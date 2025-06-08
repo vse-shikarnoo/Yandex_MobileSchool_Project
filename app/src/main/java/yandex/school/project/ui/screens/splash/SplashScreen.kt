@@ -13,7 +13,6 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import yandex.school.project.R
-import yandex.school.project.ui.navigation.Screen
 
 @Composable
 fun SplashScreen(

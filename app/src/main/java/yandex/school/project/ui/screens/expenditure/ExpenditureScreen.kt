@@ -1,6 +1,5 @@
-package yandex.school.project.ui.screens.home
+package yandex.school.project.ui.screens.expenditure
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -9,12 +8,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun HomeScreen(){
+fun ExpenditureScreen(){
     Box(
         modifier = Modifier
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Hello World")
+        Text(text = "Expenditure")
     }
 }
