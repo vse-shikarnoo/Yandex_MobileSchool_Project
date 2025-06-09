@@ -1,56 +1,73 @@
 package yandex.school.project.ui.navigation
 
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
+
+
 @Composable
-fun BottomBar(
-    navController: NavHostController,
-    modifier: Modifier = Modifier
-) {
+fun BottomBar(navController: NavHostController) {
+    val screens = listOf(
+        BottomBarDestinations.Expenses,
+        BottomBarDestinations.Settings
+    )
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestinations = navBackStackEntry?.destination
 
-    NavigationBar(
-        modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.primaryContainer
-    ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-        Screens.forEach { screen ->
-            val selected = currentRoute == screen.route
-            NavigationBarItem(
-                label = {
-                    Text(text = screen.title!!)
-                },
-                icon = {
-
-                    Icon(
-                        imageVector = if (selected) screen.icon!! else Icons.Default.KeyboardArrowUp,
-                        contentDescription = null
-                    )
-                },
-                selected = selected,
-                onClick = {
-                    navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    unselectedTextColor = MaterialTheme.colorScheme.secondary,
-                    selectedTextColor = MaterialTheme.colorScheme.primary,
-                    selectedIconColor = MaterialTheme.colorScheme.primary,
-                    unselectedIconColor = MaterialTheme.colorScheme.secondary,
-                    indicatorColor = MaterialTheme.colorScheme.surface
-                ),
+     NavigationBar {
+        screens.forEach {
+            AddItem(
+                screen = it,
+                currentDestinations = currentDestinations,
+                navController = navController
             )
         }
     }
+}
+
+@Composable
+fun RowScope.AddItem(
+    screen: BottomBarDestinations,
+    currentDestinations: NavDestination?,
+    navController: NavHostController
+) {
+    NavigationBarItem(
+        label = {
+            Text(text = screen.title)
+        },
+        icon = {
+            Icon(
+                imageVector = screen.icon,
+                contentDescription = "Nav Icon"
+            )
+        },
+        selected = currentDestinations?.hierarchy?.any { it.route == screen.route } == true,
+        colors = NavigationBarItemDefaults.colors(
+            unselectedTextColor = LocalContentColor.current.copy(
+                alpha = 0.4f
+            ),
+            unselectedIconColor = LocalContentColor.current.copy(
+                alpha = 0.4f
+            )
+        ),
+        onClick = {
+            navController.navigate(screen.route) {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+                restoreState = true
+            }
+        }
+    )
 }
