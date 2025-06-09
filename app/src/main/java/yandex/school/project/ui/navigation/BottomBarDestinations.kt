@@ -2,7 +2,10 @@ package yandex.school.project.ui.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class BottomBarDestinations(
@@ -10,15 +13,29 @@ sealed class BottomBarDestinations(
     val title: String,
     val icon: ImageVector
 ) {
-    data object Expenses: BottomBarDestinations(
-        route = EXPENSES_ROUTE,
-        title = "Expenses",
-        icon = Icons.Default.Home
+    object Expenses : BottomBarDestinations(
+        route = "expenses",
+        title = "Расходы",
+        icon = Icons.Filled.Home
     )
-
-    data object Settings: BottomBarDestinations(
-        route = SETTINGS_ROUTE,
-        title = "Settings",
-        icon = Icons.Default.Menu
+    object Income : BottomBarDestinations(
+        route = "income",
+        title = "Доходы",
+        icon = Icons.Filled.Add
+    )
+    object Account : BottomBarDestinations(
+        route = "account",
+        title = "Счёт",
+        icon = Icons.Filled.AccountBox
+    )
+    object Expenditure : BottomBarDestinations(
+        route = "expenditure",
+        title = "Траты",
+        icon = Icons.Filled.ShoppingCart
+    )
+    object Settings : BottomBarDestinations(
+        route = "settings",
+        title = "Настройки",
+        icon = Icons.Filled.Settings
     )
 }

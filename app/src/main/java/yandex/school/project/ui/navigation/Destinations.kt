@@ -3,7 +3,6 @@ package yandex.school.project.ui.navigation
 import yandex.school.project.R
 
 const val EXPENSES_ROUTE = "expenses"
-const val SETTINGS_ROUTE = "settings"
 
 sealed class Destinations(
     val route: String,

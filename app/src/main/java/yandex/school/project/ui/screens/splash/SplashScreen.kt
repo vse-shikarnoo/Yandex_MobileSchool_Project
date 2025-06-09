@@ -16,6 +16,7 @@ import yandex.school.project.R
 
 @Composable
 fun SplashScreen(
+    modifier: Modifier = Modifier,
     navController: NavHostController,
     goNextDestination: () -> Unit
 ) {
