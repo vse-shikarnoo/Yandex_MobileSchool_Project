@@ -1,4 +1,4 @@
-package yandex.school.project.domain.models
+package yandex.school.project.data.models
 
 data class AccountBrief(
     val id: Int,

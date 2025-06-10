@@ -1,9 +1,9 @@
-package yandex.school.project.domain.models
+package yandex.school.project.data.models
 
-data class TransactionResponse(
+data class Transaction(
     val id: Int,
-    val account: AccountBrief,
-    val category: Category,
+    val accountId: Int,
+    val categoryId: Int,
     val amount: String,
     val transactionDate: String,
     val comment: String?,

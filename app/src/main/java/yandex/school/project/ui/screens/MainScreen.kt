@@ -5,13 +5,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.draw.clip
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import yandex.school.project.ui.navigation.BottomBar
@@ -22,7 +28,6 @@ import yandex.school.project.ui.navigation.BottomNavigation
 fun MainScreen(navController: NavHostController) {
     val bottomNavController = rememberNavController()
 
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentTitle = rememberSaveable() { mutableStateOf("") }
 
     Scaffold(
@@ -33,7 +38,18 @@ fun MainScreen(navController: NavHostController) {
                 }
             )
         },
-        bottomBar = { BottomBar(bottomNavController) }
+        bottomBar = { BottomBar(bottomNavController) },
+        floatingActionButton = {
+            FloatingActionButton(
+                modifier = Modifier.clip(CircleShape),
+                onClick = {}
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null
+                )
+            }
+        }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             BottomNavigation(

@@ -27,19 +27,19 @@ fun BottomNavigation(
     ) {
         composable(BottomBarDestinations.Expenses.route) { ExpensesNavGraph(onTitleChange) }
         composable(BottomBarDestinations.Income.route) {
-            onTitleChange("Доходы")
+            //onTitleChange("Доходы")
             IncomeScreen()
         }
         composable(BottomBarDestinations.Account.route) {
-            onTitleChange("Аккаунт")
+            //onTitleChange("Аккаунт")
             AccountScreen()
         }
         composable(BottomBarDestinations.Expenditure.route) {
-            onTitleChange("Статьи расходов")
+            //onTitleChange("Статьи расходов")
             ExpenditureScreen()
         }
         composable(BottomBarDestinations.Settings.route) {
-            onTitleChange("Настройки")
+            //onTitleChange("Настройки")
             SettingsScreen()
         }
     }
@@ -54,8 +54,8 @@ fun ExpensesNavGraph(onTitleChange: (String) -> Unit){
     // Меняем title в зависимости от текущего route
     LaunchedEffect(currentRoute) {
         when (currentRoute) {
-            Destinations.ExpensesScreen.route -> onTitleChange("Расходы")
-            Destinations.ExpensesCreateScreen.route -> onTitleChange("Создать расход")
+            Destinations.ExpensesScreen.route -> onTitleChange("Расходы сегодня")
+            Destinations.ExpensesCreateScreen.route -> onTitleChange("Мои расходы")
         }
     }
 

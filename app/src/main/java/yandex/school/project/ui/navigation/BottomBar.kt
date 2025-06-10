@@ -1,6 +1,5 @@
 package yandex.school.project.ui.navigation
 
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.NavigationBar
@@ -9,6 +8,8 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -29,7 +30,12 @@ fun BottomBar(navController: NavHostController) {
         screens.forEach { screen ->
             NavigationBarItem(
                 label = { Text(text = screen.title) },
-                icon = { Icon(imageVector = screen.icon, contentDescription = null) },
+                icon = {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(screen.icon),
+                        contentDescription = null
+                    )
+                },
                 selected = currentRoute == screen.route,
                 colors = NavigationBarItemDefaults.colors(
                     unselectedTextColor = LocalContentColor.current.copy(alpha = 0.4f),

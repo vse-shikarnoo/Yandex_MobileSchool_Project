@@ -6,36 +6,36 @@ import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.ui.graphics.vector.ImageVector
+import yandex.school.project.R
 
 sealed class BottomBarDestinations(
     val route: String,
     val title: String,
-    val icon: ImageVector
+    val icon: Int
 ) {
     object Expenses : BottomBarDestinations(
         route = "expenses",
         title = "Расходы",
-        icon = Icons.Filled.Home
+        icon = R.drawable.ic_expenses
     )
     object Income : BottomBarDestinations(
         route = "income",
         title = "Доходы",
-        icon = Icons.Filled.Add
+        icon = R.drawable.ic_income
     )
     object Account : BottomBarDestinations(
         route = "account",
         title = "Счёт",
-        icon = Icons.Filled.AccountBox
+        icon = R.drawable.ic_account
     )
     object Expenditure : BottomBarDestinations(
         route = "expenditure",
-        title = "Траты",
-        icon = Icons.Filled.ShoppingCart
+        title = "Статья",
+        icon = R.drawable.ic_expenditure
     )
     object Settings : BottomBarDestinations(
         route = "settings",
         title = "Настройки",
-        icon = Icons.Filled.Settings
+        icon = R.drawable.ic_settings
     )
 }
