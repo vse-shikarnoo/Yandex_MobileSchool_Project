@@ -3,22 +3,43 @@ package yandex.school.project.ui.screens
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.navigation.NavHostController
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.navigation.compose.rememberNavController
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import yandex.school.project.ui.navigation.BottomBar
-import yandex.school.project.ui.navigation.BottomNavGraph
+import yandex.school.project.ui.navigation.BottomNavigation
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
-    val navController = rememberNavController()
+fun MainScreen(navController: NavHostController) {
+    val bottomNavController = rememberNavController()
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentTitle = rememberSaveable() { mutableStateOf("") }
+
     Scaffold(
-        bottomBar = { BottomBar(navController) }
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = currentTitle.value)
+                }
+            )
+        },
+        bottomBar = { BottomBar(bottomNavController) }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            BottomNavGraph(navController)
+            BottomNavigation(
+                navController = bottomNavController,
+                onTitleChange = { currentTitle.value = it }
+            )
         }
     }
 }

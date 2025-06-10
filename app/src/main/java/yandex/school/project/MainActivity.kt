@@ -14,8 +14,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ProjectTheme {
-                val navController = rememberNavController()
-                AppNavigation(navController)
+                AppNavigation()
             }
         }
     }
