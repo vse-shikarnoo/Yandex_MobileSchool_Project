@@ -39,7 +39,7 @@ fun BottomNavigation(
             ExpenditureScreen()
         }
         composable(BottomBarDestinations.Settings.route) {
-            //onTitleChange("Настройки")
+            onTitleChange("Настройки")
             SettingsScreen()
         }
     }
