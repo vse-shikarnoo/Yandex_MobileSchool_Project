@@ -29,7 +29,7 @@ fun ListItem(
             .fillMaxWidth()
             .height(56.dp)
             .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
-            .padding(horizontal = 16.dp, vertical = 20.dp),
+            .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (leading != null) {
