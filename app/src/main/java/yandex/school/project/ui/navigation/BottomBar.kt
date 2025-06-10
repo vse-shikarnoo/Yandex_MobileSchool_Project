@@ -2,6 +2,7 @@ package yandex.school.project.ui.navigation
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -38,8 +39,9 @@ fun BottomBar(navController: NavHostController) {
                 },
                 selected = currentRoute == screen.route,
                 colors = NavigationBarItemDefaults.colors(
-                    unselectedTextColor = LocalContentColor.current.copy(alpha = 0.4f),
-                    unselectedIconColor = LocalContentColor.current.copy(alpha = 0.4f)
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurface
                 ),
                 onClick = {
                     navController.navigate(screen.route) {
