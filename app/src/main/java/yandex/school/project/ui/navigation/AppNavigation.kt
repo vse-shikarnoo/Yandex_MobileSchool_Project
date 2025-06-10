@@ -27,7 +27,7 @@ fun AppNavigation(navController: NavHostController = rememberNavController()) {
             }
         }
         composable(MainDestinations.Main) {
-            MainScreen(navController)
+            MainScreen()
         }
     }
 }

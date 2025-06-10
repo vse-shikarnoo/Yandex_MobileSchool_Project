@@ -9,9 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material3.TopAppBar
@@ -21,24 +24,47 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import yandex.school.project.R
 import yandex.school.project.ui.navigation.BottomBar
 import yandex.school.project.ui.navigation.BottomNavigation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen() {
     val bottomNavController = rememberNavController()
 
     val currentTitle = rememberSaveable() { mutableStateOf("") }
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
+                navigationIcon = {
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            null
+                        )
+                    }
+                },
                 title = {
                     Text(text = currentTitle.value,
                         style = MaterialTheme.typography.titleLarge)
+                },
+                actions = {
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_history),
+                            null
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary
@@ -49,7 +75,8 @@ fun MainScreen(navController: NavHostController) {
         floatingActionButton = {
             FloatingActionButton(
                 modifier = Modifier.clip(CircleShape),
-                onClick = {}
+                onClick = {},
+                containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,

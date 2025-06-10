@@ -1,7 +1,6 @@
 package yandex.school.project.ui.navigation
 
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -27,10 +26,16 @@ fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    NavigationBar {
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.surfaceContainer
+    ) {
         screens.forEach { screen ->
             NavigationBarItem(
-                label = { Text(text = screen.title) },
+                label = {
+                    Text(
+                        text = screen.title
+                    )
+                },
                 icon = {
                     Icon(
                         imageVector = ImageVector.vectorResource(screen.icon),
@@ -39,9 +44,11 @@ fun BottomBar(navController: NavHostController) {
                 },
                 selected = currentRoute == screen.route,
                 colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = MaterialTheme.colorScheme.secondary,
+                    selectedTextColor = MaterialTheme.colorScheme.onSurface,
                     selectedIconColor = MaterialTheme.colorScheme.primary,
-                    unselectedTextColor = MaterialTheme.colorScheme.onSurface,
-                    unselectedIconColor = MaterialTheme.colorScheme.onSurface
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant
                 ),
                 onClick = {
                     navController.navigate(screen.route) {
