@@ -1,7 +1,9 @@
 package yandex.school.project.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Icon
@@ -12,15 +14,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import yandex.school.project.ui.theme.ProjectTheme
+import yandex.school.project.ui.utils.isEmoji
 
 @Composable
 fun ListItem(
     modifier: Modifier = Modifier,
-    leading: (@Composable () -> Unit)? = null,
-    content: @Composable () -> Unit,
+    leadingIcon: String? = null,
+    contentTitle: String,
     trailing: (@Composable () -> Unit)? = null,
     onClick: (() -> Unit)? = null
 ) {
@@ -32,12 +39,28 @@ fun ListItem(
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (leading != null) {
-            leading()
+        if (leadingIcon != null) {
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.secondary),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = leadingIcon,
+                    fontSize = if (isEmoji(leadingIcon)) 18.sp else 11.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
             Spacer(modifier = Modifier.width(16.dp))
         }
         Box(modifier = Modifier.weight(1f)) {
-            content()
+            Text(
+                text = contentTitle,
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
         if (trailing != null) {
             Spacer(modifier = Modifier.width(16.dp))
@@ -46,22 +69,48 @@ fun ListItem(
     }
 }
 
+
+//🏡👗🐶🍭🏋️💊
 @Preview
 @Composable
-fun ListItemSwitchPreview(){
+fun ListItemIconPreview() {
+    ProjectTheme {
+        Surface {
+            val leadingIcon = "\uD83D\uDC57"
+            ListItem(
+                leadingIcon = leadingIcon,
+                contentTitle = "Аренда квартиры"
+            )
+        }
+
+    }
+}
+
+
+@Preview
+@Composable
+fun ListItemStringPreview() {
     ProjectTheme {
         Surface {
             ListItem(
-                content = {
-                    Text(
-                        text = "Светлая темная авто",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                },
+                leadingIcon = "АК",
+                contentTitle = "Аренда квартиры"
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ListItemSwitchPreview() {
+    ProjectTheme {
+        Surface {
+            ListItem(
+                contentTitle = "Светлая темная авто",
                 trailing = {
                     Switch(
                         checked = false,
-                        onCheckedChange = {  }
+                        onCheckedChange = { }
                     )
                 }
             )
@@ -71,16 +120,11 @@ fun ListItemSwitchPreview(){
 
 @Preview
 @Composable
-fun ListItemPreview(){
+fun ListItemPreview() {
     ProjectTheme {
         Surface {
             ListItem(
-                content = {
-                    Text(
-                        text = "О приложении",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                },
+                contentTitle = "О приложении",
                 trailing = {
                     Icon(
                         imageVector = Icons.Default.ArrowForward,

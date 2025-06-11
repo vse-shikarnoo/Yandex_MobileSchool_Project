@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import yandex.school.project.R
 import yandex.school.project.ui.components.ListItem
 import yandex.school.project.ui.theme.ProjectTheme
+import yandex.school.project.ui.utils.getInitials
 
 @Composable
 fun SettingsScreen() {
@@ -28,12 +29,7 @@ fun SettingsScreen() {
     ) {
         // Переключатель темы
         ListItem(
-            content = {
-                Text(
-                    text = "Светлая темная авто",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            },
+            contentTitle = "Светлая темная авто",
             trailing = {
                 Switch(
                     checked = isAutoTheme,
@@ -54,12 +50,8 @@ fun SettingsScreen() {
         )
         items.forEach { item ->
             ListItem(
-                content = {
-                    Text(
-                        text = item,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                },
+                leadingIcon = getInitials(item),
+                contentTitle = item,
                 trailing = {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_right),
@@ -75,7 +67,7 @@ fun SettingsScreen() {
 
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
-fun ListItemSwitchPreview(){
+fun SettingsScreenPreview(){
     ProjectTheme {
         Surface {
             SettingsScreen()
