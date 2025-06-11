@@ -1,8 +1,7 @@
-package yandex.school.project.ui.screens.expenditure
+package yandex.school.project.ui.screens.category
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Divider
@@ -26,11 +25,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
-import yandex.school.project.ui.screens.settings.SettingsScreen
 import yandex.school.project.ui.theme.ProjectTheme
 
 // Мок-данные для категорий расходов
-private val expenditureCategories = listOf(
+private val categories = listOf(
     Triple("🏡", "Аренда квартиры", null),
     Triple("👗", "Одежда", null),
     Triple("🐶", "На собачку", null),
@@ -43,7 +41,7 @@ private val expenditureCategories = listOf(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpenditureScreen() {
+fun CategoryScreen() {
     var search by remember { mutableStateOf("") }
     Column(modifier = Modifier.fillMaxSize()) {
         OutlinedTextField(
@@ -65,7 +63,7 @@ fun ExpenditureScreen() {
             )
         )
         Divider()
-        expenditureCategories.forEach { (icon, title, trailing) ->
+        categories.forEach { (icon, title, trailing) ->
             ListItem(
                 leadingIcon = icon,
                 contentTitle = title
@@ -77,10 +75,10 @@ fun ExpenditureScreen() {
 
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
-fun ExpenditureScreenPreview(){
+fun CategoryScreenPreview(){
     ProjectTheme {
         Surface {
-            ExpenditureScreen()
+            CategoryScreen()
         }
     }
 }

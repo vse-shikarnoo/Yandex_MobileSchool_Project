@@ -1,11 +1,5 @@
 package yandex.school.project.ui.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Settings
 import yandex.school.project.R
 
 sealed class BottomBarDestinations(
@@ -29,9 +23,9 @@ sealed class BottomBarDestinations(
         icon = R.drawable.ic_account
     )
     object Expenditure : BottomBarDestinations(
-        route = "expenditure",
+        route = "category",
         title = "Статья",
-        icon = R.drawable.ic_expenditure
+        icon = R.drawable.ic_category
     )
     object Settings : BottomBarDestinations(
         route = "settings",

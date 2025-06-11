@@ -12,7 +12,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import yandex.school.project.ui.screens.expenses.ExpensesScreen
 import yandex.school.project.ui.screens.income.IncomeScreen
 import yandex.school.project.ui.screens.account.AccountScreen
-import yandex.school.project.ui.screens.expenditure.ExpenditureScreen
+import yandex.school.project.ui.screens.category.CategoryScreen
 import yandex.school.project.ui.screens.expenses.ExpensesCreateScreen
 import yandex.school.project.ui.screens.settings.SettingsScreen
 
@@ -36,7 +36,7 @@ fun BottomNavigation(
         }
         composable(BottomBarDestinations.Expenditure.route) {
             //onTitleChange("Статьи расходов")
-            ExpenditureScreen()
+            CategoryScreen()
         }
         composable(BottomBarDestinations.Settings.route) {
             onTitleChange("Настройки")
