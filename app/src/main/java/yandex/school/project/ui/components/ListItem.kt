@@ -34,7 +34,6 @@ fun ListItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(70.dp)
             .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically

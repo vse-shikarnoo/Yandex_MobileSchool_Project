@@ -65,6 +65,7 @@ fun CategoryScreen() {
         Divider()
         categories.forEach { (icon, title, trailing) ->
             ListItem(
+                modifier = Modifier.height(70.dp),
                 leadingIcon = icon,
                 contentTitle = title
             )

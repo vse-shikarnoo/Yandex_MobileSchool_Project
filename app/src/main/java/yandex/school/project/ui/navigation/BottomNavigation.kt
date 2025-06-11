@@ -27,15 +27,15 @@ fun BottomNavigation(
     ) {
         composable(BottomBarDestinations.Expenses.route) { ExpensesNavGraph(onTitleChange) }
         composable(BottomBarDestinations.Income.route) {
-            //onTitleChange("Доходы")
+            onTitleChange("Доходы")
             IncomeScreen()
         }
         composable(BottomBarDestinations.Account.route) {
-            //onTitleChange("Аккаунт")
+            onTitleChange("Аккаунт")
             AccountScreen()
         }
         composable(BottomBarDestinations.Expenditure.route) {
-            //onTitleChange("Статьи расходов")
+            onTitleChange("Мои статьи")
             CategoryScreen()
         }
         composable(BottomBarDestinations.Settings.route) {
