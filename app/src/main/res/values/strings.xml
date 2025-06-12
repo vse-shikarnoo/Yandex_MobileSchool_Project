@@ -1,9 +1,21 @@
 <resources>
     <string name="app_name">Project</string>
+
     <string name="splash_screen_title">Splash</string>
-    <string name="expenses_screen_title">Expenses</string>
+
+
+    <string name="expenses_graph_title">Expenses</string>
+    <string name="expenses_screen_title">Expenses today</string>
+    <string name="expenses_create_title">My expenses</string>
+    <string name="expenses_history_title">My history</string>
+    <string name="expenses_analytic_title">Analytic</string>
+
     <string name="income_screen_title">Income</string>
+
     <string name="account_screen_title">Account</string>
+
     <string name="expenditure_screen_title">Expenditure</string>
+
     <string name="settings_screen_title">Settings</string>
+
 </resources>

@@ -1,4 +1,4 @@
-package yandex.school.project.ui.screens.expenditure
+package yandex.school.project.ui.screens.expenses
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,12 +8,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun ExpenditureScreen(){
+fun ExpensesCreateScreen(){
     Box(
         modifier = Modifier
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Expenditure")
+        Text(text = "ExpensesCreate")
     }
 }

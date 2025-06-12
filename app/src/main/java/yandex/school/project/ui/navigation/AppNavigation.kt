@@ -5,30 +5,29 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import yandex.school.project.ui.screens.home.HomeScreen
+import yandex.school.project.ui.screens.MainScreen
 import yandex.school.project.ui.screens.splash.SplashScreen
 
+object MainDestinations {
+    const val Splash = "splash_screen"
+    const val Main = "main_screen"
+}
+
 @Composable
-fun AppNavigation(
-    navController: NavHostController = rememberNavController(),
-    startDestination: String = Screens.Splash.route
-) {
+fun AppNavigation(navController: NavHostController = rememberNavController()) {
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = MainDestinations.Splash
     ) {
-        composable(
-            route = Screens.Splash.route
-        ) {
+        composable(MainDestinations.Splash) {
             SplashScreen(navController = navController) {
-                navController.navigate(Screens.Home.route)
+                navController.navigate(MainDestinations.Main) {
+                    popUpTo(MainDestinations.Splash) { inclusive = true }
+                }
             }
         }
-
-        composable(
-            route = Screens.Home.route
-        ) {
-            HomeScreen()
+        composable(MainDestinations.Main) {
+            MainScreen()
         }
     }
 }
