@@ -1,19 +1,58 @@
 package yandex.school.project.ui.screens.income
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import yandex.school.project.ui.components.ListItem
+import yandex.school.project.ui.theme.ProjectTheme
 
 @Composable
-fun IncomeScreen(){
-    Box(
-        modifier = Modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = "Income")
+fun IncomeScreen() {
+    // Мок-данные
+    val incomeList = listOf(
+        Triple("Зарплата", "500 000 ₽", null),
+        Triple("Подработка", "100 000 ₽", null)
+    )
+    val total = "600 000 ₽"
+
+    Column {
+        Surface(color = MaterialTheme.colorScheme.secondary) {
+
+            ListItem(
+                modifier = Modifier.height(70.dp),
+                contentTitle = "Всего",
+                trailing = { Text(total, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface) }
+            )
+
+        }
+        Divider()
+        // Список доходов
+        incomeList.forEach { (title, amount, _) ->
+            ListItem(
+                modifier = Modifier.height(70.dp),
+                contentTitle = title,
+                trailing = { Text(amount, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface) },
+                onClick = { /* TODO: переход к деталям */ }
+            )
+            Divider()
+        }
+    }
+}
+
+@Preview(widthDp = 360, heightDp = 640)
+@Composable
+fun IncomeScreenPreview() {
+    ProjectTheme {
+        Surface {
+            IncomeScreen()
+        }
     }
 }

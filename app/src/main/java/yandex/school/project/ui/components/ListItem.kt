@@ -28,6 +28,7 @@ fun ListItem(
     modifier: Modifier = Modifier,
     leadingIcon: String? = null,
     contentTitle: String,
+    contentSecond: (@Composable () -> Unit)? = null,
     trailing: (@Composable () -> Unit)? = null,
     onClick: (() -> Unit)? = null
 ) {
@@ -58,8 +59,14 @@ fun ListItem(
         Box(modifier = Modifier.weight(1f)) {
             Text(
                 text = contentTitle,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
             )
+        }
+        if (contentSecond != null){
+            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterEnd) {
+                contentSecond()
+            }
         }
         if (trailing != null) {
             Spacer(modifier = Modifier.width(16.dp))
@@ -124,6 +131,13 @@ fun ListItemPreview() {
         Surface {
             ListItem(
                 contentTitle = "О приложении",
+                contentSecond = {
+                    Text(
+                        text = "500 000",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                },
                 trailing = {
                     Icon(
                         imageVector = Icons.Default.ArrowForward,

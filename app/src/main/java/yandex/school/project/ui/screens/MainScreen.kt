@@ -13,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -22,10 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import yandex.school.project.R
 import yandex.school.project.ui.navigation.BottomBar
 import yandex.school.project.ui.navigation.BottomNavigation
+import yandex.school.project.ui.theme.ProjectTheme
 
 data class TopBarState(
     val navigationIcon: ImageVector?,
@@ -33,6 +36,7 @@ data class TopBarState(
     val title: String,
     val actionIcon: ImageVector?,
     val actionIconAction: () -> Unit = {},
+    val isFAB: Boolean = false
 )
 
 
@@ -45,7 +49,7 @@ fun MainScreen() {
         mutableStateOf(
             TopBarState(
                 navigationIcon = null,
-                title = "",
+                title = "Расходы сегодня",
                 actionIcon = null,
             )
         )
@@ -60,7 +64,7 @@ fun MainScreen() {
                             onClick = currentTopBarState.value.navigationIconAction
                         ) {
                             Icon(
-                                imageVector = Icons.Default.Close,
+                                imageVector = currentTopBarState.value.navigationIcon!!,
                                 null
                             )
                         }
@@ -78,7 +82,7 @@ fun MainScreen() {
                             onClick = currentTopBarState.value.actionIconAction
                         ) {
                             Icon(
-                                imageVector = ImageVector.vectorResource(R.drawable.ic_history),
+                                imageVector = currentTopBarState.value.actionIcon!!,
                                 null
                             )
                         }
@@ -91,16 +95,19 @@ fun MainScreen() {
         },
         bottomBar = { BottomBar(bottomNavController) },
         floatingActionButton = {
-            FloatingActionButton(
-                modifier = Modifier.clip(CircleShape),
-                onClick = {},
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null
-                )
+            if (currentTopBarState.value.isFAB) {
+                FloatingActionButton(
+                    modifier = Modifier.clip(CircleShape),
+                    onClick = {},
+                    containerColor = MaterialTheme.colorScheme.primary
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null
+                    )
+                }
             }
+
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
@@ -109,5 +116,13 @@ fun MainScreen() {
                 onTitleChange = { currentTopBarState.value = it }
             )
         }
+    }
+}
+
+@Preview(widthDp = 360, heightDp = 640)
+@Composable
+fun MainScreenPreview() {
+    ProjectTheme {
+        MainScreen()
     }
 }

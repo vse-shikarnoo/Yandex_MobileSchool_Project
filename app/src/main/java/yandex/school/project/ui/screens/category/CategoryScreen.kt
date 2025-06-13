@@ -25,6 +25,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import yandex.school.project.ui.theme.ProjectTheme
 
 // Мок-данные для категорий расходов
@@ -41,7 +42,9 @@ private val categories = listOf(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CategoryScreen() {
+fun CategoryScreen(
+    viewModel: CategoryViewModel = CategoryViewModel()
+) {
     var search by remember { mutableStateOf("") }
     Column(modifier = Modifier.fillMaxSize()) {
         OutlinedTextField(

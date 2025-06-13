@@ -35,7 +35,8 @@ fun BottomNavigation(
                 TopBarState(
                     navigationIcon = null,
                     title = "Доходы сегодня",
-                    actionIcon = ImageVector.vectorResource(R.drawable.ic_history)
+                    actionIcon = ImageVector.vectorResource(R.drawable.ic_history),
+                    isFAB = true
                 )
             )
             IncomeScreen()
@@ -45,7 +46,8 @@ fun BottomNavigation(
                 TopBarState(
                     navigationIcon = null,
                     title = "Мой счет",
-                    actionIcon = ImageVector.vectorResource(R.drawable.ic_edit)
+                    actionIcon = ImageVector.vectorResource(R.drawable.ic_edit),
+                    isFAB = true
                 )
             )
             AccountScreen()
@@ -87,7 +89,8 @@ fun ExpensesNavGraph(onTitleChange: (TopBarState) -> Unit) {
                     TopBarState(
                         navigationIcon = null,
                         title = "Расходы сегодня",
-                        actionIcon = null//ImageVector.vectorResource(R.drawable.ic_history)
+                        actionIcon = null,//ImageVector.vectorResource(R.drawable.ic_history)
+                        isFAB = true
                     )
                 )
             }
