@@ -16,3 +16,5 @@ val GreenLight = Color(0xFFD4FAE6)
 val RedMain = Color(0xFFE46962)
 
 val YellowMain = Color(0xFFFCE300)
+
+val Grey = Color(0xFFC4BFC7)

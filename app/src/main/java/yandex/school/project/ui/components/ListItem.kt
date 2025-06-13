@@ -30,12 +30,15 @@ fun ListItem(
     contentTitle: String,
     contentSecond: (@Composable () -> Unit)? = null,
     trailing: (@Composable () -> Unit)? = null,
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
+    backgroundColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.surface,
+    iconBackgroundColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.secondary
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
+            .background(backgroundColor)
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -44,7 +47,7 @@ fun ListItem(
                 modifier = Modifier
                     .size(24.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.secondary),
+                    .background(iconBackgroundColor),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -85,10 +88,11 @@ fun ListItemIconPreview() {
             val leadingIcon = "\uD83D\uDC57"
             ListItem(
                 leadingIcon = leadingIcon,
-                contentTitle = "Аренда квартиры"
+                contentTitle = "Аренда квартиры",
+                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                iconBackgroundColor = MaterialTheme.colorScheme.primary
             )
         }
-
     }
 }
 
@@ -100,7 +104,9 @@ fun ListItemStringPreview() {
         Surface {
             ListItem(
                 leadingIcon = "АК",
-                contentTitle = "Аренда квартиры"
+                contentTitle = "Аренда квартиры",
+                backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+                iconBackgroundColor = MaterialTheme.colorScheme.tertiary
             )
         }
     }

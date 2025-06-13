@@ -1,19 +1,72 @@
 package yandex.school.project.ui.screens.account
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import yandex.school.project.ui.components.ListItem
+import yandex.school.project.ui.screens.income.IncomeScreen
+import yandex.school.project.ui.theme.ProjectTheme
 
 @Composable
-fun AccountScreen(){
-    Box(
+fun AccountScreen() {
+    val balance = "-670 000 ₽"
+    val currency = "₽"
+
+
+    Column(
         modifier = Modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center
+            .fillMaxWidth()
+            //.background(color = MaterialTheme.colorScheme.secondary)
     ) {
-        Text(text = "Account")
+        // Баланс
+        ListItem(
+            modifier = Modifier.height(56.dp),
+            leadingIcon = "💰", // Можно заменить на иконку, если появится
+            contentTitle = "Баланс",
+            contentSecond = {
+                Text(
+                    text = balance,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            },
+            backgroundColor = MaterialTheme.colorScheme.secondary,
+            iconBackgroundColor = MaterialTheme.colorScheme.surface
+        )
+        Divider()
+        // Валюта
+        ListItem(
+            modifier = Modifier.height(56.dp),
+            contentTitle = "Валюта",
+            contentSecond = {
+                Text(
+                    text = currency,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            },
+            backgroundColor = MaterialTheme.colorScheme.secondary
+        )
+    }
+
+}
+
+@Preview(widthDp = 360, heightDp = 640)
+@Composable
+fun AccountScreenPreview() {
+    ProjectTheme {
+        Surface {
+            AccountScreen()
+        }
     }
 }

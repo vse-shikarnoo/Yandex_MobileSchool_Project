@@ -31,22 +31,24 @@ fun BottomNavigation(
     ) {
         composable(BottomBarDestinations.Expenses.route) { ExpensesNavGraph(onTitleChange) }
         composable(BottomBarDestinations.Income.route) {
+            val historyIcon = ImageVector.vectorResource(R.drawable.ic_history)
             onTitleChange(
                 TopBarState(
                     navigationIcon = null,
                     title = "Доходы сегодня",
-                    actionIcon = ImageVector.vectorResource(R.drawable.ic_history),
+                    actionIcon = historyIcon,
                     isFAB = true
                 )
             )
             IncomeScreen()
         }
         composable(BottomBarDestinations.Account.route) {
+            val editIcon = ImageVector.vectorResource(R.drawable.ic_edit)
             onTitleChange(
                 TopBarState(
                     navigationIcon = null,
                     title = "Мой счет",
-                    actionIcon = ImageVector.vectorResource(R.drawable.ic_edit),
+                    actionIcon = editIcon,
                     isFAB = true
                 )
             )
@@ -80,6 +82,7 @@ fun ExpensesNavGraph(onTitleChange: (TopBarState) -> Unit) {
     val expensesNavController = rememberNavController()
     val navBackStackEntry by expensesNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val historyIcon = ImageVector.vectorResource(R.drawable.ic_history)
 
     // Меняем title в зависимости от текущего route
     LaunchedEffect(currentRoute) {
@@ -89,7 +92,7 @@ fun ExpensesNavGraph(onTitleChange: (TopBarState) -> Unit) {
                     TopBarState(
                         navigationIcon = null,
                         title = "Расходы сегодня",
-                        actionIcon = null,//ImageVector.vectorResource(R.drawable.ic_history)
+                        actionIcon = historyIcon,
                         isFAB = true
                     )
                 )

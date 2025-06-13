@@ -3,7 +3,10 @@ package yandex.school.project.ui.screens.income
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
@@ -24,22 +27,42 @@ fun IncomeScreen() {
     val total = "600 000 ₽"
 
     Column {
-        Surface(color = MaterialTheme.colorScheme.secondary) {
 
-            ListItem(
-                modifier = Modifier.height(70.dp),
-                contentTitle = "Всего",
-                trailing = { Text(total, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface) }
-            )
 
-        }
+        ListItem(
+            modifier = Modifier.height(56.dp),
+            contentTitle = "Всего",
+            contentSecond = {
+                Text(
+                    total,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            },
+            backgroundColor = MaterialTheme.colorScheme.secondary
+        )
+
+
         Divider()
         // Список доходов
         incomeList.forEach { (title, amount, _) ->
             ListItem(
                 modifier = Modifier.height(70.dp),
                 contentTitle = title,
-                trailing = { Text(amount, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface) },
+                contentSecond = {
+                    Text(
+                        amount,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                },
+                trailing = {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowRight,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.tertiary
+                    )
+                },
                 onClick = { /* TODO: переход к деталям */ }
             )
             Divider()

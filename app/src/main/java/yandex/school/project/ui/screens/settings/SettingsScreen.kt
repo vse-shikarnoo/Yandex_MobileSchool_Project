@@ -32,7 +32,7 @@ fun SettingsScreen() {
         // Переключатель темы
         ListItem(
             modifier = Modifier.height(56.dp),
-            contentTitle = "Светлая темная авто",
+            contentTitle = "Темная тема",
             trailing = {
                 Switch(
                     checked = isAutoTheme,
