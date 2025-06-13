@@ -7,27 +7,27 @@ sealed class BottomBarDestinations(
     val title: String,
     val icon: Int
 ) {
-    object Expenses : BottomBarDestinations(
+    data object Expenses : BottomBarDestinations(
         route = "expenses",
         title = "Расходы",
         icon = R.drawable.ic_expenses
     )
-    object Income : BottomBarDestinations(
+    data object Income : BottomBarDestinations(
         route = "income",
         title = "Доходы",
         icon = R.drawable.ic_income
     )
-    object Account : BottomBarDestinations(
+    data object Account : BottomBarDestinations(
         route = "account",
         title = "Счёт",
         icon = R.drawable.ic_account
     )
-    object Expenditure : BottomBarDestinations(
+    data object Expenditure : BottomBarDestinations(
         route = "category",
         title = "Статья",
         icon = R.drawable.ic_category
     )
-    object Settings : BottomBarDestinations(
+    data object Settings : BottomBarDestinations(
         route = "settings",
         title = "Настройки",
         icon = R.drawable.ic_settings

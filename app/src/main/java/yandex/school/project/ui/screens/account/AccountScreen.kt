@@ -1,21 +1,18 @@
 package yandex.school.project.ui.screens.account
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Divider
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import yandex.school.project.ui.components.ListItem
-import yandex.school.project.ui.screens.income.IncomeScreen
 import yandex.school.project.ui.theme.ProjectTheme
 
 @Composable
@@ -44,7 +41,7 @@ fun AccountScreen(
             backgroundColor = MaterialTheme.colorScheme.secondary,
             iconBackgroundColor = MaterialTheme.colorScheme.surface
         )
-        Divider()
+        HorizontalDivider()
         // Валюта
         ListItem(
             modifier = Modifier.height(56.dp),

@@ -3,7 +3,7 @@ package yandex.school.project.ui.screens.settings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import yandex.school.project.R
 import yandex.school.project.ui.components.ListItem
 import yandex.school.project.ui.theme.ProjectTheme
-import yandex.school.project.ui.utils.getInitials
 
 @Composable
 fun SettingsScreen() {
@@ -40,7 +39,7 @@ fun SettingsScreen() {
                 )
             }
         )
-        Divider()
+        HorizontalDivider()
         // Список пунктов
         val items = listOf(
             "Основной цвет",
@@ -63,7 +62,7 @@ fun SettingsScreen() {
                 },
                 onClick = { /* TODO: обработка нажатия */ }
             )
-            Divider()
+            HorizontalDivider()
         }
     }
 }

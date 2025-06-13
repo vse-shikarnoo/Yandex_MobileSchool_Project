@@ -1,26 +1,18 @@
 package yandex.school.project.ui.screens.expenses
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Surface
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import yandex.school.project.ui.components.ListItem
-import yandex.school.project.ui.screens.income.IncomeScreen
 import yandex.school.project.ui.theme.ProjectTheme
 
 @Composable
@@ -55,7 +47,7 @@ fun ExpensesScreen(
             backgroundColor = MaterialTheme.colorScheme.secondary
         )
 
-        Divider()
+        HorizontalDivider()
         // Список расходов
         expenses.forEach { (icon, title, amount) ->
             ListItem(
@@ -71,14 +63,14 @@ fun ExpensesScreen(
                 },
                 trailing = {
                     Icon(
-                        imageVector = Icons.Default.KeyboardArrowRight,
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.tertiary
                     )
                 },
                 onClick = { /* TODO: переход к деталям */ }
             )
-            Divider()
+            HorizontalDivider()
         }
     }
 }
@@ -88,7 +80,7 @@ fun ExpensesScreen(
 fun ExpensesScreenPreview() {
     ProjectTheme {
         Surface {
-            ExpensesScreen() {}
+            ExpensesScreen {}
         }
     }
 }

@@ -1,15 +1,14 @@
 package yandex.school.project.ui.screens.income
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.Divider
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,7 +42,7 @@ fun IncomeScreen() {
         )
 
 
-        Divider()
+        HorizontalDivider()
         // Список доходов
         incomeList.forEach { (title, amount, _) ->
             ListItem(
@@ -58,14 +57,14 @@ fun IncomeScreen() {
                 },
                 trailing = {
                     Icon(
-                        imageVector = Icons.Default.KeyboardArrowRight,
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.tertiary
                     )
                 },
                 onClick = { /* TODO: переход к деталям */ }
             )
-            Divider()
+            HorizontalDivider()
         }
     }
 }
