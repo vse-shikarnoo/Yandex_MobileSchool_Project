@@ -13,15 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import yandex.school.project.ui.components.ListItem
 import yandex.school.project.ui.screens.income.IncomeScreen
 import yandex.school.project.ui.theme.ProjectTheme
 
 @Composable
-fun AccountScreen() {
-    val balance = "-670 000 ₽"
-    val currency = "₽"
-
+fun AccountScreen(
+    viewModel: AccountViewModel = viewModel()
+) {
+    val accountState = viewModel.accountState
 
     Column(
         modifier = Modifier
@@ -35,7 +36,7 @@ fun AccountScreen() {
             contentTitle = "Баланс",
             contentSecond = {
                 Text(
-                    text = balance,
+                    text = accountState.balance,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -50,7 +51,7 @@ fun AccountScreen() {
             contentTitle = "Валюта",
             contentSecond = {
                 Text(
-                    text = currency,
+                    text = accountState.currency,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -58,7 +59,6 @@ fun AccountScreen() {
             backgroundColor = MaterialTheme.colorScheme.secondary
         )
     }
-
 }
 
 @Preview(widthDp = 360, heightDp = 640)

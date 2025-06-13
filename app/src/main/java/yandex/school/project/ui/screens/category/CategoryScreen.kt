@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import yandex.school.project.ui.theme.ProjectTheme
+import androidx.compose.runtime.collectAsState
 
 // Мок-данные для категорий расходов
 private val categories = listOf(
@@ -43,9 +44,11 @@ private val categories = listOf(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryScreen(
-    viewModel: CategoryViewModel = CategoryViewModel()
+    viewModel: CategoryViewModel = viewModel()
 ) {
     var search by remember { mutableStateOf("") }
+    val categories by viewModel.categories.collectAsState()
+
     Column(modifier = Modifier.fillMaxSize()) {
         OutlinedTextField(
             value = search,
@@ -66,11 +69,11 @@ fun CategoryScreen(
             )
         )
         Divider()
-        categories.forEach { (icon, title, trailing) ->
+        categories.forEach { category ->
             ListItem(
                 modifier = Modifier.height(70.dp),
-                leadingIcon = icon,
-                contentTitle = title
+                leadingIcon = category.emoji,
+                contentTitle = category.name
             )
             Divider()
         }
@@ -79,7 +82,7 @@ fun CategoryScreen(
 
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
-fun CategoryScreenPreview(){
+fun CategoryScreenPreview() {
     ProjectTheme {
         Surface {
             CategoryScreen()
