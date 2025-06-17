@@ -56,7 +56,7 @@ class ApiService(private val apiClient: ApiClient) {
     }
 
     // Transactions
-    suspend fun createTransaction(transactionData: TransactionRequest): Transaction = withContext(Dispatchers.IO) {
+    suspend fun createTransaction(transactionData: TransactionRequest): TransactionResponse = withContext(Dispatchers.IO) {
         val response = apiClient.client.post(ApiEndpoints.TRANSACTIONS) {
             setBody(transactionData)
         }
