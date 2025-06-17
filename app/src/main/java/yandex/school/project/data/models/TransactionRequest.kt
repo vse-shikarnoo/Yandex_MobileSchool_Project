@@ -1,5 +1,8 @@
 package yandex.school.project.data.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class TransactionRequest(
     val accountId: Int,
     val categoryId: Int,
