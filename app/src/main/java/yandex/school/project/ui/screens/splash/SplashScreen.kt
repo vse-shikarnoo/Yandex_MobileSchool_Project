@@ -23,7 +23,7 @@ fun SplashScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.splash))
         val logoAnimationState =

@@ -16,6 +16,7 @@ import yandex.school.project.ui.screens.TopBarState
 import yandex.school.project.ui.screens.account.AccountScreen
 import yandex.school.project.ui.screens.category.CategoryScreen
 import yandex.school.project.ui.screens.expenses.ExpensesCreateScreen
+import yandex.school.project.ui.screens.expenses.ExpensesHistoryScreen
 import yandex.school.project.ui.screens.expenses.ExpensesScreen
 import yandex.school.project.ui.screens.income.IncomeScreen
 import yandex.school.project.ui.screens.settings.SettingsScreen
@@ -34,7 +35,6 @@ fun BottomNavigation(
             val historyIcon = ImageVector.vectorResource(R.drawable.ic_history)
             onTitleChange(
                 TopBarState(
-                    navigationIcon = null,
                     title = "Доходы сегодня",
                     actionIcon = historyIcon,
                     isFAB = true
@@ -46,7 +46,6 @@ fun BottomNavigation(
             val editIcon = ImageVector.vectorResource(R.drawable.ic_edit)
             onTitleChange(
                 TopBarState(
-                    navigationIcon = null,
                     title = "Мой счет",
                     actionIcon = editIcon,
                     isFAB = true
@@ -57,9 +56,7 @@ fun BottomNavigation(
         composable(BottomBarDestinations.Expenditure.route) {
             onTitleChange(
                 TopBarState(
-                    navigationIcon = null,
-                    title = "Мои статьи",
-                    actionIcon = null
+                    title = "Мои статьи"
                 )
             )
             CategoryScreen()
@@ -67,9 +64,7 @@ fun BottomNavigation(
         composable(BottomBarDestinations.Settings.route) {
             onTitleChange(
                 TopBarState(
-                    navigationIcon = null,
-                    title = "Настройки",
-                    actionIcon = null
+                    title = "Настройки"
                 )
             )
             SettingsScreen()
@@ -90,9 +85,11 @@ fun ExpensesNavGraph(onTitleChange: (TopBarState) -> Unit) {
             Destinations.ExpensesScreen.route -> {
                 onTitleChange(
                     TopBarState(
-                        navigationIcon = null,
                         title = "Расходы сегодня",
                         actionIcon = historyIcon,
+                        actionIconAction = {
+                            expensesNavController.navigate(Destinations.ExpensesHistoryScreen.route)
+                        },
                         isFAB = true
                     )
                 )
@@ -100,9 +97,13 @@ fun ExpensesNavGraph(onTitleChange: (TopBarState) -> Unit) {
 
             Destinations.ExpensesCreateScreen.route -> onTitleChange(
                 TopBarState(
-                    navigationIcon = null,//ImageVector,
-                    title = "Мои расходы",
-                    actionIcon = null//ImageVector
+                    title = "Мои расходы"
+                )
+            )
+
+            Destinations.ExpensesHistoryScreen.route -> onTitleChange(
+                TopBarState(
+                    title = "История"
                 )
             )
         }
@@ -123,6 +124,9 @@ fun ExpensesNavGraph(onTitleChange: (TopBarState) -> Unit) {
         }
         composable(Destinations.ExpensesCreateScreen.route) {
             ExpensesCreateScreen()
+        }
+        composable(Destinations.ExpensesHistoryScreen.route) {
+            ExpensesHistoryScreen()
         }
     }
 }

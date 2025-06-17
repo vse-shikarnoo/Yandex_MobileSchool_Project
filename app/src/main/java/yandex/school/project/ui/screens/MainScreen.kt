@@ -27,10 +27,10 @@ import yandex.school.project.ui.navigation.BottomNavigation
 import yandex.school.project.ui.theme.ProjectTheme
 
 data class TopBarState(
-    val navigationIcon: ImageVector?,
+    val navigationIcon: ImageVector? = null,
     val navigationIconAction: () -> Unit = {},
     val title: String,
-    val actionIcon: ImageVector?,
+    val actionIcon: ImageVector? = null,
     val actionIconAction: () -> Unit = {},
     val isFAB: Boolean = false
 )
