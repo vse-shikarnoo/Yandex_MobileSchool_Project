@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import yandex.school.project.ui.components.ListItem
 import yandex.school.project.ui.theme.ProjectTheme
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 
 // Мок-данные для категорий расходов
 private val categories = listOf(
@@ -53,7 +55,9 @@ fun CategoryScreen(
         OutlinedTextField(
             value = search,
             onValueChange = { search = it },
-            modifier = Modifier.fillMaxWidth().height(56.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
             placeholder = { Text("Найти статью") },
             trailingIcon = {
                 Icon(imageVector = Icons.Default.Search, contentDescription = null)
@@ -69,16 +73,18 @@ fun CategoryScreen(
                 focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = Color.Transparent,
                 unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-               )
+            )
         )
         HorizontalDivider()
-        categories.forEach { category ->
-            ListItem(
-                modifier = Modifier.height(70.dp),
-                leadingIcon = category.emoji,
-                contentTitle = category.name
-            )
-            HorizontalDivider()
+        LazyColumn(modifier = Modifier.weight(1f)) {
+            items(categories) { category ->
+                ListItem(
+                    modifier = Modifier.height(70.dp),
+                    leadingIcon = category.emoji,
+                    contentTitle = category.name
+                )
+                HorizontalDivider()
+            }
         }
     }
 }
