@@ -1,11 +1,14 @@
 package yandex.school.project.ui.screens.category
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -28,8 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import yandex.school.project.ui.components.ListItem
 import yandex.school.project.ui.theme.ProjectTheme
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 
 // Мок-данные для категорий расходов
 private val categories = listOf(
@@ -43,7 +44,7 @@ private val categories = listOf(
     Triple("💊", "Медицина", null)
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun CategoryScreen(
     viewModel: CategoryViewModel = viewModel()
@@ -51,42 +52,44 @@ fun CategoryScreen(
     var search by remember { mutableStateOf("") }
     val categories by viewModel.categories.collectAsState()
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        OutlinedTextField(
-            value = search,
-            onValueChange = { search = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            placeholder = { Text("Найти статью") },
-            trailingIcon = {
-                Icon(imageVector = Icons.Default.Search, contentDescription = null)
-            },
-            singleLine = true,
-            shape = RectangleShape,
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                errorContainerColor = Color.Transparent,
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = Color.Transparent,
-                unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        )
-        HorizontalDivider()
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            items(categories) { category ->
-                ListItem(
-                    modifier = Modifier.height(70.dp),
-                    leadingIcon = category.emoji,
-                    contentTitle = category.name
+    HorizontalDivider()
+    LazyColumn(modifier = Modifier.fillMaxSize(),) {
+        stickyHeader {
+            OutlinedTextField(
+                value = search,
+                onValueChange = { search = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                placeholder = { Text("Найти статью") },
+                trailingIcon = {
+                    Icon(imageVector = Icons.Default.Search, contentDescription = null)
+                },
+                singleLine = true,
+                shape = RectangleShape,
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    errorContainerColor = Color.Transparent,
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent,
+                    unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                HorizontalDivider()
-            }
+            )
+            HorizontalDivider()
+        }
+        items(categories) { category ->
+            ListItem(
+                modifier = Modifier.height(70.dp),
+                leadingIcon = category.emoji,
+                contentTitle = category.name
+            )
+            HorizontalDivider()
         }
     }
+
 }
 
 @Preview(widthDp = 360, heightDp = 640)
