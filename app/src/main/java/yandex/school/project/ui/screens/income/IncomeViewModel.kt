@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import yandex.school.project.data.models.TransactionResponse
 import yandex.school.project.data.network.ApiClient
 import yandex.school.project.data.network.ApiService
-import yandex.school.project.data.repository.IncomeRepository
+import yandex.school.project.data.repository.TransactionsRepository
 import yandex.school.project.ui.common.Result
 
 data class IncomeState(
@@ -21,7 +21,7 @@ class IncomeViewModel(
 
 ) : ViewModel() {
 
-    private val repository: IncomeRepository = IncomeRepository(ApiService(ApiClient()))
+    private val repository: TransactionsRepository = TransactionsRepository(ApiService(ApiClient()))
 
     private val _uiState = MutableStateFlow<Result<IncomeState>>(Result.Loading)
     val uiState: StateFlow<Result<IncomeState>> = _uiState.asStateFlow()
@@ -30,7 +30,7 @@ class IncomeViewModel(
         viewModelScope.launch {
             try {
                 _uiState.value = Result.Loading
-                val transactions = repository.getIncomeTransactions(accountId)
+                val transactions = repository.getTransactions(accountId, isIncome = true)
                 val total = transactions.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }
                 _uiState.value = Result.Success(
                     IncomeState(
