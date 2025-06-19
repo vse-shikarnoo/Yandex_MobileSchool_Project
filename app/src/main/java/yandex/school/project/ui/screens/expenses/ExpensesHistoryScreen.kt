@@ -96,6 +96,7 @@ fun ExpensesHistoryScreen(
     ) {
         stickyHeader {
             ListItem(
+                modifier = Modifier.height(56.dp),
                 contentTitle = "Начало",
                 contentSecond = {
                     Text(startDate?.let { DateTimeFormatter.ofPattern("dd-MM-yyyy").format(it) }
@@ -106,6 +107,7 @@ fun ExpensesHistoryScreen(
             )
             HorizontalDivider()
             ListItem(
+                modifier = Modifier.height(56.dp),
                 contentTitle = "Конец",
                 contentSecond = {
                     Text(endDate?.let { DateTimeFormatter.ofPattern("dd-MM-yyyy").format(it) }
@@ -116,6 +118,7 @@ fun ExpensesHistoryScreen(
             )
             HorizontalDivider()
             ListItem(
+                modifier = Modifier.height(56.dp),
                 contentTitle = "Сумма",
                 contentSecond = {
                     Text("${totalAmount.toInt()} ₽")
