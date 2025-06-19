@@ -32,18 +32,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import yandex.school.project.ui.components.ListItem
 import yandex.school.project.ui.theme.ProjectTheme
 
-// Мок-данные для категорий расходов
-private val categories = listOf(
-    Triple("🏡", "Аренда квартиры", null),
-    Triple("👗", "Одежда", null),
-    Triple("🐶", "На собачку", null),
-    Triple("🐶", "На собачку", null),
-    Triple("PK", "Ремонт квартиры", null),
-    Triple("🍭", "Продукты", null),
-    Triple("🏋️", "Спортзал", null),
-    Triple("💊", "Медицина", null)
-)
-
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun CategoryScreen(
