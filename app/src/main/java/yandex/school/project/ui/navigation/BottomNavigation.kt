@@ -118,9 +118,7 @@ fun ExpensesNavGraph(onTitleChange: (TopBarState) -> Unit) {
         startDestination = Destinations.ExpensesScreen.route
     ) {
         composable(Destinations.ExpensesScreen.route) {
-            ExpensesScreen {
-                expensesNavController.navigate(Destinations.ExpensesCreateScreen.route)
-            }
+            ExpensesScreen()
         }
         composable(Destinations.ExpensesCreateScreen.route) {
             ExpensesCreateScreen()

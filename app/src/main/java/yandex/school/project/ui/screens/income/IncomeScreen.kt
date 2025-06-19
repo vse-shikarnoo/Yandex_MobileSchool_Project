@@ -37,7 +37,7 @@ fun IncomeScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(accountId) {
-        viewModel.loadIncomeTransactions(accountId)
+        viewModel.loadTransactions(accountId)
     }
 
     when (val state = uiState) {
