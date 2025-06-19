@@ -13,6 +13,6 @@ class TransactionsRepository(private val apiService: ApiService) {
     ): List<TransactionResponse> {
         val allTransactions =
             apiService.getTransactionsByAccountPeriod(accountId, startDate, endDate)
-        return allTransactions.filter { it.category.isIncome == isIncome }
+        return allTransactions.filter { it.category.isIncome == isIncome }.sortedByDescending { it.transactionDate }
     }
 } 

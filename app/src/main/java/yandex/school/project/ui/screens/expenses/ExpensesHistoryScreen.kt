@@ -1,101 +1,173 @@
 package yandex.school.project.ui.screens.expenses
 
+import android.app.DatePickerDialog
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import yandex.school.project.data.models.AccountBrief
-import yandex.school.project.data.models.Category
-import yandex.school.project.data.models.TransactionResponse
+import androidx.lifecycle.viewmodel.compose.viewModel
 import yandex.school.project.ui.components.ListItem
 import yandex.school.project.ui.theme.ProjectTheme
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import java.util.Calendar
 
-private val sampleTransactions = listOf(
-    TransactionResponse(
-        id = 1,
-        account = AccountBrief(1, "Основной счёт", "1000.00", "RUB"),
-        category = Category(1, "Еда", "🍔", false),
-        amount = "500.00",
-        transactionDate = "2024-03-20T10:00:00Z",
-        comment = "Обед в кафе",
-        createdAt = "2024-03-20T10:00:00Z",
-        updatedAt = "2024-03-20T10:00:00Z"
-    ),
-    TransactionResponse(
-        id = 2,
-        account = AccountBrief(1, "Основной счёт", "500.00", "RUB"),
-        category = Category(2, "Транспорт", "🚌", false),
-        amount = "150.00",
-        transactionDate = "2024-03-19T15:30:00Z",
-        comment = "Поездка на автобусе",
-        createdAt = "2024-03-19T15:30:00Z",
-        updatedAt = "2024-03-19T15:30:00Z"
-    ),
-    TransactionResponse(
-        id = 3,
-        account = AccountBrief(2, "Сбережения", "2000.00", "USD"),
-        category = Category(3, "Развлечения", "🎬", false),
-        amount = "25.00",
-        transactionDate = "2024-03-18T20:00:00Z",
-        comment = "Билет в кино",
-        createdAt = "2024-03-18T20:00:00Z",
-        updatedAt = "2024-03-18T20:00:00Z"
-    )
-)
-
+@OptIn(ExperimentalFoundationApi::class)
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ExpensesHistoryScreen(
-    transactions: List<TransactionResponse> = sampleTransactions,
+    viewModel: ExpensesHistoryViewModel = viewModel(),
     onTransactionClick: (Int) -> Unit = {}
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize()
+    val transactions = viewModel.transactions
+    val startDate = viewModel.startDate
+    val endDate = viewModel.endDate
+    val totalAmount = viewModel.totalAmount
+
+    val context = LocalContext.current
+    var showStartDatePicker by remember { mutableStateOf(false) }
+    var showEndDatePicker by remember { mutableStateOf(false) }
+
+    // DatePickerDialog для начала
+    if (showStartDatePicker) {
+        val calendar = Calendar.getInstance()
+        val year = startDate?.year ?: calendar.get(Calendar.YEAR)
+        val month = startDate?.monthValue?.minus(1) ?: calendar.get(Calendar.MONTH)
+        val day = startDate?.dayOfMonth ?: calendar.get(Calendar.DAY_OF_MONTH)
+        DatePickerDialog(
+            context,
+            { _, y, m, d ->
+                val newDate = LocalDate.of(y, m + 1, d)
+                viewModel.onDateRangeSelected(newDate, endDate ?: newDate)
+                showStartDatePicker = false
+            },
+            year, month, day
+        ).apply { setOnDismissListener { showStartDatePicker = false } }.show()
+    }
+    // DatePickerDialog для конца
+    if (showEndDatePicker) {
+        val calendar = Calendar.getInstance()
+        val year = endDate?.year ?: calendar.get(Calendar.YEAR)
+        val month = endDate?.monthValue?.minus(1) ?: calendar.get(Calendar.MONTH)
+        val day = endDate?.dayOfMonth ?: calendar.get(Calendar.DAY_OF_MONTH)
+        DatePickerDialog(
+            context,
+            { _, y, m, d ->
+                val newDate = LocalDate.of(y, m + 1, d)
+                viewModel.onDateRangeSelected(startDate ?: newDate, newDate)
+                showEndDatePicker = false
+            },
+            year, month, day
+        ).apply { setOnDismissListener { showEndDatePicker = false } }.show()
+    }
+
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(transactions) { transaction ->
-                ListItem(
-                    leadingIcon = transaction.category.emoji,
-                    contentTitle = transaction.category.name,
-                    contentSecond = {
+        stickyHeader {
+            ListItem(
+                contentTitle = "Начало",
+                contentSecond = {
+                    Text(startDate?.let { DateTimeFormatter.ofPattern("dd-MM-yyyy").format(it) }
+                        ?: "-")
+                },
+                onClick = { showStartDatePicker = true },
+                backgroundColor = MaterialTheme.colorScheme.secondary
+            )
+            HorizontalDivider()
+            ListItem(
+                contentTitle = "Конец",
+                contentSecond = {
+                    Text(endDate?.let { DateTimeFormatter.ofPattern("dd-MM-yyyy").format(it) }
+                        ?: "-")
+                },
+                onClick = { showEndDatePicker = true },
+                backgroundColor = MaterialTheme.colorScheme.secondary
+            )
+            HorizontalDivider()
+            ListItem(
+                contentTitle = "Сумма",
+                contentSecond = {
+                    Text("${totalAmount.toInt()} ₽")
+                },
+                backgroundColor = MaterialTheme.colorScheme.secondary
+            )
+            HorizontalDivider()
+        }
+        items(transactions) { transaction ->
+            ListItem(
+                leadingIcon = transaction.category.emoji,
+                contentTitle = transaction.category.name,
+                comment = transaction.comment,
+                contentSecond = {
+                    Column(horizontalAlignment = Alignment.End) {
                         Text(
-                            text = "${transaction.amount} ${transaction.account.currency}",
+                            text = "${transaction.amount} ₽",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                    },
-                    trailing = {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                            contentDescription = null
+                        val formattedDate = try {
+                            val dt = OffsetDateTime.parse(transaction.transactionDate)
+                            dt.format(DateTimeFormatter.ofPattern("dd-MM-yy HH:mm"))
+                        } catch (e: DateTimeParseException) {
+                            Log.e("ExpensesHistoryScreen", "ExpensesHistoryScreen: transactionDate parse", e)
+                            transaction.transactionDate
+                        }
+                        Text(
+                            text = formattedDate,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
-                    },
-                    onClick = { onTransactionClick(transaction.id) },
-                    backgroundColor = MaterialTheme.colorScheme.surface,
-                    modifier = Modifier.height(56.dp)
-                )
-                Divider()
-            }
+                    }
+                },
+                trailing = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.tertiary
+                    )
+                },
+                onClick = { onTransactionClick(transaction.id) },
+                backgroundColor = MaterialTheme.colorScheme.surface,
+                modifier = Modifier.height(56.dp)
+            )
+            Divider()
         }
     }
 }
 
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun PreviewExpensesHistoryScreen() {
@@ -104,9 +176,18 @@ fun PreviewExpensesHistoryScreen() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            ExpensesHistoryScreen(sampleTransactions) { transactionId ->
+            ExpensesHistoryScreen() { transactionId ->
                 println("Transaction clicked: $transactionId")
             }
         }
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun ExpensesHistoryScreenWithDependencies(
+    accountId: Int,
+    onTransactionClick: (Int) -> Unit = {}
+) {
+    ExpensesHistoryScreen(onTransactionClick = onTransactionClick)
 } 
