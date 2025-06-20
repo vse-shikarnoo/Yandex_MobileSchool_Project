@@ -13,12 +13,15 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import yandex.school.project.R
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun SplashScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    goNextDestination: () -> Unit
+    goNextDestination: () -> Unit,
+    accountIdChange: (Int) -> Unit,
+    viewModel: SplashViewModel = viewModel()
 ) {
     Box(
         modifier = Modifier
@@ -33,6 +36,7 @@ fun SplashScreen(
             progress = { logoAnimationState.progress }
         )
         if (logoAnimationState.isAtEnd && logoAnimationState.isPlaying) {
+            accountIdChange(viewModel.accountId)
             goNextDestination()
         }
     }

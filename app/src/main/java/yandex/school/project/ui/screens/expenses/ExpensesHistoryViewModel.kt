@@ -28,17 +28,16 @@ class ExpensesHistoryViewModel() : ViewModel() {
         val now = LocalDate.now()
         startDate = now.withDayOfMonth(1)
         endDate = now
-        loadTransactions()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun loadTransactions() {
+    fun loadTransactions(accountId: Int) {
         viewModelScope.launch {
             val formatter = DateTimeFormatter.ISO_LOCAL_DATE
             val start = startDate?.format(formatter)
             val end = endDate?.format(formatter)
             val result = repository.getTransactions(
-                accountId = 1,
+                accountId = accountId,
                 startDate = start,
                 endDate = end,
                 isIncome = false
@@ -49,9 +48,9 @@ class ExpensesHistoryViewModel() : ViewModel() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun onDateRangeSelected(start: LocalDate, end: LocalDate) {
+    fun onDateRangeSelected(accountId: Int, start: LocalDate, end: LocalDate) {
         startDate = start
         endDate = end
-        loadTransactions()
+        loadTransactions(accountId)
     }
 } 

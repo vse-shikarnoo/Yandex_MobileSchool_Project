@@ -32,7 +32,7 @@ import yandex.school.project.ui.theme.ProjectTheme
 @Composable
 fun IncomeScreen(
     viewModel: IncomeViewModel = viewModel(),
-    accountId: Int = 1
+    accountId: Int
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -74,7 +74,11 @@ fun IncomeScreen(
                         modifier = Modifier.height(70.dp),
                         leadingIcon = transaction.category.emoji,
                         contentTitle = transaction.category.name,
-                        comment = transaction.comment+" "+transaction.transactionDate,
+                        comment = if (!transaction.comment.isNullOrEmpty()) {
+                            transaction.comment
+                        } else {
+                            null
+                        },
                         contentSecond = {
                             Text(
                                 "${transaction.amount} ₽",
@@ -103,7 +107,7 @@ fun IncomeScreen(
 fun IncomeScreenPreview() {
     ProjectTheme {
         Surface {
-            IncomeScreen()
+            IncomeScreen(accountId = 1)
         }
     }
 }

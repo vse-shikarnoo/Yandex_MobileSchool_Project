@@ -1,6 +1,8 @@
 package yandex.school.project.ui.navigation
 
+import android.os.Build
 import androidx.activity.compose.BackHandler
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,16 +23,23 @@ import yandex.school.project.ui.screens.expenses.ExpensesScreen
 import yandex.school.project.ui.screens.income.IncomeScreen
 import yandex.school.project.ui.screens.settings.SettingsScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BottomNavigation(
     navController: NavHostController,
-    onTitleChange: (TopBarState) -> Unit
+    onTitleChange: (TopBarState) -> Unit,
+    accountId: Int
 ) {
     NavHost(
         navController = navController,
         startDestination = BottomBarDestinations.Expenses.route
     ) {
-        composable(BottomBarDestinations.Expenses.route) { ExpensesNavGraph(onTitleChange) }
+        composable(BottomBarDestinations.Expenses.route) {
+            ExpensesNavGraph(
+                accountId = accountId,
+                onTitleChange
+            )
+        }
         composable(BottomBarDestinations.Income.route) {
             val historyIcon = ImageVector.vectorResource(R.drawable.ic_history)
             onTitleChange(
@@ -40,7 +49,7 @@ fun BottomNavigation(
                     isFAB = true
                 )
             )
-            IncomeScreen()
+            IncomeScreen(accountId = accountId)
         }
         composable(BottomBarDestinations.Account.route) {
             val editIcon = ImageVector.vectorResource(R.drawable.ic_edit)
@@ -72,8 +81,12 @@ fun BottomNavigation(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ExpensesNavGraph(onTitleChange: (TopBarState) -> Unit) {
+fun ExpensesNavGraph(
+    accountId: Int,
+    onTitleChange: (TopBarState) -> Unit
+) {
     val expensesNavController = rememberNavController()
     val navBackStackEntry by expensesNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -118,13 +131,13 @@ fun ExpensesNavGraph(onTitleChange: (TopBarState) -> Unit) {
         startDestination = Destinations.ExpensesScreen.route
     ) {
         composable(Destinations.ExpensesScreen.route) {
-            ExpensesScreen()
+            ExpensesScreen(accountId = accountId)
         }
         composable(Destinations.ExpensesCreateScreen.route) {
             ExpensesCreateScreen()
         }
         composable(Destinations.ExpensesHistoryScreen.route) {
-            ExpensesHistoryScreen()
+            ExpensesHistoryScreen(accountId = accountId)
         }
     }
 }

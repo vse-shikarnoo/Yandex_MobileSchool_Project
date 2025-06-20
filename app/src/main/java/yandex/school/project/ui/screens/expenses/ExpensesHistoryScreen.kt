@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +46,7 @@ import java.util.Calendar
 @Composable
 fun ExpensesHistoryScreen(
     viewModel: ExpensesHistoryViewModel = viewModel(),
+    accountId: Int,
     onTransactionClick: (Int) -> Unit = {}
 ) {
     val transactions = viewModel.transactions
@@ -56,6 +58,10 @@ fun ExpensesHistoryScreen(
     var showStartDatePicker by remember { mutableStateOf(false) }
     var showEndDatePicker by remember { mutableStateOf(false) }
 
+    LaunchedEffect(accountId) {
+        viewModel.loadTransactions(accountId)
+    }
+
     // DatePickerDialog для начала
     if (showStartDatePicker) {
         val calendar = Calendar.getInstance()
@@ -66,7 +72,7 @@ fun ExpensesHistoryScreen(
             context,
             { _, y, m, d ->
                 val newDate = LocalDate.of(y, m + 1, d)
-                viewModel.onDateRangeSelected(newDate, endDate ?: newDate)
+                viewModel.onDateRangeSelected(accountId, newDate, endDate ?: newDate)
                 showStartDatePicker = false
             },
             year, month, day
@@ -82,7 +88,7 @@ fun ExpensesHistoryScreen(
             context,
             { _, y, m, d ->
                 val newDate = LocalDate.of(y, m + 1, d)
-                viewModel.onDateRangeSelected(startDate ?: newDate, newDate)
+                viewModel.onDateRangeSelected(accountId, startDate ?: newDate, newDate)
                 showEndDatePicker = false
             },
             year, month, day
@@ -179,7 +185,7 @@ fun PreviewExpensesHistoryScreen() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            ExpensesHistoryScreen() { transactionId ->
+            ExpensesHistoryScreen(accountId = 1) { transactionId ->
                 println("Transaction clicked: $transactionId")
             }
         }
@@ -192,5 +198,5 @@ fun ExpensesHistoryScreenWithDependencies(
     accountId: Int,
     onTransactionClick: (Int) -> Unit = {}
 ) {
-    ExpensesHistoryScreen(onTransactionClick = onTransactionClick)
+    ExpensesHistoryScreen(accountId = 1, onTransactionClick = onTransactionClick)
 } 
