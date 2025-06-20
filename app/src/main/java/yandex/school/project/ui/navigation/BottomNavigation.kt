@@ -3,6 +3,9 @@ package yandex.school.project.ui.navigation
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -85,6 +88,7 @@ fun ExpensesNavGraph(
     val navBackStackEntry by expensesNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val historyIcon = ImageVector.vectorResource(R.drawable.ic_history)
+    val analyticIcon = ImageVector.vectorResource(R.drawable.history_analytic)
 
     // Меняем title в зависимости от текущего route
     LaunchedEffect(currentRoute) {
@@ -104,13 +108,21 @@ fun ExpensesNavGraph(
 
             Destinations.ExpensesCreateScreen.route -> onTitleChange(
                 TopBarState(
-                    title = "Мои расходы"
+                    title = "Мои расходы",
                 )
             )
 
             Destinations.ExpensesHistoryScreen.route -> onTitleChange(
                 TopBarState(
-                    title = "История расходов"
+                    title = "История расходов",
+                    actionIcon = analyticIcon,
+                    actionIconAction = {
+
+                    },
+                    navigationIcon = Icons.Default.ArrowBack,
+                    navigationIconAction = {
+                        expensesNavController.popBackStack()
+                    }
                 )
             )
         }
@@ -146,6 +158,7 @@ fun IncomesNavGraph(
     val navBackStackEntry by incomesNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val historyIcon = ImageVector.vectorResource(R.drawable.ic_history)
+    val analyticIcon = ImageVector.vectorResource(R.drawable.history_analytic)
 
     // Меняем title в зависимости от текущего route
     LaunchedEffect(currentRoute) {
@@ -171,7 +184,15 @@ fun IncomesNavGraph(
 
             Destinations.IncomesHistoryScreen.route -> onTitleChange(
                 TopBarState(
-                    title = "История доходов"
+                    title = "История доходов",
+                    actionIcon = analyticIcon,
+                    actionIconAction = {
+
+                    },
+                    navigationIcon = Icons.Default.ArrowBack,
+                    navigationIconAction = {
+                        incomesNavController.popBackStack()
+                    }
                 )
             )
         }
