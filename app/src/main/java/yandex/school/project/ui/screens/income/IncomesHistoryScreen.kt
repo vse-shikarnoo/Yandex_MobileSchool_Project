@@ -3,6 +3,7 @@ package yandex.school.project.ui.screens.income
 import android.app.DatePickerDialog
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -51,13 +52,20 @@ fun IncomesHistoryScreen(
     val startDate = viewModel.startDate
     val endDate = viewModel.endDate
     val totalAmount = viewModel.totalAmount
+    val errorMessage = viewModel.errorMessage
 
     val context = LocalContext.current
     var showStartDatePicker by remember { mutableStateOf(false) }
     var showEndDatePicker by remember { mutableStateOf(false) }
 
     LaunchedEffect(accountId) {
-        viewModel.loadTransactions(accountId)
+        viewModel.loadTransactionsWithRetry(accountId)
+    }
+
+    LaunchedEffect(errorMessage) {
+        if (!errorMessage.isNullOrEmpty()) {
+            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+        }
     }
 
     // DatePickerDialog для начала
@@ -92,7 +100,6 @@ fun IncomesHistoryScreen(
             year, month, day
         ).apply { setOnDismissListener { showEndDatePicker = false } }.show()
     }
-
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -172,7 +179,6 @@ fun IncomesHistoryScreen(
         }
     }
 }
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)

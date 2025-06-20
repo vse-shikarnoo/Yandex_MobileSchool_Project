@@ -54,7 +54,7 @@ fun BottomNavigation(
                     isFAB = true
                 )
             )
-            AccountScreen()
+            AccountScreen(accountId = accountId)
         }
         composable(BottomBarDestinations.Expenditure.route) {
             onTitleChange(
