@@ -11,15 +11,14 @@ import yandex.school.project.data.network.ApiClient
 import yandex.school.project.data.network.ApiService
 import yandex.school.project.data.repository.TransactionsRepository
 import yandex.school.project.ui.common.Result
+import yandex.school.project.ui.screens.income.IncomeState
 
 data class IncomeState(
     val transactions: List<TransactionResponse> = emptyList(),
     val total: String = "0 ₽"
 )
 
-class IncomeViewModel(
-
-) : ViewModel() {
+class IncomesViewModel() : ViewModel() {
 
     private val repository: TransactionsRepository = TransactionsRepository(ApiService(ApiClient()))
 
@@ -43,4 +42,4 @@ class IncomeViewModel(
             }
         }
     }
-} 
+}

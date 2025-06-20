@@ -2,7 +2,6 @@ package yandex.school.project.ui.screens.income
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,8 +29,8 @@ import yandex.school.project.ui.theme.ProjectTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun IncomeScreen(
-    viewModel: IncomeViewModel = viewModel(),
+fun IncomesScreen(
+    viewModel: IncomesViewModel = viewModel(),
     accountId: Int
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -46,11 +45,13 @@ fun IncomeScreen(
                 CircularProgressIndicator()
             }
         }
+
         is Result.Error -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = state.message)
             }
         }
+
         is Result.Success -> {
             LazyColumn {
                 stickyHeader {
@@ -68,7 +69,7 @@ fun IncomeScreen(
                     )
                     HorizontalDivider()
                 }
-                
+
                 items(state.data.transactions) { transaction ->
                     ListItem(
                         modifier = Modifier.height(70.dp),
@@ -104,10 +105,10 @@ fun IncomeScreen(
 
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
-fun IncomeScreenPreview() {
+fun ExpensesScreenPreview() {
     ProjectTheme {
         Surface {
-            IncomeScreen(accountId = 1)
+            IncomesScreen(accountId = 1)
         }
     }
 }

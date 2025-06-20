@@ -3,6 +3,7 @@ package yandex.school.project.ui.navigation
 import yandex.school.project.R
 
 const val EXPENSES_ROUTE = "expenses"
+const val INCOMES_ROUTE = "incomes"
 
 sealed class Destinations(
     val route: String,
@@ -26,7 +27,7 @@ sealed class Destinations(
     )
 
     data object ExpensesHistoryScreen : Destinations(
-        EXPENSES_ROUTE + "s_history_screen",
+        EXPENSES_ROUTE + "_history_screen",
         title = R.string.expenses_history_title
     )
 
@@ -36,8 +37,23 @@ sealed class Destinations(
     )
 
 
-    data object Income : Destinations(
-        "income_screen",
+    data object IncomesScreen : Destinations(
+        INCOMES_ROUTE + "_screen",
+        title = R.string.income_screen_title
+    )
+
+    data object IncomesCreateScreen : Destinations(
+        INCOMES_ROUTE + "_create_screen",
+        title = R.string.income_screen_title
+    )
+
+    data object IncomesHistoryScreen : Destinations(
+        INCOMES_ROUTE + "_history_screen",
+        title = R.string.income_screen_title
+    )
+
+    data object IncomesAnalyticScreen : Destinations(
+        INCOMES_ROUTE + "_analytic_screen",
         title = R.string.income_screen_title
     )
 

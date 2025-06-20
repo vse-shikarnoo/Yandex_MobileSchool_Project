@@ -20,7 +20,9 @@ import yandex.school.project.ui.screens.category.CategoryScreen
 import yandex.school.project.ui.screens.expenses.ExpensesCreateScreen
 import yandex.school.project.ui.screens.expenses.ExpensesHistoryScreen
 import yandex.school.project.ui.screens.expenses.ExpensesScreen
-import yandex.school.project.ui.screens.income.IncomeScreen
+import yandex.school.project.ui.screens.income.IncomesCreateScreen
+import yandex.school.project.ui.screens.income.IncomesHistoryScreen
+import yandex.school.project.ui.screens.income.IncomesScreen
 import yandex.school.project.ui.screens.settings.SettingsScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -40,16 +42,8 @@ fun BottomNavigation(
                 onTitleChange
             )
         }
-        composable(BottomBarDestinations.Income.route) {
-            val historyIcon = ImageVector.vectorResource(R.drawable.ic_history)
-            onTitleChange(
-                TopBarState(
-                    title = "Доходы сегодня",
-                    actionIcon = historyIcon,
-                    isFAB = true
-                )
-            )
-            IncomeScreen(accountId = accountId)
+        composable(BottomBarDestinations.Incomes.route) {
+            IncomesNavGraph(accountId = accountId, onTitleChange)
         }
         composable(BottomBarDestinations.Account.route) {
             val editIcon = ImageVector.vectorResource(R.drawable.ic_edit)
@@ -116,7 +110,7 @@ fun ExpensesNavGraph(
 
             Destinations.ExpensesHistoryScreen.route -> onTitleChange(
                 TopBarState(
-                    title = "История"
+                    title = "История расходов"
                 )
             )
         }
@@ -138,6 +132,67 @@ fun ExpensesNavGraph(
         }
         composable(Destinations.ExpensesHistoryScreen.route) {
             ExpensesHistoryScreen(accountId = accountId)
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun IncomesNavGraph(
+    accountId: Int,
+    onTitleChange: (TopBarState) -> Unit
+) {
+    val incomesNavController = rememberNavController()
+    val navBackStackEntry by incomesNavController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    val historyIcon = ImageVector.vectorResource(R.drawable.ic_history)
+
+    // Меняем title в зависимости от текущего route
+    LaunchedEffect(currentRoute) {
+        when (currentRoute) {
+            Destinations.IncomesScreen.route -> {
+                onTitleChange(
+                    TopBarState(
+                        title = "Доходы сегодня",
+                        actionIcon = historyIcon,
+                        actionIconAction = {
+                            incomesNavController.navigate(Destinations.IncomesHistoryScreen.route)
+                        },
+                        isFAB = true
+                    )
+                )
+            }
+
+            Destinations.IncomesCreateScreen.route -> onTitleChange(
+                TopBarState(
+                    title = "Мои доходы"
+                )
+            )
+
+            Destinations.IncomesHistoryScreen.route -> onTitleChange(
+                TopBarState(
+                    title = "История доходов"
+                )
+            )
+        }
+    }
+
+    BackHandler(enabled = incomesNavController.previousBackStackEntry != null) {
+        incomesNavController.popBackStack()
+    }
+
+    NavHost(
+        navController = incomesNavController,
+        startDestination = Destinations.IncomesScreen.route
+    ) {
+        composable(Destinations.IncomesScreen.route) {
+            IncomesScreen(accountId = accountId)
+        }
+        composable(Destinations.IncomesCreateScreen.route) {
+            IncomesCreateScreen()
+        }
+        composable(Destinations.IncomesHistoryScreen.route) {
+            IncomesHistoryScreen(accountId = accountId)
         }
     }
 }
