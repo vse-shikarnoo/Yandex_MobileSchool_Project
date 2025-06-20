@@ -5,6 +5,16 @@ plugins {
     kotlin("plugin.serialization") version "1.9.0"
 }
 
+// Читаем токен из local.properties
+val localPropertiesFile = rootProject.file("local.properties")
+val apiToken = if (localPropertiesFile.exists()) {
+    val lines = localPropertiesFile.readLines()
+    val apiTokenLine = lines.find { it.startsWith("API_TOKEN=") }
+    apiTokenLine?.substringAfter("API_TOKEN=") ?: ""
+} else {
+    ""
+}
+
 android {
     namespace = "yandex.school.project"
     compileSdk = 35
@@ -17,6 +27,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Добавляем токен в BuildConfig
+        buildConfigField("String", "API_TOKEN", "\"$apiToken\"")
     }
 
     buildTypes {
@@ -37,6 +50,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
