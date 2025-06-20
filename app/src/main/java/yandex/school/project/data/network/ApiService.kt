@@ -1,5 +1,6 @@
 package yandex.school.project.data.network
 
+import android.util.Log
 import io.ktor.client.call.body
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -7,6 +8,7 @@ import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import yandex.school.project.data.models.*
+import java.io.IOException
 
 class ApiService(private val apiClient: ApiClient) {
 
@@ -46,8 +48,26 @@ class ApiService(private val apiClient: ApiClient) {
 
     // Categories
     suspend fun getCategories(): List<Category> = withContext(Dispatchers.IO) {
-        val response = apiClient.client.get(ApiEndpoints.CATEGORIES)
-        response.body()
+        try {
+            Log.d("ApiService", "Отправка GET запроса на: ${ApiEndpoints.CATEGORIES}")
+            val response = apiClient.client.get(ApiEndpoints.CATEGORIES)
+            Log.d("ApiService", "Получен ответ с кодом: ${response.status}")
+            
+            // Проверяем HTTP-код ответа
+            if (!response.status.isSuccess()) {
+                val errorBody = response.bodyAsText()
+                Log.e("ApiService", "HTTP ошибка ${response.status}: $errorBody")
+                throw IOException("HTTP ${response.status.value}: ${response.status.description}")
+            }
+            
+            val categories = response.body<List<Category>>()
+            Log.d("ApiService", "Успешно десериализовано категорий: ${categories.size}")
+            categories
+        } catch (e: Exception) {
+            Log.e("ApiService", "Ошибка в getCategories: ${e.javaClass.simpleName} - ${e.message}")
+            Log.e("ApiService", "Полный стек ошибки:", e)
+            throw e
+        }
     }
 
     suspend fun getCategoriesByType(isIncome: Boolean): List<Category> = withContext(Dispatchers.IO) {

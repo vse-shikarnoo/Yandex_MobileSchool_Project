@@ -144,7 +144,11 @@ fun ExpensesHistoryScreen(
             ListItem(
                 leadingIcon = transaction.category.emoji,
                 contentTitle = transaction.category.name,
-                comment = transaction.comment,
+                comment = if (!transaction.comment.isNullOrEmpty()) {
+                    transaction.comment
+                } else {
+                    null
+                },
                 contentSecond = {
                     Column(horizontalAlignment = Alignment.End) {
                         Text(

@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import yandex.school.project.ui.common.Result
+import yandex.school.project.ui.components.ErrorItem
 import yandex.school.project.ui.components.ListItem
 import yandex.school.project.ui.theme.ProjectTheme
 
@@ -51,8 +52,10 @@ fun AccountScreen(
             }
         }
         is Result.Error -> {
-            Box(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp), contentAlignment = Alignment.Center) {
-                Text(text = state.message)
+            ErrorItem(
+                errorMessage = state.message
+            ) {
+                viewModel.loadAccountWithRetry(accountId = accountId)
             }
         }
         is Result.Success -> {

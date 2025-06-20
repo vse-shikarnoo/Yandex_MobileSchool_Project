@@ -1,5 +1,8 @@
 package yandex.school.project.ui.screens.category
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,8 +18,13 @@ import yandex.school.project.data.network.ApiClient
 import yandex.school.project.ui.common.Result
 import java.io.IOException
 import java.net.UnknownHostException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.SocketException
+import javax.net.ssl.SSLException
+import yandex.school.project.ui.common.BaseNetworkViewModel
 
-class CategoryViewModel : ViewModel() {
+class CategoryViewModel : BaseNetworkViewModel() {
     private val _uiState = MutableStateFlow<Result<List<Category>>>(Result.Loading)
     val uiState: StateFlow<Result<List<Category>>> = _uiState.asStateFlow()
 
@@ -27,33 +35,18 @@ class CategoryViewModel : ViewModel() {
     }
 
     fun loadCategoriesWithRetry(maxRetries: Int = 3, delayMillis: Long = 2000) {
-        viewModelScope.launch {
-            _uiState.value = Result.Loading
-            var attempt = 0
-            var success = false
-            var lastError: Exception? = null
-            while (attempt < maxRetries && !success) {
-                try {
-                    val result = repository.getCategories()
-                    _uiState.value = Result.Success(result)
-                    success = true
-                } catch (e: Exception) {
-                    lastError = e
-                    attempt++
-                    if (e is UnknownHostException || e is IOException) {
-                        _uiState.value = Result.Error("Нет подключения к интернету")
-                        break
-                    }
-                    if (attempt < maxRetries) {
-                        delay(delayMillis)
-                    }
-                }finally {
-                    Log.d("RetryTest", "loadCategoriesWithRetry: $attempt")
-                }
-            }
-            if (!success && lastError != null) {
-                _uiState.value = Result.Error(lastError.message ?: "Неизвестная ошибка")
-            }
-        }
+        executeWithRetry(
+            operation = { repository.getCategories() },
+            onSuccess = { categories ->
+                Log.d("CategoryViewModel", "Категории успешно загружены: ${categories.size} элементов")
+                _uiState.value = Result.Success(categories)
+            },
+            onError = { errorMessage ->
+                _uiState.value = Result.Error(errorMessage)
+            },
+            maxRetries = maxRetries,
+            delayMillis = delayMillis,
+            operationName = "загрузка категорий"
+        )
     }
 }

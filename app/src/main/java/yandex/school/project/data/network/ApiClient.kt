@@ -1,5 +1,6 @@
 package yandex.school.project.data.network
 
+import android.util.Log
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -14,6 +15,11 @@ class ApiClient {
     companion object {
         private const val BASE_URL = "https://shmr-finance.ru"
         private const val TOKEN = "2NrVL2sbxdmisqnLPGh7NUCe"
+    }
+
+    init {
+        Log.d("ApiClient", "Инициализация ApiClient с BASE_URL: $BASE_URL")
+        Log.d("ApiClient", "Токен: $TOKEN")
     }
 
     val client = HttpClient(Android) {
@@ -34,6 +40,7 @@ class ApiClient {
             url(BASE_URL)
             header(HttpHeaders.Authorization, "Bearer $TOKEN")
             header(HttpHeaders.ContentType, ContentType.Application.Json)
+            Log.d("ApiClient", "Настройка defaultRequest: ${url.buildString()}")
         }
     }
 } 
