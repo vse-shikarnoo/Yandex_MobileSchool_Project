@@ -37,17 +37,10 @@ fun IncomesScreen(
     viewModel: IncomesViewModel = viewModel(),
     accountId: Int
 ) {
-    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(accountId) {
         viewModel.loadTransactionsWithRetry(accountId)
-    }
-
-    LaunchedEffect(uiState) {
-        if (uiState is Result.Error) {
-            Toast.makeText(context, (uiState as Result.Error).message, Toast.LENGTH_LONG).show()
-        }
     }
 
     when (val state = uiState) {

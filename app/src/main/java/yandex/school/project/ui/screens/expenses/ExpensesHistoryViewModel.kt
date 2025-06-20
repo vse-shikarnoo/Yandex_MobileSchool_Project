@@ -66,11 +66,6 @@ class ExpensesHistoryViewModel() : BaseNetworkViewModel() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun loadTransactions(accountId: Int) {
-        loadTransactionsWithRetry(accountId)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
     fun onDateRangeSelected(accountId: Int, start: LocalDate, end: LocalDate) {
         startDate = start
         endDate = end

@@ -32,17 +32,10 @@ fun AccountScreen(
     viewModel: AccountViewModel = viewModel(),
     accountId: Int
 ) {
-    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(accountId) {
         viewModel.loadAccountWithRetry(accountId)
-    }
-
-    LaunchedEffect(uiState) {
-        if (uiState is Result.Error) {
-            Toast.makeText(context, (uiState as Result.Error).message, Toast.LENGTH_LONG).show()
-        }
     }
 
     when (val state = uiState) {

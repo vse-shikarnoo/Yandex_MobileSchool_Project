@@ -47,15 +47,8 @@ import yandex.school.project.ui.theme.ProjectTheme
 fun CategoryScreen(
     viewModel: CategoryViewModel = viewModel()
 ) {
-    val context = LocalContext.current
     var search by remember { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsState()
-
-    LaunchedEffect(uiState) {
-        if (uiState is Result.Error) {
-            Toast.makeText(context, (uiState as Result.Error).message, Toast.LENGTH_LONG).show()
-        }
-    }
 
     when (val state = uiState) {
         is Result.Loading -> {

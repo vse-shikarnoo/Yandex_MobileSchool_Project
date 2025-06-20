@@ -64,12 +64,6 @@ fun ExpensesHistoryScreen(
         viewModel.loadTransactionsWithRetry(accountId)
     }
 
-    LaunchedEffect(errorMessage) {
-        if (!errorMessage.isNullOrEmpty()) {
-            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
-        }
-    }
-
     // DatePickerDialog для начала
     if (showStartDatePicker) {
         val calendar = Calendar.getInstance()
