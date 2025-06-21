@@ -1,5 +1,6 @@
 package yandex.school.project.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -24,9 +25,10 @@ import yandex.school.project.ui.utils.isEmoji
 
 @Composable
 fun ListItem(
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.height(70.dp),
     leadingIcon: String? = null,
     contentTitle: String,
+    comment: String? = null,
     contentSecond: (@Composable () -> Unit)? = null,
     trailing: (@Composable () -> Unit)? = null,
     onClick: (() -> Unit)? = null,
@@ -58,12 +60,19 @@ fun ListItem(
             }
             Spacer(modifier = Modifier.width(16.dp))
         }
-        Box(modifier = Modifier.weight(1f)) {
+        Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = contentTitle,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )
+            if (comment != null) {
+                Text(
+                    text = comment,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
+            }
         }
         if (contentSecond != null){
             Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterEnd) {
@@ -88,6 +97,7 @@ fun ListItemIconPreview() {
             ListItem(
                 leadingIcon = leadingIcon,
                 contentTitle = "Аренда квартиры",
+                comment = "Иван",
                 backgroundColor = MaterialTheme.colorScheme.primaryContainer,
                 iconBackgroundColor = MaterialTheme.colorScheme.primary
             )
@@ -104,6 +114,7 @@ fun ListItemStringPreview() {
             ListItem(
                 leadingIcon = "АК",
                 contentTitle = "Аренда квартиры",
+                comment = "Иван",
                 backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
                 iconBackgroundColor = MaterialTheme.colorScheme.tertiary
             )
@@ -136,6 +147,7 @@ fun ListItemPreview() {
         Surface {
             ListItem(
                 contentTitle = "О приложении",
+                comment = "Описание приложения",
                 contentSecond = {
                     Text(
                         text = "500 000",

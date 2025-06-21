@@ -18,7 +18,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 fun BottomBar(navController: NavHostController) {
     val screens = listOf(
         BottomBarDestinations.Expenses,
-        BottomBarDestinations.Income,
+        BottomBarDestinations.Incomes,
         BottomBarDestinations.Account,
         BottomBarDestinations.Expenditure,
         BottomBarDestinations.Settings

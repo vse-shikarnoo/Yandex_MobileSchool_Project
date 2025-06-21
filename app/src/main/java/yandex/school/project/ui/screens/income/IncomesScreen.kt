@@ -1,4 +1,4 @@
-package yandex.school.project.ui.screens.expenses
+package yandex.school.project.ui.screens.income
 
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -33,8 +33,8 @@ import yandex.school.project.ui.theme.ProjectTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ExpensesScreen(
-    viewModel: ExpensesViewModel = viewModel(),
+fun IncomesScreen(
+    viewModel: IncomesViewModel = viewModel(),
     accountId: Int
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -114,7 +114,7 @@ fun ExpensesScreen(
 fun ExpensesScreenPreview() {
     ProjectTheme {
         Surface {
-            ExpensesScreen(accountId = 1)
+            IncomesScreen(accountId = 1)
         }
     }
 }

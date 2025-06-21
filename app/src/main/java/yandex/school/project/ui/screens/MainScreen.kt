@@ -27,10 +27,10 @@ import yandex.school.project.ui.navigation.BottomNavigation
 import yandex.school.project.ui.theme.ProjectTheme
 
 data class TopBarState(
-    val navigationIcon: ImageVector?,
+    val navigationIcon: ImageVector? = null,
     val navigationIconAction: () -> Unit = {},
     val title: String,
-    val actionIcon: ImageVector?,
+    val actionIcon: ImageVector? = null,
     val actionIconAction: () -> Unit = {},
     val isFAB: Boolean = false
 )
@@ -38,7 +38,7 @@ data class TopBarState(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(accountId: Int) {
     val bottomNavController = rememberNavController()
 
     val currentTopBarState = remember {
@@ -109,7 +109,8 @@ fun MainScreen() {
         Box(modifier = Modifier.padding(innerPadding)) {
             BottomNavigation(
                 navController = bottomNavController,
-                onTitleChange = { currentTopBarState.value = it }
+                onTitleChange = { currentTopBarState.value = it },
+                accountId = accountId
             )
         }
     }
@@ -119,6 +120,6 @@ fun MainScreen() {
 @Composable
 fun MainScreenPreview() {
     ProjectTheme {
-        MainScreen()
+        MainScreen(accountId = 1)
     }
 }

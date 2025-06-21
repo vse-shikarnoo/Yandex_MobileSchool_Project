@@ -1,31 +1,52 @@
 package yandex.school.project.ui.screens.category
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import yandex.school.project.domain.models.CategoryDomain
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import yandex.school.project.data.models.Category
+import yandex.school.project.data.repository.CategoryRepository
+import yandex.school.project.data.network.ApiService
+import yandex.school.project.data.network.ApiClient
+import yandex.school.project.ui.common.Result
+import java.io.IOException
+import java.net.UnknownHostException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.SocketException
+import javax.net.ssl.SSLException
+import yandex.school.project.ui.common.BaseNetworkViewModel
 
-class CategoryViewModel : ViewModel() {
-    private val _categories = MutableStateFlow<List<CategoryDomain>>(emptyList())
-    val categories: StateFlow<List<CategoryDomain>> = _categories.asStateFlow()
+class CategoryViewModel : BaseNetworkViewModel() {
+    private val _uiState = MutableStateFlow<Result<List<Category>>>(Result.Loading)
+    val uiState: StateFlow<Result<List<Category>>> = _uiState.asStateFlow()
+
+    private val repository = CategoryRepository(ApiService(ApiClient()))
 
     init {
-        loadCategories()
+        loadCategoriesWithRetry()
     }
 
-    private fun loadCategories() {
-        // Здесь в будущем будет загрузка данных из репозитория
-        // Сейчас используем тестовые данные
-        val mockCategories = listOf(
-            CategoryDomain(1, "Аренда квартиры", "🏡", false),
-            CategoryDomain(2, "Одежда", "👗", false),
-            CategoryDomain(3, "На собачку", "🐶", false),
-            CategoryDomain(4, "Ремонт квартиры", "PK", false),
-            CategoryDomain(5, "Продукты", "🍭", false),
-            CategoryDomain(6, "Спортзал", "🏋️", false),
-            CategoryDomain(7, "Медицина", "💊", false)
+    fun loadCategoriesWithRetry(maxRetries: Int = 3, delayMillis: Long = 2000) {
+        executeWithRetry(
+            operation = { repository.getCategories() },
+            onSuccess = { categories ->
+                Log.d("CategoryViewModel", "Категории успешно загружены: ${categories.size} элементов")
+                _uiState.value = Result.Success(categories)
+            },
+            onError = { errorMessage ->
+                _uiState.value = Result.Error(errorMessage)
+            },
+            maxRetries = maxRetries,
+            delayMillis = delayMillis,
+            operationName = "загрузка категорий"
         )
-        _categories.value = mockCategories
     }
 }

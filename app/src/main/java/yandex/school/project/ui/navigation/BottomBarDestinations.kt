@@ -12,8 +12,8 @@ sealed class BottomBarDestinations(
         title = "Расходы",
         icon = R.drawable.ic_expenses
     )
-    data object Income : BottomBarDestinations(
-        route = "income",
+    data object Incomes : BottomBarDestinations(
+        route = "incomes",
         title = "Доходы",
         icon = R.drawable.ic_income
     )
