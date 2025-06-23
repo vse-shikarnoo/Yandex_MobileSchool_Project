@@ -2,7 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    kotlin("plugin.serialization") version "1.9.0"
+    kotlin("plugin.serialization") version "1.9.22"
+    alias(libs.plugins.dagger.hilt.android)
+    kotlin("kapt")
 }
 
 // Читаем токен из local.properties
@@ -52,6 +54,9 @@ android {
         compose = true
         buildConfig = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.8"
+    }
 }
 
 dependencies {
@@ -74,6 +79,12 @@ dependencies {
 
     implementation(libs.android.lottie.compose)
     implementation(libs.androidx.navigation.compose)
+
+    // Hilt
+    implementation("com.google.dagger:hilt-android:2.50")
+    implementation(libs.androidx.storage)
+    kapt("com.google.dagger:hilt-compiler:2.50")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     // Ktor
     implementation("io.ktor:ktor-client-android:2.3.7")
