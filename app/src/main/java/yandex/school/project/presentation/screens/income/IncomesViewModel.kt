@@ -5,14 +5,13 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import yandex.school.project.domain.usecases.transaction.GetTransactionsByAccountUseCase
-import yandex.school.project.domain.usecases.category.GetCategoriesUseCase
-import yandex.school.project.presentation.common.Result
-import yandex.school.project.presentation.common.NetworkOperationHelper
-import javax.inject.Inject
 import yandex.school.project.domain.entities.TransactionWithCategory
+import yandex.school.project.domain.usecases.category.GetCategoriesUseCase
+import yandex.school.project.domain.usecases.transaction.GetTransactionsByAccountUseCase
+import yandex.school.project.presentation.common.NetworkOperationHelper
+import yandex.school.project.presentation.common.Result
 import yandex.school.project.presentation.utils.CURRENCY_RUB
+import javax.inject.Inject
 
 @HiltViewModel
 class IncomesViewModel @Inject constructor(

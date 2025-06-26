@@ -1,16 +1,14 @@
 package yandex.school.project.presentation.screens.account
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import yandex.school.project.domain.entities.Account
 import yandex.school.project.domain.usecases.account.GetAccountByIdUseCase
-import yandex.school.project.presentation.common.Result
 import yandex.school.project.presentation.common.NetworkOperationHelper
+import yandex.school.project.presentation.common.Result
 import javax.inject.Inject
 
 @HiltViewModel

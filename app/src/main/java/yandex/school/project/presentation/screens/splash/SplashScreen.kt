@@ -8,14 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import yandex.school.project.R
-import androidx.lifecycle.viewmodel.compose.viewModel
-import yandex.school.project.presentation.screens.splash.SplashViewModel
 
 @Composable
 fun SplashScreen(

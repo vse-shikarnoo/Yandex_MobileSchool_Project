@@ -1,11 +1,9 @@
 package yandex.school.project.presentation.screens.splash
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import yandex.school.project.domain.entities.Account
 import yandex.school.project.domain.usecases.account.GetFirstAccountUseCase
 import javax.inject.Inject
 

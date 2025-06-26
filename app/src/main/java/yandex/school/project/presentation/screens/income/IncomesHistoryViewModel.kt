@@ -1,25 +1,24 @@
 package yandex.school.project.presentation.screens.income
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import yandex.school.project.domain.entities.TransactionWithCategory
 import yandex.school.project.domain.usecases.category.GetCategoriesUseCase
 import yandex.school.project.domain.usecases.transaction.GetTransactionsByAccountUseCase
+import yandex.school.project.presentation.common.HistoryState
 import yandex.school.project.presentation.common.HistoryViewModel
+import yandex.school.project.presentation.common.NetworkOperationHelper
+import yandex.school.project.presentation.common.Result
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
-import yandex.school.project.presentation.common.NetworkOperationHelper
-import androidx.lifecycle.viewModelScope
-import yandex.school.project.domain.entities.TransactionWithCategory
-import yandex.school.project.presentation.common.Result
-import yandex.school.project.presentation.common.HistoryState
 
 @HiltViewModel
 class IncomesHistoryViewModel @Inject constructor(

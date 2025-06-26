@@ -17,7 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import yandex.school.project.R
-import yandex.school.project.presentation.screens.TopBarState
+import yandex.school.project.presentation.components.TopBarState
 import yandex.school.project.presentation.screens.account.AccountScreen
 import yandex.school.project.presentation.screens.category.CategoryScreen
 import yandex.school.project.presentation.screens.expenses.ExpensesCreateScreen
