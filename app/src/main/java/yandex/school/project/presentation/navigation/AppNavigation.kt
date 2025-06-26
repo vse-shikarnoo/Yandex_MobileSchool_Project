@@ -24,7 +24,6 @@ fun AppNavigation(navController: NavHostController = rememberNavController()) {
     ) {
         composable(MainDestinations.Splash) {
             SplashScreen(
-                navController = navController,
                 goNextDestination = {
                     navController.navigate(MainDestinations.Main) {
                         popUpTo(MainDestinations.Splash) { inclusive = true }

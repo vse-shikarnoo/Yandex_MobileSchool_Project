@@ -3,87 +3,87 @@ package yandex.school.project.presentation.screens.income
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import yandex.school.project.domain.entities.Transaction
-import yandex.school.project.domain.usecases.transaction.GetTransactionsByAccountUseCase
 import yandex.school.project.domain.usecases.category.GetCategoriesUseCase
-import yandex.school.project.presentation.common.BaseNetworkViewModel
+import yandex.school.project.domain.usecases.transaction.GetTransactionsByAccountUseCase
+import yandex.school.project.presentation.common.HistoryViewModel
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
+import yandex.school.project.presentation.common.NetworkOperationHelper
+import androidx.lifecycle.viewModelScope
+import yandex.school.project.domain.entities.TransactionWithCategory
+import yandex.school.project.presentation.common.Result
+import yandex.school.project.presentation.common.HistoryState
 
 @HiltViewModel
 class IncomesHistoryViewModel @Inject constructor(
     private val getTransactionsByAccountUseCase: GetTransactionsByAccountUseCase,
-    private val getCategoriesUseCase: GetCategoriesUseCase
-) : BaseNetworkViewModel() {
+    private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val networkHelper: NetworkOperationHelper
+) : ViewModel(), HistoryViewModel {
 
-    var transactions by mutableStateOf<List<TransactionWithCategory>>(emptyList())
+    override var uiState: Result<HistoryState> by mutableStateOf(Result.Loading)
         private set
 
-    var startDate by mutableStateOf<LocalDate?>(null)
-    var endDate by mutableStateOf<LocalDate?>(null)
-    var totalAmount by mutableStateOf(0.0)
-    var errorMessage by mutableStateOf<String?>(null)
-        private set
+    private var currentStartDate: LocalDate? = null
+    private var currentEndDate: LocalDate? = null
 
     init {
         val now = LocalDate.now()
-        startDate = now.withDayOfMonth(1)
-        endDate = now
+        currentStartDate = now.withDayOfMonth(1)
+        currentEndDate = now
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun loadTransactionsWithRetry(accountId: Int, maxRetries: Int = 3, delayMillis: Long = 2000) {
-        val formatter = DateTimeFormatter.ISO_LOCAL_DATE
-        val start = startDate?.format(formatter)
-        val end = endDate?.format(formatter)
-        errorMessage = null
-        
-        executeWithRetry(
-            operation = { 
+    override fun loadTransactionsWithRetry(accountId: Int, maxRetries: Int, delayMillis: Long) {
+        uiState = Result.Loading
+        val start = currentStartDate?.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        val end = currentEndDate?.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        networkHelper.executeWithRetry(
+            scope = viewModelScope,
+            operation = {
                 val allTransactions = getTransactionsByAccountUseCase(accountId)
                 val categories = getCategoriesUseCase()
-                
                 val filteredTransactions = allTransactions.filter { transaction ->
                     val isIncome = transaction.type == yandex.school.project.domain.entities.TransactionType.INCOME
                     val inDateRange = if (start != null && end != null) {
                         try {
-                            // Парсим ISO 8601 дату с временем и часовым поясом
                             val transactionDateTime = OffsetDateTime.parse(transaction.date)
                             val transactionDate = transactionDateTime.toLocalDate()
                             val startDate = LocalDate.parse(start)
                             val endDate = LocalDate.parse(end)
                             !transactionDate.isBefore(startDate) && !transactionDate.isAfter(endDate)
                         } catch (e: Exception) {
-                            Log.e("IncomesHistoryViewModel", "Ошибка парсинга даты: ${transaction.date}", e)
-                            true // Если не удается распарсить дату, включаем транзакцию
+                            true
                         }
                     } else {
                         true
                     }
                     isIncome && inDateRange
-                }.sortedByDescending {
-                    it.date
-                }
-                
-                // Создаем TransactionWithCategory для каждой транзакции
-                filteredTransactions.mapNotNull { transaction ->
+                }.sortedByDescending { it.date }
+                val transactionsWithCategory = filteredTransactions.mapNotNull { transaction ->
                     val category = categories.find { it.id == transaction.categoryId }
                     category?.let { TransactionWithCategory(transaction, it) }
                 }
+                val total = transactionsWithCategory.sumOf { it.amount }
+                HistoryState(
+                    transactions = transactionsWithCategory,
+                    startDate = currentStartDate,
+                    endDate = currentEndDate,
+                    totalAmount = total
+                )
             },
-            onSuccess = { result ->
-                transactions = result
-                totalAmount = result.sumOf { it.amount }
+            onSuccess = { data ->
+                uiState = Result.Success(data)
             },
             onError = { errorMessage ->
-                this.errorMessage = errorMessage
-                transactions = emptyList()
-                totalAmount = 0.0
+                uiState = Result.Error(errorMessage)
             },
             maxRetries = maxRetries,
             delayMillis = delayMillis,
@@ -92,14 +92,9 @@ class IncomesHistoryViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun loadTransactions(accountId: Int) {
-        loadTransactionsWithRetry(accountId)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun onDateRangeSelected(accountId: Int, start: LocalDate, end: LocalDate) {
-        startDate = start
-        endDate = end
-        loadTransactionsWithRetry(accountId)
+    override fun onDateRangeSelected(accountId: Int, start: LocalDate, end: LocalDate) {
+        currentStartDate = start
+        currentEndDate = end
+        loadTransactionsWithRetry(accountId, 3, 2000)
     }
 } 

@@ -19,8 +19,6 @@ import yandex.school.project.presentation.screens.splash.SplashViewModel
 
 @Composable
 fun SplashScreen(
-    modifier: Modifier = Modifier,
-    navController: NavHostController,
     goNextDestination: () -> Unit,
     accountIdChange: (Int) -> Unit,
     viewModel: SplashViewModel = hiltViewModel()

@@ -7,6 +7,8 @@ import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.net.ssl.SSLException
+import yandex.school.project.presentation.common.NetworkOperationHelper
+import yandex.school.project.presentation.utils.DEFAULT_OPERATION_NAME
 
 /**
  * Утилита для обработки сетевых ошибок

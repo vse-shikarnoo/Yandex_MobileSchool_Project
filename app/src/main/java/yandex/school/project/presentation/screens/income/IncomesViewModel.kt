@@ -9,20 +9,24 @@ import kotlinx.coroutines.launch
 import yandex.school.project.domain.usecases.transaction.GetTransactionsByAccountUseCase
 import yandex.school.project.domain.usecases.category.GetCategoriesUseCase
 import yandex.school.project.presentation.common.Result
-import yandex.school.project.presentation.common.BaseNetworkViewModel
+import yandex.school.project.presentation.common.NetworkOperationHelper
 import javax.inject.Inject
+import yandex.school.project.domain.entities.TransactionWithCategory
+import yandex.school.project.presentation.utils.CURRENCY_RUB
 
 @HiltViewModel
 class IncomesViewModel @Inject constructor(
     private val getTransactionsByAccountUseCase: GetTransactionsByAccountUseCase,
-    private val getCategoriesUseCase: GetCategoriesUseCase
-) : BaseNetworkViewModel() {
+    private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val networkHelper: NetworkOperationHelper
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow<Result<IncomesState>>(Result.Loading)
     val uiState: StateFlow<Result<IncomesState>> = _uiState
 
     fun loadTransactionsWithRetry(accountId: Int, maxRetries: Int = 3, delayMillis: Long = 2000) {
-        executeWithRetry(
+        networkHelper.executeWithRetry(
+            scope = viewModelScope,
             operation = {
                 val allTransactions = getTransactionsByAccountUseCase(accountId)
                 val categories = getCategoriesUseCase()
@@ -41,7 +45,7 @@ class IncomesViewModel @Inject constructor(
                 val total = transactionsWithCategory.sumOf { it.amount }
                 IncomesState(
                     transactions = transactionsWithCategory,
-                    total = "${total.toInt()} ₽"
+                    total = "${total.toInt()} $CURRENCY_RUB"
                 )
             },
             onSuccess = { incomesState ->

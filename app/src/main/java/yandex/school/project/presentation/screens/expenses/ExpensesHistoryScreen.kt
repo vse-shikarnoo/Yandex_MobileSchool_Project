@@ -44,138 +44,15 @@ import java.util.Calendar
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ExpensesHistoryScreen(
-    viewModel: ExpensesHistoryViewModel = hiltViewModel(),
     accountId: Int,
+    viewModel: ExpensesHistoryViewModel = hiltViewModel(),
     onTransactionClick: (Int) -> Unit = {}
 ) {
-    val transactions = viewModel.transactions
-    val startDate = viewModel.startDate
-    val endDate = viewModel.endDate
-    val totalAmount = viewModel.totalAmount
-    val errorMessage = viewModel.errorMessage
-
-    val context = LocalContext.current
-    var showStartDatePicker by remember { mutableStateOf(false) }
-    var showEndDatePicker by remember { mutableStateOf(false) }
-
-    LaunchedEffect(accountId) {
-        viewModel.loadTransactionsWithRetry(accountId)
-    }
-
-    // DatePickerDialog для начала
-    if (showStartDatePicker) {
-        val calendar = Calendar.getInstance()
-        val year = startDate?.year ?: calendar.get(Calendar.YEAR)
-        val month = startDate?.monthValue?.minus(1) ?: calendar.get(Calendar.MONTH)
-        val day = startDate?.dayOfMonth ?: calendar.get(Calendar.DAY_OF_MONTH)
-        DatePickerDialog(
-            context,
-            { _, y, m, d ->
-                val newDate = LocalDate.of(y, m + 1, d)
-                viewModel.onDateRangeSelected(accountId, newDate, endDate ?: newDate)
-                showStartDatePicker = false
-            },
-            year, month, day
-        ).apply { setOnDismissListener { showStartDatePicker = false } }.show()
-    }
-    // DatePickerDialog для конца
-    if (showEndDatePicker) {
-        val calendar = Calendar.getInstance()
-        val year = endDate?.year ?: calendar.get(Calendar.YEAR)
-        val month = endDate?.monthValue?.minus(1) ?: calendar.get(Calendar.MONTH)
-        val day = endDate?.dayOfMonth ?: calendar.get(Calendar.DAY_OF_MONTH)
-        DatePickerDialog(
-            context,
-            { _, y, m, d ->
-                val newDate = LocalDate.of(y, m + 1, d)
-                viewModel.onDateRangeSelected(accountId, startDate ?: newDate, newDate)
-                showEndDatePicker = false
-            },
-            year, month, day
-        ).apply { setOnDismissListener { showEndDatePicker = false } }.show()
-    }
-
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        stickyHeader {
-            ListItem(
-                modifier = Modifier.height(56.dp),
-                contentTitle = "Начало",
-                contentSecond = {
-                    Text(startDate?.let { DateTimeFormatter.ofPattern("dd-MM-yyyy").format(it) }
-                        ?: "-")
-                },
-                onClick = { showStartDatePicker = true },
-                backgroundColor = MaterialTheme.colorScheme.secondary
-            )
-            HorizontalDivider()
-            ListItem(
-                modifier = Modifier.height(56.dp),
-                contentTitle = "Конец",
-                contentSecond = {
-                    Text(endDate?.let { DateTimeFormatter.ofPattern("dd-MM-yyyy").format(it) }
-                        ?: "-")
-                },
-                onClick = { showEndDatePicker = true },
-                backgroundColor = MaterialTheme.colorScheme.secondary
-            )
-            HorizontalDivider()
-            ListItem(
-                modifier = Modifier.height(56.dp),
-                contentTitle = "Сумма",
-                contentSecond = {
-                    Text("${totalAmount.toInt()} ₽")
-                },
-                backgroundColor = MaterialTheme.colorScheme.secondary
-            )
-            HorizontalDivider()
-        }
-        items(transactions) { transactionWithCategory ->
-            ListItem(
-                leadingIcon = transactionWithCategory.categoryIcon ?: "📁",
-                contentTitle = transactionWithCategory.categoryName,
-                comment = if (!transactionWithCategory.description.isNullOrEmpty()) {
-                    transactionWithCategory.description
-                } else {
-                    null
-                },
-                contentSecond = {
-                    Column(horizontalAlignment = Alignment.End) {
-                        Text(
-                            text = "${transactionWithCategory.amount} ₽",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        val formattedDate = try {
-                            val dt = OffsetDateTime.parse(transactionWithCategory.date)
-                            dt.format(DateTimeFormatter.ofPattern("dd-MM-yy HH:mm"))
-                        } catch (e: DateTimeParseException) {
-                            Log.e("ExpensesHistoryScreen", "ExpensesHistoryScreen: transactionDate parse", e)
-                            transactionWithCategory.date
-                        }
-                        Text(
-                            text = formattedDate,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                        )
-                    }
-                },
-                trailing = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.tertiary
-                    )
-                },
-                onClick = { onTransactionClick(transactionWithCategory.id) },
-                backgroundColor = MaterialTheme.colorScheme.surface,
-                modifier = Modifier.height(56.dp)
-            )
-            Divider()
-        }
-    }
+    HistoryScreen(
+        viewModel = viewModel,
+        accountId = accountId,
+        onTransactionClick = onTransactionClick
+    )
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

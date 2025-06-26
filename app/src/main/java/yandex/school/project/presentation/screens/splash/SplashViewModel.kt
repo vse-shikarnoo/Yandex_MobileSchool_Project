@@ -1,5 +1,6 @@
 package yandex.school.project.presentation.screens.splash
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,14 +19,11 @@ class SplashViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val account = try {
-                getFirstAccountUseCase()
+            accountId = try {
+                getFirstAccountUseCase()!!.id
             } catch (e: Exception) {
-                null
+                1
             }
-            //пока лень забивать транзакции через сваггер, но так это есть
-            accountId = 1
-            //accountId = account?.id ?: 1
         }
     }
 } 

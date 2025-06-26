@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,16 +7,15 @@ plugins {
     kotlin("plugin.serialization") version "1.9.22"
     alias(libs.plugins.dagger.hilt.android)
     kotlin("kapt")
+    id("io.gitlab.arturbosch.detekt") version "1.23.8"
 }
 
 // Читаем токен из local.properties
-val localPropertiesFile = rootProject.file("local.properties")
-val apiToken = if (localPropertiesFile.exists()) {
-    val lines = localPropertiesFile.readLines()
-    val apiTokenLine = lines.find { it.startsWith("API_TOKEN=") }
-    apiTokenLine?.substringAfter("API_TOKEN=") ?: ""
-} else {
-    ""
+val apiToken: String by lazy {
+    val properties = Properties().apply {
+        rootProject.file("local.properties").inputStream().use { load(it) }
+    }
+    properties.getProperty("API_TOKEN", "")
 }
 
 android {
@@ -23,7 +24,7 @@ android {
 
     defaultConfig {
         applicationId = "yandex.school.project"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -31,7 +32,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
         // Добавляем токен в BuildConfig
-        buildConfigField("String", "API_TOKEN", "\"$apiToken\"")
+        buildConfigField("String", "API_TOKEN", apiToken)
     }
 
     buildTypes {
@@ -44,11 +45,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -94,3 +95,4 @@ dependencies {
     implementation("io.ktor:ktor-client-logging:2.3.7")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 }
+

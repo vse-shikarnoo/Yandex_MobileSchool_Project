@@ -1,8 +1,8 @@
-package yandex.school.project.presentation.screens.income
+package yandex.school.project.domain.entities
 
-import yandex.school.project.domain.entities.Category
-import yandex.school.project.domain.entities.Transaction
-
+/**
+ * Сущность для отображения транзакции с категорией (используется для истории расходов и доходов).
+ */
 data class TransactionWithCategory(
     val transaction: Transaction,
     val category: Category
@@ -13,9 +13,4 @@ data class TransactionWithCategory(
     val date: String get() = transaction.date
     val categoryName: String get() = category.name
     val categoryIcon: String? get() = category.icon
-}
-
-data class IncomesState(
-    val transactions: List<TransactionWithCategory> = emptyList(),
-    val total: String = "0 ₽"
-) 
+} 

@@ -7,6 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import yandex.school.project.data.network.ApiClient
 import yandex.school.project.data.network.ApiService
 import javax.inject.Singleton
+import yandex.school.project.presentation.common.NetworkOperationHelper
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -23,4 +24,7 @@ object NetworkModule {
     fun provideApiService(apiClient: ApiClient): ApiService {
         return ApiService(apiClient)
     }
+
+    @Provides
+    fun provideNetworkOperationHelper(): NetworkOperationHelper = NetworkOperationHelper()
 } 

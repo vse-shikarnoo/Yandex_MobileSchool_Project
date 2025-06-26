@@ -1,6 +1,6 @@
 package yandex.school.project.data.repository
 
-import yandex.school.project.data.mappers.CategoryMapper
+import yandex.school.project.data.mappers.toDomain
 import yandex.school.project.data.network.ApiService
 import yandex.school.project.domain.entities.Category
 import yandex.school.project.domain.repositories.CategoryRepository
@@ -11,10 +11,10 @@ class CategoryRepositoryImpl @Inject constructor(
 ) : CategoryRepository {
     
     override suspend fun getCategories(): List<Category> {
-        return apiService.getCategories().map { CategoryMapper.mapToDomain(it) }
+        return apiService.getCategories().map { it.toDomain() }
     }
     
     override suspend fun getCategoriesByType(isIncome: Boolean): List<Category> {
-        return apiService.getCategoriesByType(isIncome).map { CategoryMapper.mapToDomain(it) }
+        return apiService.getCategoriesByType(isIncome).map { it.toDomain() }
     }
 } 

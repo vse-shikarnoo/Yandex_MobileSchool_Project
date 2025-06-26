@@ -14,7 +14,9 @@ class ApiService(private val apiClient: ApiClient) {
 
     // Accounts
     suspend fun getAccounts(): List<Account> = withContext(Dispatchers.IO) {
+        Log.d("ApiService", "Отправка GET запроса на: ${ApiEndpoints.ACCOUNTS}")
         val response = apiClient.client.get(ApiEndpoints.ACCOUNTS)
+        Log.d("ApiService", "Получен ответ с кодом: ${response.status}")
         response.body()
     }
 
@@ -100,10 +102,12 @@ class ApiService(private val apiClient: ApiClient) {
     }
 
     suspend fun getTransactionsByAccountPeriod(
-        accountId: Int,
+        accountId: Int = 1,
         startDate: String? = null,
         endDate: String? = null
     ): List<TransactionResponse> = withContext(Dispatchers.IO) {
+        Log.d("ApiService", "Отправка GET запроса на: ${ApiEndpoints.TRANSACTIONS_BY_ACCOUNT_PERIOD}")
+        Log.d("ApiService", "$accountId $startDate $endDate")
         val url = ApiEndpoints.TRANSACTIONS_BY_ACCOUNT_PERIOD
             .replace("{accountId}", accountId.toString())
         
@@ -111,6 +115,7 @@ class ApiService(private val apiClient: ApiClient) {
             startDate?.let { parameter("startDate", it) }
             endDate?.let { parameter("endDate", it) }
         }
+        Log.d("ApiService", "Получен ответ с кодом: ${response.status}")
         response.body()
     }
 } 

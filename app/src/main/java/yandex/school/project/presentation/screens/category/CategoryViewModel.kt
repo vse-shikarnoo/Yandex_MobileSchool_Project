@@ -9,13 +9,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import yandex.school.project.domain.entities.Category
 import yandex.school.project.domain.usecases.category.GetCategoriesUseCase
 import yandex.school.project.presentation.common.Result
-import yandex.school.project.presentation.common.BaseNetworkViewModel
 import javax.inject.Inject
+import yandex.school.project.presentation.common.NetworkOperationHelper
+import androidx.lifecycle.viewModelScope
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    private val getCategoriesUseCase: GetCategoriesUseCase
-) : BaseNetworkViewModel() {
+    private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val networkHelper: NetworkOperationHelper
+) : ViewModel() {
     
     private val _uiState = MutableStateFlow<Result<List<Category>>>(Result.Loading)
     val uiState: StateFlow<Result<List<Category>>> = _uiState.asStateFlow()
@@ -25,7 +27,8 @@ class CategoryViewModel @Inject constructor(
     }
 
     fun loadCategoriesWithRetry(maxRetries: Int = 3, delayMillis: Long = 2000) {
-        executeWithRetry(
+        networkHelper.executeWithRetry(
+            scope = viewModelScope,
             operation = { getCategoriesUseCase() },
             onSuccess = { categories ->
                 Log.d("CategoryViewModel", "Категории успешно загружены: ${categories.size} элементов")

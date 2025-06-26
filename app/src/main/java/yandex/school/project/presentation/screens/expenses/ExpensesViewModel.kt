@@ -6,23 +6,27 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import yandex.school.project.domain.entities.TransactionWithCategory
 import yandex.school.project.domain.usecases.transaction.GetTransactionsByAccountUseCase
 import yandex.school.project.domain.usecases.category.GetCategoriesUseCase
 import yandex.school.project.presentation.common.Result
-import yandex.school.project.presentation.common.BaseNetworkViewModel
+import yandex.school.project.presentation.common.NetworkOperationHelper
+import yandex.school.project.presentation.utils.CURRENCY_RUB
 import javax.inject.Inject
 
 @HiltViewModel
 class ExpensesViewModel @Inject constructor(
     private val getTransactionsByAccountUseCase: GetTransactionsByAccountUseCase,
-    private val getCategoriesUseCase: GetCategoriesUseCase
-) : BaseNetworkViewModel() {
+    private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val networkHelper: NetworkOperationHelper
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow<Result<ExpensesState>>(Result.Loading)
     val uiState: StateFlow<Result<ExpensesState>> = _uiState
 
     fun loadTransactionsWithRetry(accountId: Int, maxRetries: Int = 3, delayMillis: Long = 2000) {
-        executeWithRetry(
+        networkHelper.executeWithRetry(
+            scope = viewModelScope,
             operation = {
                 val allTransactions = getTransactionsByAccountUseCase(accountId)
                 val categories = getCategoriesUseCase()
@@ -41,7 +45,7 @@ class ExpensesViewModel @Inject constructor(
                 val total = transactionsWithCategory.sumOf { it.amount }
                 ExpensesState(
                     transactions = transactionsWithCategory,
-                    total = "${total.toInt()} ₽"
+                    total = "${total.toInt()} $CURRENCY_RUB"
                 )
             },
             onSuccess = { expensesState ->

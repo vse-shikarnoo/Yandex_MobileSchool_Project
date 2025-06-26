@@ -10,19 +10,21 @@ import kotlinx.coroutines.launch
 import yandex.school.project.domain.entities.Account
 import yandex.school.project.domain.usecases.account.GetAccountByIdUseCase
 import yandex.school.project.presentation.common.Result
-import yandex.school.project.presentation.common.BaseNetworkViewModel
+import yandex.school.project.presentation.common.NetworkOperationHelper
 import javax.inject.Inject
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
-    private val getAccountByIdUseCase: GetAccountByIdUseCase
-) : BaseNetworkViewModel() {
+    private val getAccountByIdUseCase: GetAccountByIdUseCase,
+    private val networkHelper: NetworkOperationHelper
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow<Result<Account>>(Result.Loading)
     val uiState: StateFlow<Result<Account>> = _uiState
 
     fun loadAccount(accountId: Int) {
-        executeOnce(
+        networkHelper.executeOnce(
+            scope = viewModelScope,
             operation = { getAccountByIdUseCase(accountId) },
             onSuccess = { account ->
                 _uiState.value = Result.Success(account)
@@ -35,7 +37,8 @@ class AccountViewModel @Inject constructor(
     }
 
     fun loadAccountWithRetry(accountId: Int, maxRetries: Int = 3, delayMillis: Long = 2000) {
-        executeWithRetry(
+        networkHelper.executeWithRetry(
+            scope = viewModelScope,
             operation = { getAccountByIdUseCase(accountId) },
             onSuccess = { account ->
                 _uiState.value = Result.Success(account)

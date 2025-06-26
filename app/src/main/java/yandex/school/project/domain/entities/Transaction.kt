@@ -1,5 +1,8 @@
 package yandex.school.project.domain.entities
 
+/**
+ * Доменная сущность транзакции для бизнес-логики приложения.
+ */
 data class Transaction(
     val id: Int,
     val accountId: Int,
