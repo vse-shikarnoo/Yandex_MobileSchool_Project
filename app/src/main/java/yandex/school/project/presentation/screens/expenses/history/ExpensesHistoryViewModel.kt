@@ -1,6 +1,7 @@
 package yandex.school.project.presentation.screens.expenses.history
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
@@ -35,6 +36,11 @@ class ExpensesHistoryViewModel @Inject constructor(
         val now = LocalDate.now()
         currentStartDate = now.withDayOfMonth(1)
         currentEndDate = now
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("${this::class.java}", "onCleared: ")
     }
 
     override fun loadTransactionsWithRetry(accountId: Int, maxRetries: Int, delayMillis: Long) {

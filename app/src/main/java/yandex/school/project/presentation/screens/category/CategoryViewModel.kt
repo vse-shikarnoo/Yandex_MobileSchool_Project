@@ -12,6 +12,7 @@ import yandex.school.project.presentation.common.Result
 import javax.inject.Inject
 import yandex.school.project.presentation.common.NetworkOperationHelper
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 
 /**
  * ViewModel для экрана категорий, управляющий состоянием и загрузкой списка категорий.
@@ -30,10 +31,15 @@ class CategoryViewModel @Inject constructor(
         loadCategoriesWithRetry()
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("${this::class.java}", "onCleared: ")
+    }
+
     fun loadCategoriesWithRetry(maxRetries: Int = 3, delayMillis: Long = 2000) {
         networkHelper.executeWithRetry(
             scope = viewModelScope,
-            operation = { getCategoriesUseCase() },
+            operation = { delay(10000);getCategoriesUseCase() },
             onSuccess = { categories ->
                 Log.d("CategoryViewModel", "Категории успешно загружены: ${categories.size} элементов")
                 _uiState.value = Result.Success(categories)

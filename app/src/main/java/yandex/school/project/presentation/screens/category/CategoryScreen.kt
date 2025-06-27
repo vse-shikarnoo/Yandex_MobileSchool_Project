@@ -16,6 +16,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import yandex.school.project.presentation.components.ListItem
 import yandex.school.project.presentation.components.ResultScreen
 import yandex.school.project.presentation.theme.ProjectTheme
+import yandex.school.project.presentation.common.rememberCoroutineManager
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -39,9 +41,19 @@ fun CategoryScreen(
     var search by remember { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsState()
 
+    // Используем CoroutineManager для автоматического управления корутинами
+    val coroutineManager = rememberCoroutineManager(viewModel)
+    
+    LaunchedEffect(Unit) {
+        coroutineManager.launchWithCancelPrevious {
+            viewModel.loadCategoriesWithRetry()
+        }
+    }
+
     ResultScreen(
         result = uiState,
-        onRetry = { viewModel.loadCategoriesWithRetry() }
+        onRetry = { viewModel.loadCategoriesWithRetry() },
+        coroutineManager = coroutineManager
     ) { categories ->
         val filtered = categories.filter { it.name.contains(search, ignoreCase = true) }
         HorizontalDivider()

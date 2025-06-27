@@ -1,5 +1,6 @@
 package yandex.school.project.presentation.screens.account
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +24,11 @@ class AccountViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<Result<Account>>(Result.Loading)
     val uiState: StateFlow<Result<Account>> = _uiState
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("${this::class.java}", "onCleared: ")
+    }
 
     fun loadAccount(accountId: Int) {
         networkHelper.executeOnce(

@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import yandex.school.project.presentation.components.HistoryScreen
 import yandex.school.project.presentation.theme.ProjectTheme
+import yandex.school.project.presentation.common.rememberCoroutineManager
 
 @Composable
 fun IncomesHistoryScreen(
@@ -18,10 +19,13 @@ fun IncomesHistoryScreen(
     viewModel: IncomesHistoryViewModel = hiltViewModel(),
     onTransactionClick: (Int) -> Unit = {}
 ) {
+    val coroutineManager = rememberCoroutineManager(viewModel)
+    
     HistoryScreen(
         viewModel = viewModel,
         accountId = accountId,
-        onTransactionClick = onTransactionClick
+        onTransactionClick = onTransactionClick,
+        coroutineManager = coroutineManager
     )
 }
 

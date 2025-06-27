@@ -1,6 +1,7 @@
 package yandex.school.project.presentation.screens.income.history
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +38,11 @@ class IncomesHistoryViewModel @Inject constructor(
         val now = LocalDate.now()
         currentStartDate = now.withDayOfMonth(1)
         currentEndDate = now
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("${this::class.java}", "onCleared: ")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

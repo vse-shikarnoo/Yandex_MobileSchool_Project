@@ -18,21 +18,28 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import yandex.school.project.presentation.components.ListItem
 import yandex.school.project.presentation.components.ResultScreen
 import yandex.school.project.presentation.theme.ProjectTheme
+import yandex.school.project.presentation.common.rememberCoroutineManager
 
 @Composable
 fun AccountScreen(
-    viewModel: AccountViewModel = hiltViewModel(),
-    accountId: Int
+    accountId: Int,
+    viewModel: AccountViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
+    
+    // Используем CoroutineManager для автоматического управления корутинами
+    val coroutineManager = rememberCoroutineManager(viewModel)
+    
     LaunchedEffect(accountId) {
-        viewModel.loadAccountWithRetry(accountId)
+        coroutineManager.launchWithCancelPrevious {
+            viewModel.loadAccountWithRetry(accountId)
+        }
     }
 
     ResultScreen(
         result = uiState,
-        onRetry = { viewModel.loadAccountWithRetry(accountId) }
+        onRetry = { viewModel.loadAccountWithRetry(accountId) },
+        coroutineManager = coroutineManager
     ) { account ->
         Column(
             modifier = Modifier

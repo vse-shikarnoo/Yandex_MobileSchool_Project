@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import yandex.school.project.presentation.common.rememberCoroutineManager
 import yandex.school.project.presentation.components.ListItem
 import yandex.school.project.presentation.components.ResultScreen
 import yandex.school.project.presentation.theme.ProjectTheme
@@ -26,18 +27,24 @@ import yandex.school.project.presentation.theme.ProjectTheme
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IncomesScreen(
-    viewModel: IncomesViewModel = hiltViewModel(),
-    accountId: Int
+    accountId: Int,
+    viewModel: IncomesViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
+    
+    // Используем CoroutineManager для автоматического управления корутинами
+    val coroutineManager = rememberCoroutineManager(viewModel)
+    
     LaunchedEffect(accountId) {
-        viewModel.loadTransactionsWithRetry(accountId)
+        coroutineManager.launchWithCancelPrevious {
+            viewModel.loadTransactionsWithRetry(accountId)
+        }
     }
 
     ResultScreen(
         result = uiState,
-        onRetry = { viewModel.loadTransactionsWithRetry(accountId) }
+        onRetry = { viewModel.loadTransactionsWithRetry(accountId) },
+        coroutineManager = coroutineManager
     ) { state ->
         LazyColumn {
             stickyHeader {

@@ -35,6 +35,7 @@ import yandex.school.project.presentation.common.Result
 import yandex.school.project.presentation.components.ErrorItem
 import yandex.school.project.presentation.utils.CURRENCY_RUB
 import yandex.school.project.presentation.common.HistoryState
+import yandex.school.project.presentation.common.CoroutineManager
 
 /**
  * Универсальный экран истории транзакций (расходы/доходы).
@@ -45,7 +46,8 @@ import yandex.school.project.presentation.common.HistoryState
 fun HistoryScreen(
     viewModel: HistoryViewModel,
     accountId: Int,
-    onTransactionClick: (Int) -> Unit = {}
+    onTransactionClick: (Int) -> Unit = {},
+    coroutineManager: CoroutineManager? = null
 ) {
     val uiState = viewModel.uiState
 
@@ -55,7 +57,8 @@ fun HistoryScreen(
 
     ResultScreen(
         result = uiState,
-        onRetry = { viewModel.loadTransactionsWithRetry(accountId) }
+        onRetry = { viewModel.loadTransactionsWithRetry(accountId) },
+        coroutineManager = coroutineManager
     ) { data ->
         val transactions = data.transactions
         val startDate = data.startDate
@@ -69,13 +72,29 @@ fun HistoryScreen(
         DatePickerDialogComponent(
             show = showStartDatePicker,
             initialDate = startDate,
-            onDateSelected = { newDate -> viewModel.onDateRangeSelected(accountId, newDate, endDate ?: newDate) },
+            onDateSelected = { newDate -> 
+                if (coroutineManager != null) {
+                    coroutineManager.launchWithCancelPrevious {
+                        viewModel.onDateRangeSelected(accountId, newDate, endDate ?: newDate)
+                    }
+                } else {
+                    viewModel.onDateRangeSelected(accountId, newDate, endDate ?: newDate)
+                }
+            },
             onDismiss = { showStartDatePicker = false }
         )
         DatePickerDialogComponent(
             show = showEndDatePicker,
             initialDate = endDate,
-            onDateSelected = { newDate -> viewModel.onDateRangeSelected(accountId, startDate ?: newDate, newDate) },
+            onDateSelected = { newDate -> 
+                if (coroutineManager != null) {
+                    coroutineManager.launchWithCancelPrevious {
+                        viewModel.onDateRangeSelected(accountId, startDate ?: newDate, newDate)
+                    }
+                } else {
+                    viewModel.onDateRangeSelected(accountId, startDate ?: newDate, newDate)
+                }
+            },
             onDismiss = { showEndDatePicker = false }
         )
 
