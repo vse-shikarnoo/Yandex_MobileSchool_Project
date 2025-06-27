@@ -4,7 +4,8 @@ import yandex.school.project.data.models.Category as DataCategory
 import yandex.school.project.domain.entities.Category as DomainCategory
 
 /**
- * Extension-функции для преобразования между data и domain Category.
+ * Функции для преобразования объектов Category между слоями данных и домена.
+ * Единственная ответственность: преобразование данных категорий между различными слоями приложения.
  */
 
 fun DataCategory.toDomain(): DomainCategory = DomainCategory(

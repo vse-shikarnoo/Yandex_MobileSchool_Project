@@ -14,6 +14,10 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
+/**
+ * Нижняя панель навигации приложения.
+ * Единственная ответственность: отображение и управление нижней панелью навигации между экранами.
+ */
 @Composable
 fun BottomBar(navController: NavHostController) {
     val screens = listOf(

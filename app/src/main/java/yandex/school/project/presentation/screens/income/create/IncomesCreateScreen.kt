@@ -1,4 +1,4 @@
-package yandex.school.project.presentation.screens.expenses
+package yandex.school.project.presentation.screens.income.create
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,21 +10,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import yandex.school.project.presentation.theme.ProjectTheme
 
 @Composable
-fun ExpensesCreateScreen() {
-    // TODO: Реализовать экран создания расходов
+fun IncomesCreateScreen() {
+    // TODO: Реализовать экран создания доходов
     Box(
         modifier = Modifier
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "ExpensesCreate")
+        Text(text = "IncomesCreate")
     }
 }
 
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
-fun ExpensesCreateScreenPreview() {
+fun IncomesCreateScreenPreview() {
     ProjectTheme {
-        ExpensesCreateScreen()
+        IncomesCreateScreen()
     }
 }

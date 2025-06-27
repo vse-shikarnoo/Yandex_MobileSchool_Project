@@ -1,4 +1,4 @@
-package yandex.school.project.presentation.screens.expenses
+package yandex.school.project.presentation.screens.expenses.expenses
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.height

@@ -9,6 +9,10 @@ import yandex.school.project.data.network.ApiService
 import javax.inject.Singleton
 import yandex.school.project.presentation.common.NetworkOperationHelper
 
+/**
+ * Модуль Hilt для предоставления сетевых зависимостей.
+ * Единственная ответственность: настройка и предоставление зависимостей для сетевого слоя приложения.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {

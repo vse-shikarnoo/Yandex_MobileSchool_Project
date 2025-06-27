@@ -6,6 +6,10 @@ import yandex.school.project.domain.entities.Category
 import yandex.school.project.domain.repositories.CategoryRepository
 import javax.inject.Inject
 
+/**
+ * Реализация репозитория для работы с категориями, связывающая домен с данными.
+ * Единственная ответственность: управление данными категориями и преобразование между слоями данных.
+ */
 class CategoryRepositoryImpl @Inject constructor(
     private val apiService: ApiService
 ) : CategoryRepository {

@@ -8,6 +8,7 @@ import yandex.school.project.utils.NetworkErrorHandler
 
 /**
  * Хелпер для выполнения сетевых операций с поддержкой повторов и обработки ошибок.
+ * Единственная ответственность: выполнение сетевых операций с автоматическими повторами и обработкой ошибок.
  */
 class NetworkOperationHelper {
     private val TAG = "NetworkOperationHelper"

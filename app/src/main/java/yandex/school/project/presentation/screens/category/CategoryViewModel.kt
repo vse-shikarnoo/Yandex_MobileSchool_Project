@@ -13,6 +13,10 @@ import javax.inject.Inject
 import yandex.school.project.presentation.common.NetworkOperationHelper
 import androidx.lifecycle.viewModelScope
 
+/**
+ * ViewModel для экрана категорий, управляющий состоянием и загрузкой списка категорий.
+ * Единственная ответственность: управление состоянием UI и загрузка списка всех категорий.
+ */
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,

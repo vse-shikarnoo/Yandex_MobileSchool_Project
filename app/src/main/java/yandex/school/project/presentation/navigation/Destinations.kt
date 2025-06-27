@@ -9,13 +9,6 @@ sealed class Destinations(
     val route: String,
     val title: Int
 ) {
-
-    data object Splash : Destinations(
-        route = "splash_screen",
-        title = R.string.splash_screen_title
-    )
-
-
     data object ExpensesScreen : Destinations(
         EXPENSES_ROUTE + "_screen",
         title = R.string.expenses_graph_title

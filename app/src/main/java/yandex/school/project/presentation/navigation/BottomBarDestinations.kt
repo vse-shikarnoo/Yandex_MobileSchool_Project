@@ -2,6 +2,10 @@ package yandex.school.project.presentation.navigation
 
 import yandex.school.project.R
 
+/**
+ * Направления для нижней панели навигации приложения.
+ * Единственная ответственность: определение экранов и их метаданных для нижней панели навигации.
+ */
 sealed class BottomBarDestinations(
     val route: String,
     val title: String,

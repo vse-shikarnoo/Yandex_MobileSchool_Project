@@ -1,4 +1,4 @@
-package yandex.school.project.presentation.screens.expenses
+package yandex.school.project.presentation.screens.expenses.history
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme

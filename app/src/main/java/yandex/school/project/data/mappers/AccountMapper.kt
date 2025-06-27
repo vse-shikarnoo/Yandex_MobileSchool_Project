@@ -5,7 +5,8 @@ import yandex.school.project.data.models.AccountResponse as DataAccountResponse
 import yandex.school.project.domain.entities.Account as DomainAccount
 
 /**
- * Extension-функции для преобразования между data и domain Account.
+ * Функции для преобразования объектов Account между слоями данных и домена.
+ * Единственная ответственность: преобразование данных аккаунтов между различными слоями приложения.
  */
 
 fun DataAccount.toDomain(): DomainAccount = DomainAccount(

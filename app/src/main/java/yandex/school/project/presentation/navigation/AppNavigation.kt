@@ -10,11 +10,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import yandex.school.project.presentation.screens.splash.SplashScreen
 
+/**
+ * Константы для основных экранов приложения.
+ * Единственная ответственность: хранение констант для навигации между основными экранами.
+ */
 object MainDestinations {
     const val Splash = "splash_screen"
     const val Main = "main_screen"
 }
 
+/**
+ * Основная навигация приложения, управляющая переходами между экранами.
+ * Единственная ответственность: настройка и управление навигацией между экранами приложения.
+ */
 @Composable
 fun AppNavigation(navController: NavHostController = rememberNavController()) {
     val (accountId, setAccountId) = remember { mutableStateOf<Int>(1) }

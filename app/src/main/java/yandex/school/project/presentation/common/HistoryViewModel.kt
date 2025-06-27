@@ -5,6 +5,7 @@ import yandex.school.project.presentation.common.HistoryState
 
 /**
  * Интерфейс для ViewModel истории транзакций (расходы/доходы).
+ * Единственная ответственность: определение контракта для ViewModel, управляющих историей транзакций.
  */
 interface HistoryViewModel {
     val uiState: Result<HistoryState>

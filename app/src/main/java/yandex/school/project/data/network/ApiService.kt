@@ -10,6 +10,10 @@ import kotlinx.coroutines.withContext
 import yandex.school.project.data.models.*
 import java.io.IOException
 
+/**
+ * Сервис для выполнения HTTP запросов к API серверу.
+ * Единственная ответственность: выполнение сетевых запросов и получение данных от API.
+ */
 class ApiService(private val apiClient: ApiClient) {
 
     // Accounts

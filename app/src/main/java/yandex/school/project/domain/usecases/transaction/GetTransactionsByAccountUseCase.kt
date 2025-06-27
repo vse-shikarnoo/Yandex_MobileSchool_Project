@@ -4,6 +4,10 @@ import yandex.school.project.domain.entities.Transaction
 import yandex.school.project.domain.repositories.TransactionRepository
 import javax.inject.Inject
 
+/**
+ * Use case для получения транзакций по аккаунту.
+ * Единственная ответственность: получение списка транзакций для конкретного аккаунта из репозитория.
+ */
 class GetTransactionsByAccountUseCase @Inject constructor(
     private val transactionRepository: TransactionRepository
 ) {

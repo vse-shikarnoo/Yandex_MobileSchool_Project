@@ -1,4 +1,4 @@
-package yandex.school.project.presentation.screens.income
+package yandex.school.project.presentation.screens.income.history
 
 import android.os.Build
 import androidx.annotation.RequiresApi

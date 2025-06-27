@@ -11,6 +11,10 @@ import yandex.school.project.presentation.common.NetworkOperationHelper
 import yandex.school.project.presentation.common.Result
 import javax.inject.Inject
 
+/**
+ * ViewModel для экрана аккаунта, управляющий состоянием и загрузкой данных аккаунта.
+ * Единственная ответственность: управление состоянием UI и загрузка данных конкретного аккаунта.
+ */
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     private val getAccountByIdUseCase: GetAccountByIdUseCase,

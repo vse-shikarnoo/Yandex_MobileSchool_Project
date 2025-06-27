@@ -1,5 +1,9 @@
 package yandex.school.project.data.network
 
+/**
+ * Объект, содержащий все эндпоинты API для работы с сервером.
+ * Единственная ответственность: хранение и предоставление URL эндпоинтов для API запросов.
+ */
 object ApiEndpoints {
     private const val BASE_PATH = "/api/v1"
     

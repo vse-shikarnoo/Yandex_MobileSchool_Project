@@ -6,7 +6,8 @@ import yandex.school.project.domain.entities.Transaction as DomainTransaction
 import yandex.school.project.domain.entities.TransactionType as DomainTransactionType
 
 /**
- * Extension-функции для преобразования между data и domain Transaction.
+ * Функции для преобразования объектов Transaction между слоями данных и домена.
+ * Единственная ответственность: преобразование данных транзакций между различными слоями приложения.
  */
 
 fun DataTransactionResponse.toDomain(): DomainTransaction = DomainTransaction(

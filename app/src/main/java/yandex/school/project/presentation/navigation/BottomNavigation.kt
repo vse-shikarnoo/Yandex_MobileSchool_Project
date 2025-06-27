@@ -5,7 +5,6 @@ import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,14 +19,18 @@ import yandex.school.project.R
 import yandex.school.project.presentation.components.TopBarState
 import yandex.school.project.presentation.screens.account.AccountScreen
 import yandex.school.project.presentation.screens.category.CategoryScreen
-import yandex.school.project.presentation.screens.expenses.ExpensesCreateScreen
-import yandex.school.project.presentation.screens.expenses.ExpensesHistoryScreen
-import yandex.school.project.presentation.screens.expenses.ExpensesScreen
-import yandex.school.project.presentation.screens.income.IncomesCreateScreen
-import yandex.school.project.presentation.screens.income.IncomesHistoryScreen
-import yandex.school.project.presentation.screens.income.IncomesScreen
+import yandex.school.project.presentation.screens.expenses.create.ExpensesCreateScreen
+import yandex.school.project.presentation.screens.expenses.history.ExpensesHistoryScreen
+import yandex.school.project.presentation.screens.expenses.expenses.ExpensesScreen
+import yandex.school.project.presentation.screens.income.create.IncomesCreateScreen
+import yandex.school.project.presentation.screens.income.history.IncomesHistoryScreen
+import yandex.school.project.presentation.screens.income.incomes.IncomesScreen
 import yandex.school.project.presentation.screens.settings.SettingsScreen
 
+/**
+ * Основная навигация нижней панели приложения.
+ * Единственная ответственность: настройка и управление навигацией между основными разделами приложения через нижнюю панель.
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BottomNavigation(
@@ -78,6 +81,10 @@ fun BottomNavigation(
     }
 }
 
+/**
+ * Навигация для раздела расходов.
+ * Единственная ответственность: управление навигацией между экранами расходов.
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ExpensesNavGraph(

@@ -7,6 +7,10 @@ import yandex.school.project.domain.repositories.AccountRepository
 import javax.inject.Inject
 import yandex.school.project.data.mappers.toDomain
 
+/**
+ * Реализация репозитория для работы с аккаунтами, связывающая домен с данными.
+ * Единственная ответственность: управление данными аккаунтов и преобразование между слоями данных.
+ */
 class AccountRepositoryImpl @Inject constructor(
     private val apiService: ApiService
 ) : AccountRepository {

@@ -5,6 +5,10 @@ import yandex.school.project.domain.entities.TransactionType
 import yandex.school.project.domain.repositories.TransactionRepository
 import javax.inject.Inject
 
+/**
+ * Use case для создания новой транзакции.
+ * Единственная ответственность: создание транзакции через репозиторий.
+ */
 class CreateTransactionUseCase @Inject constructor(
     private val transactionRepository: TransactionRepository
 ) {

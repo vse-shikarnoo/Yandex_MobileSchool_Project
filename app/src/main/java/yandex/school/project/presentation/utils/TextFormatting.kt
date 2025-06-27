@@ -1,5 +1,10 @@
 package yandex.school.project.presentation.utils
 
+/**
+ * Функции для форматирования текста в UI.
+ * Единственная ответственность: предоставление утилит для работы с текстом в пользовательском интерфейсе.
+ */
+
 fun isEmoji(str: String): Boolean {
     val emojiRegex = Regex("[\\u203C-\\u3299\\uD83C-\\uDBFF\\uDC00-\\uDFFF\\uFE0F\\u200D]+")
     return str.matches(emojiRegex)

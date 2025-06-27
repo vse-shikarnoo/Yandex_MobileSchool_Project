@@ -7,6 +7,10 @@ import yandex.school.project.domain.repositories.TransactionRepository
 import javax.inject.Inject
 import yandex.school.project.data.mappers.toDomain
 
+/**
+ * Реализация репозитория для работы с транзакциями, связывающая домен с данными.
+ * Единственная ответственность: управление данными транзакций и преобразование между слоями данных.
+ */
 class TransactionRepositoryImpl @Inject constructor(
     private val apiService: ApiService
 ) : TransactionRepository {

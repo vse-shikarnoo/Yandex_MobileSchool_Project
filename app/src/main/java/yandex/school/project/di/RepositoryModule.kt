@@ -12,6 +12,10 @@ import yandex.school.project.domain.repositories.CategoryRepository
 import yandex.school.project.domain.repositories.TransactionRepository
 import javax.inject.Singleton
 
+/**
+ * Модуль Hilt для привязки репозиториев к их интерфейсам.
+ * Единственная ответственность: настройка dependency injection для репозиториев.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
