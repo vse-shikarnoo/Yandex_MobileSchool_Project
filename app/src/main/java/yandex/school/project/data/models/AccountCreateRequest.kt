@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AccountCreateRequest(
     val name: String,
-    val balance: String,
+    val balance: Double,
     val currency: String
 ) 

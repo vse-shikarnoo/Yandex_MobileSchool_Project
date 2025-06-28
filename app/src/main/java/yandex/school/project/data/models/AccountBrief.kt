@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 data class AccountBrief(
     val id: Int,
     val name: String,
-    val balance: String,
+    val balance: Double,
     val currency: String
 ) 

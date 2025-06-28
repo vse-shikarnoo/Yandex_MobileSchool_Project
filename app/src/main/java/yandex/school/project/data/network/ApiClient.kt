@@ -12,6 +12,10 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import yandex.school.project.BuildConfig
 
+/**
+ * HTTP клиент для работы с API, отвечающий за настройку сетевых запросов.
+ * Единственная ответственность: конфигурация и предоставление настроенного HTTP клиента для API запросов.
+ */
 class ApiClient {
     companion object {
         private const val BASE_URL = "https://shmr-finance.ru"
