@@ -11,6 +11,8 @@ import yandex.school.project.domain.usecases.account.GetAccountByIdUseCase
 import yandex.school.project.presentation.common.NetworkOperationHelper
 import yandex.school.project.presentation.common.Result
 import javax.inject.Inject
+import yandex.school.project.domain.repositories.AccountRepository
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel для экрана аккаунта, управляющий состоянием и загрузкой данных аккаунта.
@@ -19,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     private val getAccountByIdUseCase: GetAccountByIdUseCase,
-    private val networkHelper: NetworkOperationHelper
+    private val networkHelper: NetworkOperationHelper,
+    private val accountRepository: AccountRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<Result<Account>>(Result.Loading)

@@ -18,6 +18,7 @@ import yandex.school.project.R
 fun SplashScreen(
     goNextDestination: () -> Unit,
     accountIdChange: (Int) -> Unit,
+    currencyChange: (String) -> Unit,
     viewModel: SplashViewModel = hiltViewModel()
 ) {
     Box(
@@ -34,6 +35,7 @@ fun SplashScreen(
         )
         if (logoAnimationState.isAtEnd && logoAnimationState.isPlaying) {
             accountIdChange(viewModel.accountId)
+            currencyChange(viewModel.currency)
             goNextDestination()
         }
     }

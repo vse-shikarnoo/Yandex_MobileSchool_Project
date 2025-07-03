@@ -23,11 +23,14 @@ import yandex.school.project.presentation.common.rememberCoroutineManager
 import yandex.school.project.presentation.components.ListItem
 import yandex.school.project.presentation.components.ResultScreen
 import yandex.school.project.presentation.theme.ProjectTheme
+import yandex.school.project.presentation.utils.convertAmount
+import yandex.school.project.presentation.utils.CURRENCY_RUB
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IncomesScreen(
     accountId: Int,
+    currency: String = CURRENCY_RUB,
     viewModel: IncomesViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -52,8 +55,9 @@ fun IncomesScreen(
                     modifier = Modifier.height(56.dp),
                     contentTitle = "Всего",
                     contentSecond = {
+                        val total = convertAmount(state.total.toDoubleOrNull() ?: 0.0, CURRENCY_RUB, currency)
                         Text(
-                            state.total,
+                            "${total.toInt()} $currency",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -66,7 +70,7 @@ fun IncomesScreen(
             items(state.transactions) { transactionWithCategory ->
                 ListItem(
                     modifier = Modifier.height(70.dp),
-                    leadingIcon = transactionWithCategory.categoryIcon ?: "📁",
+                    leadingIcon = transactionWithCategory.categoryIcon ?: "\uD83D\uDCC1",
                     contentTitle = transactionWithCategory.categoryName,
                     comment = if (!transactionWithCategory.description.isNullOrEmpty()) {
                         transactionWithCategory.description
@@ -74,8 +78,9 @@ fun IncomesScreen(
                         null
                     },
                     contentSecond = {
+                        val amount = convertAmount(transactionWithCategory.amount, CURRENCY_RUB, currency)
                         Text(
-                            "${transactionWithCategory.amount} ₽",
+                            "${amount.toInt()} $currency",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )

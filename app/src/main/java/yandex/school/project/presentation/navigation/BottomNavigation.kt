@@ -8,6 +8,8 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavHostController
@@ -26,6 +28,7 @@ import yandex.school.project.presentation.screens.income.create.IncomesCreateScr
 import yandex.school.project.presentation.screens.income.history.IncomesHistoryScreen
 import yandex.school.project.presentation.screens.income.incomes.IncomesScreen
 import yandex.school.project.presentation.screens.settings.SettingsScreen
+import yandex.school.project.presentation.utils.CURRENCY_RUB
 
 /**
  * Основная навигация нижней панели приложения.
@@ -36,8 +39,10 @@ import yandex.school.project.presentation.screens.settings.SettingsScreen
 fun BottomNavigation(
     navController: NavHostController,
     onTitleChange: (TopBarState) -> Unit,
-    accountId: Int
+    accountId: Int,
+    _currency: String
 ) {
+    val (currency, setCurrency) = remember { mutableStateOf(_currency) }
     NavHost(
         navController = navController,
         startDestination = BottomBarDestinations.Expenses.route
@@ -45,11 +50,12 @@ fun BottomNavigation(
         composable(BottomBarDestinations.Expenses.route) {
             ExpensesNavGraph(
                 accountId = accountId,
-                onTitleChange
+                currency = currency,
+                onTitleChange = onTitleChange
             )
         }
         composable(BottomBarDestinations.Incomes.route) {
-            IncomesNavGraph(accountId = accountId, onTitleChange)
+            IncomesNavGraph(accountId = accountId, currency = currency, onTitleChange = onTitleChange)
         }
         composable(BottomBarDestinations.Account.route) {
             val editIcon = ImageVector.vectorResource(R.drawable.ic_edit)
@@ -60,7 +66,7 @@ fun BottomNavigation(
                     isFAB = true
                 )
             )
-            AccountScreen(accountId = accountId)
+            AccountScreen(accountId = accountId, currency = currency, onCurrencyChanged = {setCurrency(it)})
         }
         composable(BottomBarDestinations.Expenditure.route) {
             onTitleChange(
@@ -89,6 +95,7 @@ fun BottomNavigation(
 @Composable
 fun ExpensesNavGraph(
     accountId: Int,
+    currency: String = CURRENCY_RUB,
     onTitleChange: (TopBarState) -> Unit
 ) {
     val expensesNavController = rememberNavController()
@@ -144,13 +151,13 @@ fun ExpensesNavGraph(
         startDestination = Destinations.ExpensesScreen.route
     ) {
         composable(Destinations.ExpensesScreen.route) {
-            ExpensesScreen(accountId = accountId)
+            ExpensesScreen(accountId = accountId, currency = currency)
         }
         composable(Destinations.ExpensesCreateScreen.route) {
             ExpensesCreateScreen()
         }
         composable(Destinations.ExpensesHistoryScreen.route) {
-            ExpensesHistoryScreen(accountId = accountId)
+            ExpensesHistoryScreen(accountId = accountId, currency = currency)
         }
     }
 }
@@ -159,6 +166,7 @@ fun ExpensesNavGraph(
 @Composable
 fun IncomesNavGraph(
     accountId: Int,
+    currency: String = CURRENCY_RUB,
     onTitleChange: (TopBarState) -> Unit
 ) {
     val incomesNavController = rememberNavController()
@@ -214,7 +222,7 @@ fun IncomesNavGraph(
         startDestination = Destinations.IncomesScreen.route
     ) {
         composable(Destinations.IncomesScreen.route) {
-            IncomesScreen(accountId = accountId)
+            IncomesScreen(accountId = accountId, currency = currency)
         }
         composable(Destinations.IncomesCreateScreen.route) {
             IncomesCreateScreen()
