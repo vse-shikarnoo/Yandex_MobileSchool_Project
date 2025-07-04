@@ -12,6 +12,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,17 +22,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import androidx.hilt.navigation.compose.hiltViewModel
 import yandex.school.project.presentation.components.TopBar
 import yandex.school.project.presentation.components.TopBarState
 import yandex.school.project.presentation.navigation.BottomBar
 import yandex.school.project.presentation.navigation.BottomNavigation
 import yandex.school.project.presentation.theme.ProjectTheme
+import yandex.school.project.presentation.screens.account.AccountViewModel
+import yandex.school.project.presentation.common.Result
+import yandex.school.project.domain.entities.Account
+import yandex.school.project.presentation.utils.CURRENCY_RUB
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(accountId: Int) {
+fun MainScreen(account: Account?) {
     val bottomNavController = rememberNavController()
-
     val currentTopBarState = remember {
         mutableStateOf(
             TopBarState(
@@ -39,7 +46,6 @@ fun MainScreen(accountId: Int) {
             )
         )
     }
-
     Scaffold(
         topBar = {
             TopBar(currentTopBarState.value)
@@ -58,23 +64,14 @@ fun MainScreen(accountId: Int) {
                     )
                 }
             }
-
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             BottomNavigation(
                 navController = bottomNavController,
                 onTitleChange = { currentTopBarState.value = it },
-                accountId = accountId
+                account = account,
             )
         }
-    }
-}
-
-@Preview(widthDp = 360, heightDp = 640)
-@Composable
-fun MainScreenPreview() {
-    ProjectTheme {
-        MainScreen(accountId = 1)
     }
 }

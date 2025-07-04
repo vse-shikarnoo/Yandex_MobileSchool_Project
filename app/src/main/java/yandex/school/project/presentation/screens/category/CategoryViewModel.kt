@@ -39,7 +39,7 @@ class CategoryViewModel @Inject constructor(
     fun loadCategoriesWithRetry(maxRetries: Int = 3, delayMillis: Long = 2000) {
         networkHelper.executeWithRetry(
             scope = viewModelScope,
-            operation = { delay(10000);getCategoriesUseCase() },
+            operation = { getCategoriesUseCase() },
             onSuccess = { categories ->
                 Log.d("CategoryViewModel", "Категории успешно загружены: ${categories.size} элементов")
                 _uiState.value = Result.Success(categories)
