@@ -18,7 +18,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RepositoryBindModule {
+abstract class RepositoryModule {
     
     @Binds
     @Singleton

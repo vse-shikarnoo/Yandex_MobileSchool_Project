@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import yandex.school.project.domain.entities.Account
 import yandex.school.project.domain.usecases.account.GetAccountByIdUseCase
+import yandex.school.project.domain.usecases.account.UpdateAccountNameUseCase
+import yandex.school.project.domain.usecases.account.UpdateAccountBalanceUseCase
+import yandex.school.project.domain.usecases.account.UpdateAccountCurrencyUseCase
 import yandex.school.project.presentation.common.NetworkOperationHelper
 import yandex.school.project.presentation.common.Result
 import javax.inject.Inject
@@ -21,8 +24,10 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     private val getAccountByIdUseCase: GetAccountByIdUseCase,
-    private val networkHelper: NetworkOperationHelper,
-    private val accountRepository: AccountRepository
+    private val updateAccountNameUseCase: UpdateAccountNameUseCase,
+    private val updateAccountBalanceUseCase: UpdateAccountBalanceUseCase,
+    private val updateAccountCurrencyUseCase: UpdateAccountCurrencyUseCase,
+    private val networkHelper: NetworkOperationHelper
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<Result<Account>>(Result.Loading)
@@ -60,6 +65,39 @@ class AccountViewModel @Inject constructor(
             maxRetries = maxRetries,
             delayMillis = delayMillis,
             operationName = "загрузка аккаунта"
+        )
+    }
+
+    fun updateAccountName(newName: String) {
+        val account = (uiState.value as? Result.Success)?.data ?: return
+        networkHelper.executeWithRetry(
+            scope = viewModelScope,
+            operation = { updateAccountNameUseCase(account.id, newName, account.balance, account.currency) },
+            onSuccess = { acc -> _uiState.value = Result.Success(acc) },
+            onError = { errorMessage -> _uiState.value = Result.Error(errorMessage) },
+            operationName = "обновление имени аккаунта"
+        )
+    }
+
+    fun updateAccountBalance(newBalance: Double) {
+        val account = (uiState.value as? Result.Success)?.data ?: return
+        networkHelper.executeWithRetry(
+            scope = viewModelScope,
+            operation = { updateAccountBalanceUseCase(account.id, account.name, newBalance, account.currency) },
+            onSuccess = { acc -> _uiState.value = Result.Success(acc) },
+            onError = { errorMessage -> _uiState.value = Result.Error(errorMessage) },
+            operationName = "обновление баланса аккаунта"
+        )
+    }
+
+    fun updateAccountCurrency(newCurrency: String) {
+        val account = (uiState.value as? Result.Success)?.data ?: return
+        networkHelper.executeWithRetry(
+            scope = viewModelScope,
+            operation = { updateAccountCurrencyUseCase(account.id, account.name, account.balance, newCurrency) },
+            onSuccess = { acc -> _uiState.value = Result.Success(acc) },
+            onError = { errorMessage -> _uiState.value = Result.Error(errorMessage) },
+            operationName = "обновление валюты аккаунта"
         )
     }
 } 
