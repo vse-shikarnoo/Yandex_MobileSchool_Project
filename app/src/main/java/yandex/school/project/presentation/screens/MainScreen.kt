@@ -35,7 +35,7 @@ import yandex.school.project.presentation.utils.CURRENCY_RUB
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(accountId: Int, currency: String) {
+fun MainScreen(account: Account?) {
     val bottomNavController = rememberNavController()
     val currentTopBarState = remember {
         mutableStateOf(
@@ -70,17 +70,8 @@ fun MainScreen(accountId: Int, currency: String) {
             BottomNavigation(
                 navController = bottomNavController,
                 onTitleChange = { currentTopBarState.value = it },
-                accountId = accountId,
-                _currency = currency
+                account = account,
             )
         }
-    }
-}
-
-@Preview(widthDp = 360, heightDp = 640)
-@Composable
-fun MainScreenPreview() {
-    ProjectTheme {
-        MainScreen(accountId = 1, currency = CURRENCY_RUB)
     }
 }

@@ -75,7 +75,7 @@ class AccountViewModel @Inject constructor(
             operation = { updateAccountNameUseCase(account.id, newName, account.balance, account.currency) },
             onSuccess = { acc -> _uiState.value = Result.Success(acc) },
             onError = { errorMessage -> _uiState.value = Result.Error(errorMessage) },
-            operationName = "обновление имени аккаунта"
+            operationName = "обновление имени аккаунта ${account.id}, ${newName}, ${account.balance}, ${account.currency}"
         )
     }
 
@@ -86,7 +86,7 @@ class AccountViewModel @Inject constructor(
             operation = { updateAccountBalanceUseCase(account.id, account.name, newBalance, account.currency) },
             onSuccess = { acc -> _uiState.value = Result.Success(acc) },
             onError = { errorMessage -> _uiState.value = Result.Error(errorMessage) },
-            operationName = "обновление баланса аккаунта"
+            operationName = "обновление баланса аккаунта ${account.id}, ${account.name}, ${newBalance}, ${account.currency}"
         )
     }
 
@@ -97,7 +97,7 @@ class AccountViewModel @Inject constructor(
             operation = { updateAccountCurrencyUseCase(account.id, account.name, account.balance, newCurrency) },
             onSuccess = { acc -> _uiState.value = Result.Success(acc) },
             onError = { errorMessage -> _uiState.value = Result.Error(errorMessage) },
-            operationName = "обновление валюты аккаунта"
+            operationName = "обновление валюты аккаунта ${account.id}, ${account.name}, ${account.balance}, ${newCurrency}"
         )
     }
 } 

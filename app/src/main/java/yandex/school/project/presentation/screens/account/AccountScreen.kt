@@ -2,6 +2,7 @@ package yandex.school.project.presentation.screens.account
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,7 +33,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -48,21 +53,13 @@ import yandex.school.project.presentation.theme.ProjectTheme
 import yandex.school.project.presentation.utils.CURRENCY_EUR
 import yandex.school.project.presentation.utils.CURRENCY_RUB
 import yandex.school.project.presentation.utils.CURRENCY_USD
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.TextRange
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountScreen(
     accountId: Int,
     currency: String,
     onCurrencyChanged: (String) -> Unit,
+    onAccountNameEditDone: ((String) -> Unit)? = null,
     viewModel: AccountViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -83,6 +80,12 @@ fun AccountScreen(
         onRetry = { viewModel.loadAccountWithRetry(accountId) },
         coroutineManager = coroutineManager
     ) { account ->
+
+        LaunchedEffect(account.balance, isEditingBalance) {
+            if (!isEditingBalance) {
+                balanceInput = account.balance.toString()
+            }
+        }
         val focusManager = LocalFocusManager.current
         val focusRequester = remember { FocusRequester() }
         val keyboardController = LocalSoftwareKeyboardController.current

@@ -1,6 +1,7 @@
 package yandex.school.project.presentation.navigation
 
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.material.icons.Icons
@@ -10,20 +11,29 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 import yandex.school.project.R
+import yandex.school.project.domain.entities.Account
+import yandex.school.project.domain.usecases.account.UpdateAccountNameUseCase
+import yandex.school.project.presentation.common.NetworkOperationHelper
 import yandex.school.project.presentation.components.TopBarState
 import yandex.school.project.presentation.screens.account.AccountScreen
 import yandex.school.project.presentation.screens.category.CategoryScreen
 import yandex.school.project.presentation.screens.expenses.create.ExpensesCreateScreen
-import yandex.school.project.presentation.screens.expenses.history.ExpensesHistoryScreen
 import yandex.school.project.presentation.screens.expenses.expenses.ExpensesScreen
+import yandex.school.project.presentation.screens.expenses.history.ExpensesHistoryScreen
 import yandex.school.project.presentation.screens.income.create.IncomesCreateScreen
 import yandex.school.project.presentation.screens.income.history.IncomesHistoryScreen
 import yandex.school.project.presentation.screens.income.incomes.IncomesScreen
@@ -39,10 +49,20 @@ import yandex.school.project.presentation.utils.CURRENCY_RUB
 fun BottomNavigation(
     navController: NavHostController,
     onTitleChange: (TopBarState) -> Unit,
-    accountId: Int,
-    _currency: String
+    account: Account?
 ) {
-    val (currency, setCurrency) = remember { mutableStateOf(_currency) }
+    val (currency, setCurrency) = remember { mutableStateOf(account?.currency ?: CURRENCY_RUB) }
+    val (isEditingTitle, setIsEditingTitle) = remember { mutableStateOf(false) }
+    val (titleInput, setTitleInput) = remember { mutableStateOf(account?.name ?: "Мой счет") }
+    val accountId = account?.id ?: 1
+
+    val context = LocalContext.current.applicationContext
+    val entryPoint = remember {
+        EntryPointAccessors.fromApplication(context, UpdateAccountNameUseCaseEntryPoint::class.java)
+    }
+    val updateAccountNameUseCase = entryPoint.updateAccountNameUseCase()
+    val networkHelper = remember { NetworkOperationHelper() }
+    val coroutineScope = rememberCoroutineScope()
     NavHost(
         navController = navController,
         startDestination = BottomBarDestinations.Expenses.route
@@ -55,18 +75,50 @@ fun BottomNavigation(
             )
         }
         composable(BottomBarDestinations.Incomes.route) {
-            IncomesNavGraph(accountId = accountId, currency = currency, onTitleChange = onTitleChange)
+            IncomesNavGraph(
+                accountId = accountId,
+                currency = currency,
+                onTitleChange = onTitleChange
+            )
         }
         composable(BottomBarDestinations.Account.route) {
             val editIcon = ImageVector.vectorResource(R.drawable.ic_edit)
+            Log.d("TAG", "BottomNavigation: $account")
             onTitleChange(
                 TopBarState(
-                    title = "Мой счет",
+                    title = account?.name ?: titleInput,
                     actionIcon = editIcon,
-                    isFAB = true
+                    actionIconAction = { setIsEditingTitle(true) },
+                    isFAB = true,
+                    isEditingTitle = isEditingTitle,
+                    titleInput = titleInput,
+                    onTitleInputChange = { setTitleInput(it) },
+                    onTitleEditDone = {
+                        setIsEditingTitle(false)
+                        if (account != null && titleInput != account.name) {
+                            networkHelper.executeWithRetry(
+                                scope = coroutineScope,
+                                operation = {
+                                    updateAccountNameUseCase(
+                                        account.id,
+                                        titleInput,
+                                        account.balance,
+                                        account.currency
+                                    )
+                                },
+                                onSuccess = { /* можно показать Snackbar или обновить UI */ },
+                                onError = { /* обработка ошибки */ },
+                                operationName = "обновление имени аккаунта"
+                            )
+                        }
+                    }
                 )
             )
-            AccountScreen(accountId = accountId, currency = currency, onCurrencyChanged = {setCurrency(it)})
+            AccountScreen(
+                accountId = accountId,
+                currency = currency,
+                onCurrencyChanged = { setCurrency(it) }
+            )
         }
         composable(BottomBarDestinations.Expenditure.route) {
             onTitleChange(
@@ -231,4 +283,11 @@ fun IncomesNavGraph(
             IncomesHistoryScreen(accountId = accountId)
         }
     }
+}
+
+// EntryPoint для usecase
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface UpdateAccountNameUseCaseEntryPoint {
+    fun updateAccountNameUseCase(): UpdateAccountNameUseCase
 } 

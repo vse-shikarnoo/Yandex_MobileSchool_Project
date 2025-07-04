@@ -13,12 +13,12 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import yandex.school.project.R
+import yandex.school.project.domain.entities.Account
 
 @Composable
 fun SplashScreen(
     goNextDestination: () -> Unit,
-    accountIdChange: (Int) -> Unit,
-    currencyChange: (String) -> Unit,
+    accountChange: (Account?) -> Unit,
     viewModel: SplashViewModel = hiltViewModel()
 ) {
     Box(
@@ -34,8 +34,7 @@ fun SplashScreen(
             progress = { logoAnimationState.progress }
         )
         if (logoAnimationState.isAtEnd && logoAnimationState.isPlaying) {
-            accountIdChange(viewModel.accountId)
-            currencyChange(viewModel.currency)
+            accountChange(viewModel.account)
             goNextDestination()
         }
     }
