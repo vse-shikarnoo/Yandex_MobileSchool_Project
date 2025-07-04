@@ -86,7 +86,7 @@ fun BottomNavigation(
             Log.d("TAG", "BottomNavigation: $account")
             onTitleChange(
                 TopBarState(
-                    title = account?.name ?: titleInput,
+                    title = titleInput,
                     actionIcon = editIcon,
                     actionIconAction = { setIsEditingTitle(true) },
                     isFAB = true,
