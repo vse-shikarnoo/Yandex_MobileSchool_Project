@@ -81,12 +81,17 @@ class AccountViewModel @Inject constructor(
 
     fun updateAccountBalance(newBalance: Double) {
         val account = (uiState.value as? Result.Success)?.data ?: return
+
+        // Оптимистичное обновление UI
+        _uiState.value = Result.Success(account.copy(balance = newBalance))
+
+        // Асинхронное обновление на сервере
         networkHelper.executeWithRetry(
             scope = viewModelScope,
             operation = { updateAccountBalanceUseCase(account.id, account.name, newBalance, account.currency) },
             onSuccess = { acc -> _uiState.value = Result.Success(acc) },
             onError = { errorMessage -> _uiState.value = Result.Error(errorMessage) },
-            operationName = "обновление баланса аккаунта ${account.id}, ${account.name}, ${newBalance}, ${account.currency}"
+            operationName = "обновление баланса аккаунта ${account.id}, ${account.name}, $newBalance, ${account.currency}"
         )
     }
 

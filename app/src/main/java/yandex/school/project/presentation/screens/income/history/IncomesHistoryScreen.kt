@@ -12,10 +12,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import yandex.school.project.presentation.components.HistoryScreen
 import yandex.school.project.presentation.theme.ProjectTheme
 import yandex.school.project.presentation.common.rememberCoroutineManager
+import yandex.school.project.presentation.utils.CURRENCY_RUB
 
 @Composable
 fun IncomesHistoryScreen(
     accountId: Int,
+    currency: String = CURRENCY_RUB,
     viewModel: IncomesHistoryViewModel = hiltViewModel(),
     onTransactionClick: (Int) -> Unit = {}
 ) {
@@ -24,6 +26,7 @@ fun IncomesHistoryScreen(
     HistoryScreen(
         viewModel = viewModel,
         accountId = accountId,
+        currency = currency,
         onTransactionClick = onTransactionClick,
         coroutineManager = coroutineManager
     )

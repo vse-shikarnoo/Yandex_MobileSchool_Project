@@ -1,5 +1,6 @@
 package yandex.school.project.presentation.screens.account
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -69,6 +70,8 @@ fun AccountScreen(
     var isEditingBalance by remember { mutableStateOf(false) }
     var balanceInput by remember { mutableStateOf("") }
 
+    Log.d("AccountScreen", "RECOMPOSE: account.balance=${uiState.let { (it as? yandex.school.project.presentation.common.Result.Success)?.data?.balance }}, isEditingBalance=$isEditingBalance, balanceInput=$balanceInput")
+
     LaunchedEffect(accountId) {
         coroutineManager.launchWithCancelPrevious {
             viewModel.loadAccountWithRetry(accountId)
@@ -113,40 +116,52 @@ fun AccountScreen(
                         .clickable {
                             if (!isEditingBalance) {
                                 isEditingBalance = true
-                                balanceInput = if (balanceInput.isEmpty()) account.balance.toString() else balanceInput
+                                balanceInput = account.balance.toString()
+                                Log.d("AccountScreen", "START EDIT: balanceInput=$balanceInput, account.balance=${account.balance}")
                             }
                         },
                     contentTitle = "Баланс",
                     contentSecond = {
-                        EditableBalanceField(
-                            isEditing = isEditingBalance,
-                            balanceInput = balanceInput,
-                            currency = currency,
-                            focusRequester = focusRequester,
-                            focusManager = focusManager,
-                            keyboardController = keyboardController,
-                            onValueChange = { input ->
-                                // Просто обновляем строку, не фильтруем ничего на лету
-                                balanceInput = input.replace(",", ".")
-                            },
-                            onDone = {
-                                var normalized = balanceInput.replaceFirst("^0+(?!$|\\.)".toRegex(), "")
-                                normalized = when {
-                                    normalized.isEmpty() -> "0.00"
-                                    normalized.endsWith(".") -> normalized + "00"
-                                    normalized.contains(".") -> {
-                                        val parts = normalized.split(".")
-                                        val afterDot = parts[1].take(2).padEnd(2, '0') // максимум 2 знака после точки
-                                        "${parts[0]}.$afterDot"
+                        if (isEditingBalance) {
+                            EditableBalanceField(
+                                isEditing = true,
+                                balanceInput = balanceInput,
+                                currency = currency,
+                                focusRequester = focusRequester,
+                                focusManager = focusManager,
+                                keyboardController = keyboardController,
+                                onValueChange = { input ->
+                                    balanceInput = input.replace(",", ".")
+                                    Log.d("AccountScreen", "INPUT: balanceInput=$balanceInput")
+                                },
+                                onDone = {
+                                    var normalized = balanceInput.replaceFirst("^0+(?!$|\\.)".toRegex(), "")
+                                    normalized = when {
+                                        normalized.isEmpty() -> "0.00"
+                                        normalized.endsWith(".") -> normalized + "00"
+                                        normalized.contains(".") -> {
+                                            val parts = normalized.split(".")
+                                            val afterDot = parts[1].take(2).padEnd(2, '0')
+                                            "${parts[0]}.$afterDot"
+                                        }
+                                        else -> normalized + ".00"
                                     }
-                                    else -> normalized + ".00"
+                                    balanceInput = normalized
+                                    isEditingBalance = false
+                                    focusManager.clearFocus()
+                                    Log.d("AccountScreen", "ON_DONE: balanceInput=$balanceInput, account.balance=${account.balance}")
+                                    viewModel.updateAccountBalance(balanceInput.toDouble())
                                 }
-                                balanceInput = normalized
-                                isEditingBalance = false
-                                focusManager.clearFocus()
-                                viewModel.updateAccountBalance(balanceInput.toDouble())
-                            }
-                        )
+                            )
+                        } else {
+                            Text(
+                                text = "${account.balance} $currency",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.End
+                            )
+                        }
                     },
                     backgroundColor = MaterialTheme.colorScheme.secondary,
                     iconBackgroundColor = MaterialTheme.colorScheme.surface
@@ -324,7 +339,7 @@ fun BottomSheetItem(
             .fillMaxWidth()
             .background(backgroundColor)
             .clickable { onClick() }
-            .height(56.dp)
+            .height(72.dp)
             .padding(horizontal = 16.dp),
         contentAlignment = Alignment.CenterStart
     ) {

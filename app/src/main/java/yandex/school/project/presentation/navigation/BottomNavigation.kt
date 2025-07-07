@@ -84,36 +84,40 @@ fun BottomNavigation(
         composable(BottomBarDestinations.Account.route) {
             val editIcon = ImageVector.vectorResource(R.drawable.ic_edit)
             Log.d("TAG", "BottomNavigation: $account")
-            onTitleChange(
-                TopBarState(
-                    title = titleInput,
-                    actionIcon = editIcon,
-                    actionIconAction = { setIsEditingTitle(true) },
-                    isFAB = true,
-                    isEditingTitle = isEditingTitle,
-                    titleInput = titleInput,
-                    onTitleInputChange = { setTitleInput(it) },
-                    onTitleEditDone = {
-                        setIsEditingTitle(false)
-                        if (account != null && titleInput != account.name) {
-                            networkHelper.executeWithRetry(
-                                scope = coroutineScope,
-                                operation = {
-                                    updateAccountNameUseCase(
-                                        account.id,
-                                        titleInput,
-                                        account.balance,
-                                        account.currency
-                                    )
-                                },
-                                onSuccess = { /* можно показать Snackbar или обновить UI */ },
-                                onError = { /* обработка ошибки */ },
-                                operationName = "обновление имени аккаунта"
-                            )
+
+            LaunchedEffect(titleInput, isEditingTitle) {
+                onTitleChange(
+                    TopBarState(
+                        title = titleInput,
+                        actionIcon = editIcon,
+                        actionIconAction = { setIsEditingTitle(true) },
+                        isFAB = true,
+                        isEditingTitle = isEditingTitle,
+                        titleInput = titleInput,
+                        onTitleInputChange = { setTitleInput(it) },
+                        onTitleEditDone = {
+                            setIsEditingTitle(false)
+                            if (account != null && titleInput != account.name) {
+                                networkHelper.executeWithRetry(
+                                    scope = coroutineScope,
+                                    operation = {
+                                        updateAccountNameUseCase(
+                                            account.id,
+                                            titleInput,
+                                            account.balance,
+                                            account.currency
+                                        )
+                                    },
+                                    onSuccess = { /* можно показать Snackbar или обновить UI */ },
+                                    onError = { /* обработка ошибки */ },
+                                    operationName = "обновление имени аккаунта"
+                                )
+                            }
                         }
-                    }
+                    )
                 )
-            )
+            }
+
             AccountScreen(
                 accountId = accountId,
                 currency = currency,
@@ -280,7 +284,7 @@ fun IncomesNavGraph(
             IncomesCreateScreen()
         }
         composable(Destinations.IncomesHistoryScreen.route) {
-            IncomesHistoryScreen(accountId = accountId)
+            IncomesHistoryScreen(accountId = accountId, currency = currency)
         }
     }
 }

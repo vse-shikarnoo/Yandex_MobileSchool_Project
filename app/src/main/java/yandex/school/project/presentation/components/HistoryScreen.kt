@@ -46,6 +46,7 @@ import yandex.school.project.presentation.common.CoroutineManager
 fun HistoryScreen(
     viewModel: HistoryViewModel,
     accountId: Int,
+    currency: String,
     onTransactionClick: (Int) -> Unit = {},
     coroutineManager: CoroutineManager? = null
 ) {
@@ -129,7 +130,7 @@ fun HistoryScreen(
                     modifier = Modifier.height(56.dp),
                     contentTitle = "Сумма",
                     contentSecond = {
-                        Text("${totalAmount.toInt()} $CURRENCY_RUB")
+                        Text("${totalAmount.toInt()} $currency")
                     },
                     backgroundColor = MaterialTheme.colorScheme.secondary
                 )

@@ -24,6 +24,7 @@ fun ExpensesHistoryScreen(
     HistoryScreen(
         viewModel = viewModel,
         accountId = accountId,
+        currency = currency,
         onTransactionClick = onTransactionClick,
         coroutineManager = coroutineManager
     )
