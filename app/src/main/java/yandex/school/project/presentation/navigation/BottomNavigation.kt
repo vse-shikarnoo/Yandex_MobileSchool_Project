@@ -39,6 +39,7 @@ import yandex.school.project.presentation.screens.income.history.IncomesHistoryS
 import yandex.school.project.presentation.screens.income.incomes.IncomesScreen
 import yandex.school.project.presentation.screens.settings.SettingsScreen
 import yandex.school.project.presentation.utils.CURRENCY_RUB
+import androidx.compose.ui.text.input.TextFieldValue
 
 /**
  * Основная навигация нижней панели приложения.
@@ -53,7 +54,7 @@ fun BottomNavigation(
 ) {
     val (currency, setCurrency) = remember { mutableStateOf(account?.currency ?: CURRENCY_RUB) }
     val (isEditingTitle, setIsEditingTitle) = remember { mutableStateOf(false) }
-    val (titleInput, setTitleInput) = remember { mutableStateOf(account?.name ?: "Мой счет") }
+    val (titleInput, setTitleInput) = remember { mutableStateOf(TextFieldValue(account?.name ?: "Мой счет")) }
     val accountId = account?.id ?: 1
 
     val context = LocalContext.current.applicationContext
@@ -63,6 +64,34 @@ fun BottomNavigation(
     val updateAccountNameUseCase = entryPoint.updateAccountNameUseCase()
     val networkHelper = remember { NetworkOperationHelper() }
     val coroutineScope = rememberCoroutineScope()
+    val onTitleInputChange = remember {
+        { newValue: TextFieldValue ->
+            setTitleInput(newValue)
+            Log.d("CURSOR", "text='${newValue.text}', selection=${newValue.selection}")
+            Unit
+        }
+    }
+    val onTitleEditDone = remember {
+        {
+            setIsEditingTitle(false)
+            if (account != null && titleInput.text != account.name) {
+                networkHelper.executeWithRetry(
+                    scope = coroutineScope,
+                    operation = {
+                        updateAccountNameUseCase(
+                            account.id,
+                            titleInput.text,
+                            account.balance,
+                            account.currency
+                        )
+                    },
+                    onSuccess = { /* можно показать Snackbar или обновить UI */ },
+                    onError = { /* обработка ошибки */ },
+                    operationName = "обновление имени аккаунта"
+                )
+            }
+        }
+    }
     NavHost(
         navController = navController,
         startDestination = BottomBarDestinations.Expenses.route
@@ -88,32 +117,14 @@ fun BottomNavigation(
             LaunchedEffect(titleInput, isEditingTitle) {
                 onTitleChange(
                     TopBarState(
-                        title = titleInput,
+                        title = titleInput.text,
                         actionIcon = editIcon,
                         actionIconAction = { setIsEditingTitle(true) },
                         isFAB = true,
                         isEditingTitle = isEditingTitle,
                         titleInput = titleInput,
-                        onTitleInputChange = { setTitleInput(it) },
-                        onTitleEditDone = {
-                            setIsEditingTitle(false)
-                            if (account != null && titleInput != account.name) {
-                                networkHelper.executeWithRetry(
-                                    scope = coroutineScope,
-                                    operation = {
-                                        updateAccountNameUseCase(
-                                            account.id,
-                                            titleInput,
-                                            account.balance,
-                                            account.currency
-                                        )
-                                    },
-                                    onSuccess = { /* можно показать Snackbar или обновить UI */ },
-                                    onError = { /* обработка ошибки */ },
-                                    operationName = "обновление имени аккаунта"
-                                )
-                            }
-                        }
+                        onTitleInputChange = onTitleInputChange,
+                        onTitleEditDone = onTitleEditDone
                     )
                 )
             }

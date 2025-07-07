@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 
 // Состояние для TopBar
@@ -32,8 +33,8 @@ data class TopBarState(
     val actionIconAction: () -> Unit = {},
     val isFAB: Boolean = false,
     val isEditingTitle: Boolean = false,
-    val titleInput: String = "",
-    val onTitleInputChange: ((String) -> Unit)? = null,
+    val titleInput: TextFieldValue = TextFieldValue(""),
+    val onTitleInputChange: ((TextFieldValue) -> Unit)? = null,
     val onTitleEditDone: (() -> Unit)? = null
 )
 
@@ -71,8 +72,8 @@ fun TopBar(state: TopBarState) {
                         modifier = Modifier
                             .padding(vertical = 4.dp),
                         trailingIcon = {
-                            if (state.titleInput.isNotEmpty()) {
-                                IconButton(onClick = { state.onTitleInputChange.invoke("") }) {
+                            if (state.titleInput.text.isNotEmpty()) {
+                                IconButton(onClick = { state.onTitleInputChange.invoke(TextFieldValue("")) }) {
                                     Icon(Icons.Default.Close, contentDescription = "Очистить")
                                 }
                             }
