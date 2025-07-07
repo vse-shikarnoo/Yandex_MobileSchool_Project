@@ -1,5 +1,8 @@
 package yandex.school.project.data.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class AccountHistoryResponse(
     val accountId: Int,
     val accountName: String,
