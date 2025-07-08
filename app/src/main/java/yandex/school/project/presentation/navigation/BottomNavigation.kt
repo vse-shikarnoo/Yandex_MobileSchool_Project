@@ -20,32 +20,25 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.components.SingletonComponent
 import yandex.school.project.R
 import yandex.school.project.domain.entities.Account
-import yandex.school.project.domain.usecases.account.UpdateAccountNameUseCase
-import yandex.school.project.presentation.common.NetworkOperationHelper
+import androidx.compose.ui.text.input.TextFieldValue
 import yandex.school.project.presentation.components.TopBarState
 import yandex.school.project.presentation.screens.account.AccountScreen
 import yandex.school.project.presentation.screens.category.CategoryScreen
+import yandex.school.project.presentation.screens.settings.SettingsScreen
 import yandex.school.project.presentation.screens.expenses.create.ExpensesCreateScreen
 import yandex.school.project.presentation.screens.expenses.expenses.ExpensesScreen
 import yandex.school.project.presentation.screens.expenses.history.ExpensesHistoryScreen
 import yandex.school.project.presentation.screens.income.create.IncomesCreateScreen
 import yandex.school.project.presentation.screens.income.history.IncomesHistoryScreen
 import yandex.school.project.presentation.screens.income.incomes.IncomesScreen
-import yandex.school.project.presentation.screens.settings.SettingsScreen
 import yandex.school.project.presentation.utils.CURRENCY_RUB
-import androidx.compose.ui.text.input.TextFieldValue
 
 /**
  * Основная навигация нижней панели приложения.
  * Единственная ответственность: настройка и управление навигацией между основными разделами приложения через нижнюю панель.
  */
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BottomNavigation(
     navController: NavHostController,
@@ -57,41 +50,6 @@ fun BottomNavigation(
     val (titleInput, setTitleInput) = remember { mutableStateOf(TextFieldValue(account?.name ?: "Мой счет")) }
     val accountId = account?.id ?: 1
 
-    val context = LocalContext.current.applicationContext
-    val entryPoint = remember {
-        EntryPointAccessors.fromApplication(context, UpdateAccountNameUseCaseEntryPoint::class.java)
-    }
-    val updateAccountNameUseCase = entryPoint.updateAccountNameUseCase()
-    val networkHelper = remember { NetworkOperationHelper() }
-    val coroutineScope = rememberCoroutineScope()
-    val onTitleInputChange = remember {
-        { newValue: TextFieldValue ->
-            setTitleInput(newValue)
-            Log.d("CURSOR", "text='${newValue.text}', selection=${newValue.selection}")
-            Unit
-        }
-    }
-    val onTitleEditDone = remember {
-        {
-            setIsEditingTitle(false)
-            if (account != null && titleInput.text != account.name) {
-                networkHelper.executeWithRetry(
-                    scope = coroutineScope,
-                    operation = {
-                        updateAccountNameUseCase(
-                            account.id,
-                            titleInput.text,
-                            account.balance,
-                            account.currency
-                        )
-                    },
-                    onSuccess = { /* можно показать Snackbar или обновить UI */ },
-                    onError = { /* обработка ошибки */ },
-                    operationName = "обновление имени аккаунта"
-                )
-            }
-        }
-    }
     NavHost(
         navController = navController,
         startDestination = BottomBarDestinations.Expenses.route
@@ -123,8 +81,8 @@ fun BottomNavigation(
                         isFAB = true,
                         isEditingTitle = isEditingTitle,
                         titleInput = titleInput,
-                        onTitleInputChange = onTitleInputChange,
-                        onTitleEditDone = onTitleEditDone
+                        onTitleInputChange = { },
+                        onTitleEditDone = { }
                     )
                 )
             }
@@ -298,11 +256,4 @@ fun IncomesNavGraph(
             IncomesHistoryScreen(accountId = accountId, currency = currency)
         }
     }
-}
-
-// EntryPoint для usecase
-@EntryPoint
-@InstallIn(SingletonComponent::class)
-interface UpdateAccountNameUseCaseEntryPoint {
-    fun updateAccountNameUseCase(): UpdateAccountNameUseCase
 } 

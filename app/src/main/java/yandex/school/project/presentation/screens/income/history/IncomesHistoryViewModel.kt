@@ -8,7 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import yandex.school.project.domain.entities.TransactionWithCategory
 import yandex.school.project.domain.usecases.category.GetCategoriesUseCase
 import yandex.school.project.domain.usecases.transaction.GetTransactionsByAccountUseCase
@@ -21,7 +20,6 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-@HiltViewModel
 class IncomesHistoryViewModel @Inject constructor(
     private val getTransactionsByAccountUseCase: GetTransactionsByAccountUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,

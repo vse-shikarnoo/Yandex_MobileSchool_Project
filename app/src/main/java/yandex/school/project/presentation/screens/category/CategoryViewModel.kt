@@ -2,7 +2,6 @@ package yandex.school.project.presentation.screens.category
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +17,6 @@ import kotlinx.coroutines.delay
  * ViewModel для экрана категорий, управляющий состоянием и загрузкой списка категорий.
  * Единственная ответственность: управление состоянием UI и загрузка списка всех категорий.
  */
-@HiltViewModel
 class CategoryViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val networkHelper: NetworkOperationHelper

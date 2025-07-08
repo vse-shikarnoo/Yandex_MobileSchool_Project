@@ -27,17 +27,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import yandex.school.project.presentation.components.ListItem
 import yandex.school.project.presentation.components.ResultScreen
 import yandex.school.project.presentation.theme.ProjectTheme
 import yandex.school.project.presentation.common.rememberCoroutineManager
+import androidx.lifecycle.viewmodel.compose.viewModel
+import yandex.school.project.LocalViewModelFactory
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CategoryScreen(
-    viewModel: CategoryViewModel = hiltViewModel()
-) {
+fun CategoryScreen() {
+    val factory = LocalViewModelFactory.current
+    val viewModel: CategoryViewModel = viewModel(factory = factory)
     var search by remember { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsState()
 

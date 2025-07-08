@@ -5,11 +5,10 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.lifecycle.viewModelScope
 import yandex.school.project.domain.usecases.transaction.GetTransactionsByAccountUseCase
 import yandex.school.project.domain.usecases.category.GetCategoriesUseCase
 import yandex.school.project.presentation.common.NetworkOperationHelper
-import androidx.lifecycle.viewModelScope
 import yandex.school.project.domain.entities.TransactionWithCategory
 import yandex.school.project.presentation.common.HistoryViewModel
 import java.time.LocalDate
@@ -19,7 +18,6 @@ import javax.inject.Inject
 import yandex.school.project.presentation.common.Result
 import yandex.school.project.presentation.common.HistoryState
 
-@HiltViewModel
 class ExpensesHistoryViewModel @Inject constructor(
     private val getTransactionsByAccountUseCase: GetTransactionsByAccountUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,

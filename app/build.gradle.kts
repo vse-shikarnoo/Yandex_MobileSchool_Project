@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "1.9.22"
-    alias(libs.plugins.dagger.hilt.android)
     kotlin("kapt")
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
 }
@@ -81,12 +80,6 @@ dependencies {
     implementation(libs.android.lottie.compose)
     implementation(libs.androidx.navigation.compose)
 
-    // Hilt
-    implementation("com.google.dagger:hilt-android:2.50")
-    implementation(libs.androidx.storage)
-    kapt("com.google.dagger:hilt-compiler:2.50")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
-
     // Ktor
     implementation("io.ktor:ktor-client-android:2.3.7")
     implementation("io.ktor:ktor-client-core:2.3.7")
@@ -94,5 +87,9 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
     implementation("io.ktor:ktor-client-logging:2.3.7")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+    // Dagger 2
+    implementation("com.google.dagger:dagger:2.50")
+    kapt("com.google.dagger:dagger-compiler:2.50")
 }
 

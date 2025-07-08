@@ -45,7 +45,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import yandex.school.project.R
 import yandex.school.project.presentation.common.rememberCoroutineManager
 import yandex.school.project.presentation.components.ListItem
@@ -54,15 +53,18 @@ import yandex.school.project.presentation.theme.ProjectTheme
 import yandex.school.project.presentation.utils.CURRENCY_EUR
 import yandex.school.project.presentation.utils.CURRENCY_RUB
 import yandex.school.project.presentation.utils.CURRENCY_USD
+import androidx.lifecycle.viewmodel.compose.viewModel
+import yandex.school.project.LocalViewModelFactory
 
 @Composable
 fun AccountScreen(
     accountId: Int,
     currency: String,
     onCurrencyChanged: (String) -> Unit,
-    onAccountNameEditDone: ((String) -> Unit)? = null,
-    viewModel: AccountViewModel = hiltViewModel()
+    onAccountNameEditDone: ((String) -> Unit)? = null
 ) {
+    val factory = LocalViewModelFactory.current
+    val viewModel: AccountViewModel = viewModel(factory = factory)
     val uiState by viewModel.uiState.collectAsState()
     val coroutineManager = rememberCoroutineManager(viewModel)
     var showCurrencySheet by remember { mutableStateOf(false) }

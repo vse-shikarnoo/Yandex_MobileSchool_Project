@@ -2,7 +2,6 @@ package yandex.school.project.presentation.screens.expenses.expenses
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -19,7 +18,6 @@ import javax.inject.Inject
  * ViewModel для экрана расходов, управляющий состоянием и загрузкой данных о расходах.
  * Единственная ответственность: управление состоянием UI и загрузка данных о расходах с категориями.
  */
-@HiltViewModel
 class ExpensesViewModel @Inject constructor(
     private val getTransactionsByAccountUseCase: GetTransactionsByAccountUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,

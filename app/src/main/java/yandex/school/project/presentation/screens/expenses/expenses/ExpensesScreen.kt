@@ -19,27 +19,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import yandex.school.project.presentation.common.rememberCoroutineManager
 import yandex.school.project.presentation.components.ListItem
 import yandex.school.project.presentation.components.ResultScreen
 import yandex.school.project.presentation.theme.ProjectTheme
 import yandex.school.project.presentation.utils.convertAmount
 import yandex.school.project.presentation.utils.CURRENCY_RUB
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.ViewModelProvider
+import yandex.school.project.LocalViewModelFactory
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ExpensesScreen(
     accountId: Int,
-    currency: String = CURRENCY_RUB,
-    viewModel: ExpensesViewModel = hiltViewModel()
+    currency: String = CURRENCY_RUB
 ) {
+    val factory = LocalViewModelFactory.current
+    val viewModel: ExpensesViewModel = viewModel(factory = factory)
+    val uiState by viewModel.uiState.collectAsState()
+    val coroutineManager = rememberCoroutineManager(viewModel)
 
     Log.d("ExpensesScreen", "ExpensesScreen: $currency")
-    val uiState by viewModel.uiState.collectAsState()
-    
-    // Используем CoroutineManager для автоматического управления корутинами
-    val coroutineManager = rememberCoroutineManager(viewModel)
     
     LaunchedEffect(accountId) {
         coroutineManager.launchWithCancelPrevious {

@@ -8,27 +8,29 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import yandex.school.project.presentation.components.HistoryScreen
 import yandex.school.project.presentation.theme.ProjectTheme
 import yandex.school.project.presentation.common.rememberCoroutineManager
 import yandex.school.project.presentation.utils.CURRENCY_RUB
+import androidx.lifecycle.viewmodel.compose.viewModel
+import yandex.school.project.LocalViewModelFactory
 
 @Composable
 fun IncomesHistoryScreen(
     accountId: Int,
     currency: String = CURRENCY_RUB,
-    viewModel: IncomesHistoryViewModel = hiltViewModel(),
     onTransactionClick: (Int) -> Unit = {}
 ) {
+    val factory = LocalViewModelFactory.current
+    val viewModel: IncomesHistoryViewModel = viewModel(factory = factory)
     val coroutineManager = rememberCoroutineManager(viewModel)
     
     HistoryScreen(
-        viewModel = viewModel,
         accountId = accountId,
         currency = currency,
         onTransactionClick = onTransactionClick,
-        coroutineManager = coroutineManager
+        coroutineManager = coroutineManager,
+        viewModel = viewModel
     )
 }
 

@@ -22,7 +22,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import androidx.hilt.navigation.compose.hiltViewModel
 import yandex.school.project.presentation.components.TopBar
 import yandex.school.project.presentation.components.TopBarState
 import yandex.school.project.presentation.navigation.BottomBar

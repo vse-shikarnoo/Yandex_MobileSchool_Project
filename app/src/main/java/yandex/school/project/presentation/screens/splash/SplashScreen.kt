@@ -7,20 +7,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import yandex.school.project.R
 import yandex.school.project.domain.entities.Account
+import androidx.lifecycle.viewmodel.compose.viewModel
+import yandex.school.project.LocalViewModelFactory
 
 @Composable
 fun SplashScreen(
     goNextDestination: () -> Unit,
-    accountChange: (Account?) -> Unit,
-    viewModel: SplashViewModel = hiltViewModel()
+    accountChange: (Account?) -> Unit
 ) {
+    val factory = LocalViewModelFactory.current
+    val viewModel: SplashViewModel = viewModel(factory = factory)
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -34,7 +36,7 @@ fun SplashScreen(
             progress = { logoAnimationState.progress }
         )
         if (logoAnimationState.isAtEnd && logoAnimationState.isPlaying) {
-            accountChange(viewModel.account)
+            accountChange(null)
             goNextDestination()
         }
     }

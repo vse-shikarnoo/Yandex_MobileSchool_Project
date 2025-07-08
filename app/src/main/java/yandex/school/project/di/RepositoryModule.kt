@@ -2,8 +2,6 @@ package yandex.school.project.di
 
 import dagger.Binds
 import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import yandex.school.project.data.repository.AccountRepositoryImpl
 import yandex.school.project.data.repository.CategoryRepositoryImpl
 import yandex.school.project.data.repository.TransactionRepositoryImpl
@@ -13,11 +11,10 @@ import yandex.school.project.domain.repositories.TransactionRepository
 import javax.inject.Singleton
 
 /**
- * Модуль Hilt для привязки репозиториев к их интерфейсам.
+ * Модуль Dagger для привязки репозиториев к их интерфейсам.
  * Единственная ответственность: настройка dependency injection для репозиториев.
  */
 @Module
-@InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
     
     @Binds
