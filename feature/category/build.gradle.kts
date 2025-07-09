@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "yandex.school.project.feature.category"
+    namespace = "yandex.school.project.category"
     compileSdk = 35
 
     defaultConfig {

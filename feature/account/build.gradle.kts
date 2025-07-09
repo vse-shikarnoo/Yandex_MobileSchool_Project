@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "yandex.school.project.feature.account"
+    namespace = "yandex.school.project.account"
     compileSdk = 35
 
     defaultConfig {

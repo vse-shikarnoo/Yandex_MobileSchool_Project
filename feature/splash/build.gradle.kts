@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "yandex.school.project.feature.splash"
+    namespace = "yandex.school.project.splash"
     compileSdk = 35
 
     defaultConfig {

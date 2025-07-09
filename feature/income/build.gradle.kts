@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "yandex.school.project.feature.income"
+    namespace = "yandex.school.project.income"
     compileSdk = 35
 
     defaultConfig {

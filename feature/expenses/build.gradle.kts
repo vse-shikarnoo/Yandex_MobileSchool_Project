@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "yandex.school.project.feature.expenses"
+    namespace = "yandex.school.project.expenses"
     compileSdk = 35
 
     defaultConfig {
