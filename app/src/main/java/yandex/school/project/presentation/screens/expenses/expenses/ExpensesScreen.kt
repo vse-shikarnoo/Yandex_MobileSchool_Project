@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.HorizontalDivider
@@ -19,26 +18,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import yandex.school.project.presentation.common.rememberCoroutineManager
-import yandex.school.project.presentation.components.ListItem
-import yandex.school.project.presentation.components.ResultScreen
-import yandex.school.project.presentation.theme.ProjectTheme
-import yandex.school.project.presentation.utils.convertAmount
-import yandex.school.project.presentation.utils.CURRENCY_RUB
+import yandex.school.project.core.utils.rememberCoroutineManager
+import yandex.school.project.core.ui.components.ListItem
+import yandex.school.project.core.ui.components.ResultScreen
+import yandex.school.project.core.theme.ProjectTheme
+import yandex.school.project.core.utils.convertAmount
+import yandex.school.project.core.utils.CURRENCY_RUB
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.ViewModelProvider
 import yandex.school.project.LocalViewModelFactory
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ExpensesScreen(
     accountId: Int,
-    currency: String = CURRENCY_RUB
+    currency: String = yandex.school.project.core.utils.CURRENCY_RUB
 ) {
     val factory = LocalViewModelFactory.current
     val viewModel: ExpensesViewModel = viewModel(factory = factory)
     val uiState by viewModel.uiState.collectAsState()
-    val coroutineManager = rememberCoroutineManager(viewModel)
+    val coroutineManager = yandex.school.project.core.utils.rememberCoroutineManager(viewModel)
 
     Log.d("ExpensesScreen", "ExpensesScreen: $currency")
     
@@ -48,18 +46,22 @@ fun ExpensesScreen(
         }
     }
 
-    ResultScreen(
+    yandex.school.project.core.ui.components.ResultScreen(
         result = uiState,
         onRetry = { viewModel.loadTransactionsWithRetry(accountId) },
         coroutineManager = coroutineManager
     ) { state ->
         LazyColumn {
             stickyHeader {
-                ListItem(
+                yandex.school.project.core.ui.components.ListItem(
                     modifier = Modifier.height(56.dp),
                     contentTitle = "Всего",
                     contentSecond = {
-                        val total = convertAmount(state.total.toDoubleOrNull() ?: 0.0, CURRENCY_RUB, currency)
+                        val total = yandex.school.project.core.utils.convertAmount(
+                            state.total.toDoubleOrNull() ?: 0.0,
+                            yandex.school.project.core.utils.CURRENCY_RUB,
+                            currency
+                        )
                         Text(
                             "${total.toInt()} $currency",
                             style = MaterialTheme.typography.bodyLarge,
@@ -72,7 +74,7 @@ fun ExpensesScreen(
             }
 
             items(state.transactions) { transactionWithCategory ->
-                ListItem(
+                yandex.school.project.core.ui.components.ListItem(
                     modifier = Modifier.height(70.dp),
                     leadingIcon = transactionWithCategory.categoryIcon ?: "\uD83D\uDCC1",
                     contentTitle = transactionWithCategory.categoryName,
@@ -82,7 +84,11 @@ fun ExpensesScreen(
                         null
                     },
                     contentSecond = {
-                        val amount = convertAmount(transactionWithCategory.amount, CURRENCY_RUB, currency)
+                        val amount = yandex.school.project.core.utils.convertAmount(
+                            transactionWithCategory.amount,
+                            yandex.school.project.core.utils.CURRENCY_RUB,
+                            currency
+                        )
                         Text(
                             "${amount.toInt()} $currency",
                             style = MaterialTheme.typography.bodyLarge,
@@ -107,7 +113,7 @@ fun ExpensesScreen(
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
 fun ExpensesScreenPreview() {
-    ProjectTheme {
+    yandex.school.project.core.theme.ProjectTheme {
         Surface {
             ExpensesScreen(accountId = 1)
         }

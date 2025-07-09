@@ -5,13 +5,13 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import yandex.school.project.domain.entities.TransactionWithCategory
-import yandex.school.project.domain.usecases.transaction.GetTransactionsByAccountUseCase
-import yandex.school.project.domain.usecases.category.GetCategoriesUseCase
-import yandex.school.project.presentation.common.Result
-import yandex.school.project.presentation.common.NetworkOperationHelper
+import yandex.school.project.core.domain.entities.TransactionWithCategory
+import yandex.school.project.core.domain.usecases.transaction.GetTransactionsByAccountUseCase
+import yandex.school.project.core.domain.usecases.category.GetCategoriesUseCase
+import yandex.school.project.core.utils.Result
+import yandex.school.project.core.utils.NetworkOperationHelper
 import yandex.school.project.presentation.screens.expenses.ExpensesState
-import yandex.school.project.presentation.utils.CURRENCY_RUB
+import yandex.school.project.core.utils.CURRENCY_RUB
 import javax.inject.Inject
 
 /**
@@ -19,13 +19,14 @@ import javax.inject.Inject
  * Единственная ответственность: управление состоянием UI и загрузка данных о расходах с категориями.
  */
 class ExpensesViewModel @Inject constructor(
-    private val getTransactionsByAccountUseCase: GetTransactionsByAccountUseCase,
-    private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val networkHelper: NetworkOperationHelper
+    private val getTransactionsByAccountUseCase: yandex.school.project.core.domain.usecases.transaction.GetTransactionsByAccountUseCase,
+    private val getCategoriesUseCase: yandex.school.project.core.domain.usecases.category.GetCategoriesUseCase,
+    private val networkHelper: yandex.school.project.core.utils.NetworkOperationHelper
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<Result<ExpensesState>>(Result.Loading)
-    val uiState: StateFlow<Result<ExpensesState>> = _uiState
+    private val _uiState = MutableStateFlow<yandex.school.project.core.utils.Result<ExpensesState>>(
+        yandex.school.project.core.utils.Result.Loading)
+    val uiState: StateFlow<yandex.school.project.core.utils.Result<ExpensesState>> = _uiState
 
     fun loadTransactionsWithRetry(accountId: Int, maxRetries: Int = 3, delayMillis: Long = 2000) {
         viewModelScope.launch {
@@ -36,12 +37,17 @@ class ExpensesViewModel @Inject constructor(
                     val categories = getCategoriesUseCase()
                     
                     val expenseTransactions = allTransactions.filter { transaction ->
-                        transaction.type == yandex.school.project.domain.entities.TransactionType.EXPENSE
+                        transaction.type == yandex.school.project.core.domain.entities.TransactionType.EXPENSE
                     }
                     
                     val transactionsWithCategory = expenseTransactions.mapNotNull { transaction ->
                         val category = categories.find { it.id == transaction.categoryId }
-                        category?.let { TransactionWithCategory(transaction, it) }
+                        category?.let {
+                            yandex.school.project.core.domain.entities.TransactionWithCategory(
+                                transaction,
+                                it
+                            )
+                        }
                     }.sortedByDescending {
                         it.date
                     }
@@ -49,14 +55,14 @@ class ExpensesViewModel @Inject constructor(
                     val total = transactionsWithCategory.sumOf { it.amount }
                     ExpensesState(
                         transactions = transactionsWithCategory,
-                        total = "${total.toInt()} $CURRENCY_RUB"
+                        total = "${total.toInt()} ${yandex.school.project.core.utils.CURRENCY_RUB}"
                     )
                 },
                 onSuccess = { expensesState ->
-                    _uiState.value = Result.Success(expensesState)
+                    _uiState.value = yandex.school.project.core.utils.Result.Success(expensesState)
                 },
                 onError = { errorMessage ->
-                    _uiState.value = Result.Error(errorMessage)
+                    _uiState.value = yandex.school.project.core.utils.Result.Error(errorMessage)
                 },
                 maxRetries = maxRetries,
                 delayMillis = delayMillis,

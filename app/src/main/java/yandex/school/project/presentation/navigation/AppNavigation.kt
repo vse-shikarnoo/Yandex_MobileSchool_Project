@@ -7,10 +7,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import yandex.school.project.domain.entities.Account
+import yandex.school.project.core.domain.entities.Account
 import yandex.school.project.presentation.screens.MainScreen
 import yandex.school.project.presentation.screens.splash.SplashScreen
-import yandex.school.project.presentation.utils.CURRENCY_RUB
+import yandex.school.project.core.utils.CURRENCY_RUB
 
 /**
  * Константы для основных экранов приложения.
@@ -27,7 +27,7 @@ object MainDestinations {
  */
 @Composable
 fun AppNavigation(navController: NavHostController = rememberNavController()) {
-    val (account, setAccount) = remember { mutableStateOf<Account?>(null) }
+    val (account, setAccount) = remember { mutableStateOf<yandex.school.project.core.domain.entities.Account?>(null) }
     NavHost(
         navController = navController,
         startDestination = MainDestinations.Splash

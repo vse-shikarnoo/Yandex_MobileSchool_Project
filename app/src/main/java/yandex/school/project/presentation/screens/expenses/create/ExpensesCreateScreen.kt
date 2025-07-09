@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import yandex.school.project.presentation.theme.ProjectTheme
+import yandex.school.project.core.theme.ProjectTheme
 
 @Composable
 fun ExpensesCreateScreen() {
@@ -24,7 +24,7 @@ fun ExpensesCreateScreen() {
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
 fun ExpensesCreateScreenPreview() {
-    ProjectTheme {
+    yandex.school.project.core.theme.ProjectTheme {
         ExpensesCreateScreen()
     }
 }

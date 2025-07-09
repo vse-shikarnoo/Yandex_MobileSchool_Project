@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.HorizontalDivider
@@ -27,10 +26,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import yandex.school.project.presentation.components.ListItem
-import yandex.school.project.presentation.components.ResultScreen
-import yandex.school.project.presentation.theme.ProjectTheme
-import yandex.school.project.presentation.common.rememberCoroutineManager
+import yandex.school.project.core.ui.components.ListItem
+import yandex.school.project.core.ui.components.ResultScreen
+import yandex.school.project.core.theme.ProjectTheme
+import yandex.school.project.core.utils.rememberCoroutineManager
 import androidx.lifecycle.viewmodel.compose.viewModel
 import yandex.school.project.LocalViewModelFactory
 
@@ -43,7 +42,7 @@ fun CategoryScreen() {
     val uiState by viewModel.uiState.collectAsState()
 
     // Используем CoroutineManager для автоматического управления корутинами
-    val coroutineManager = rememberCoroutineManager(viewModel)
+    val coroutineManager = yandex.school.project.core.utils.rememberCoroutineManager(viewModel)
     
     LaunchedEffect(Unit) {
         coroutineManager.launchWithCancelPrevious {
@@ -51,7 +50,7 @@ fun CategoryScreen() {
         }
     }
 
-    ResultScreen(
+    yandex.school.project.core.ui.components.ResultScreen(
         result = uiState,
         onRetry = { viewModel.loadCategoriesWithRetry() },
         coroutineManager = coroutineManager
@@ -86,7 +85,7 @@ fun CategoryScreen() {
                 HorizontalDivider()
             }
             items(filtered) { category ->
-                ListItem(
+                yandex.school.project.core.ui.components.ListItem(
                     modifier = Modifier.height(70.dp),
                     leadingIcon = category.icon ?: "📁",
                     contentTitle = category.name
@@ -100,7 +99,7 @@ fun CategoryScreen() {
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
 fun CategoryScreenPreview() {
-    ProjectTheme {
+    yandex.school.project.core.theme.ProjectTheme {
         Surface {
             CategoryScreen()
         }

@@ -10,35 +10,25 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import yandex.school.project.presentation.components.TopBar
-import yandex.school.project.presentation.components.TopBarState
+import yandex.school.project.core.ui.components.TopBar
+import yandex.school.project.core.ui.components.TopBarState
 import yandex.school.project.presentation.navigation.BottomBar
 import yandex.school.project.presentation.navigation.BottomNavigation
-import yandex.school.project.presentation.theme.ProjectTheme
-import yandex.school.project.presentation.screens.account.AccountViewModel
-import yandex.school.project.presentation.common.Result
-import yandex.school.project.domain.entities.Account
-import yandex.school.project.presentation.utils.CURRENCY_RUB
+import yandex.school.project.core.domain.entities.Account
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(account: Account?) {
+fun MainScreen(account: yandex.school.project.core.domain.entities.Account?) {
     val bottomNavController = rememberNavController()
     val currentTopBarState = remember {
         mutableStateOf(
-            TopBarState(
+            yandex.school.project.core.ui.components.TopBarState(
                 navigationIcon = null,
                 title = "Расходы сегодня",
                 actionIcon = null,
@@ -47,7 +37,7 @@ fun MainScreen(account: Account?) {
     }
     Scaffold(
         topBar = {
-            TopBar(currentTopBarState.value)
+            yandex.school.project.core.ui.components.TopBar(currentTopBarState.value)
         },
         bottomBar = { BottomBar(bottomNavController) },
         floatingActionButton = {

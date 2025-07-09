@@ -6,13 +6,13 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import yandex.school.project.domain.entities.TransactionWithCategory
-import yandex.school.project.domain.usecases.category.GetCategoriesUseCase
-import yandex.school.project.domain.usecases.transaction.GetTransactionsByAccountUseCase
-import yandex.school.project.presentation.common.NetworkOperationHelper
-import yandex.school.project.presentation.common.Result
+import yandex.school.project.core.domain.entities.TransactionWithCategory
+import yandex.school.project.core.domain.usecases.category.GetCategoriesUseCase
+import yandex.school.project.core.domain.usecases.transaction.GetTransactionsByAccountUseCase
+import yandex.school.project.core.utils.NetworkOperationHelper
+import yandex.school.project.core.utils.Result
 import yandex.school.project.presentation.screens.income.IncomesState
-import yandex.school.project.presentation.utils.CURRENCY_RUB
+import yandex.school.project.core.utils.CURRENCY_RUB
 import javax.inject.Inject
 
 /**
@@ -20,13 +20,14 @@ import javax.inject.Inject
  * Единственная ответственность: управление состоянием UI и загрузка данных о доходах с категориями.
  */
 class IncomesViewModel @Inject constructor(
-    private val getTransactionsByAccountUseCase: GetTransactionsByAccountUseCase,
-    private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val networkHelper: NetworkOperationHelper
+    private val getTransactionsByAccountUseCase: yandex.school.project.core.domain.usecases.transaction.GetTransactionsByAccountUseCase,
+    private val getCategoriesUseCase: yandex.school.project.core.domain.usecases.category.GetCategoriesUseCase,
+    private val networkHelper: yandex.school.project.core.utils.NetworkOperationHelper
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<Result<IncomesState>>(Result.Loading)
-    val uiState: StateFlow<Result<IncomesState>> = _uiState
+    private val _uiState = MutableStateFlow<yandex.school.project.core.utils.Result<IncomesState>>(
+        yandex.school.project.core.utils.Result.Loading)
+    val uiState: StateFlow<yandex.school.project.core.utils.Result<IncomesState>> = _uiState
 
     override fun onCleared() {
         super.onCleared()
@@ -42,12 +43,17 @@ class IncomesViewModel @Inject constructor(
                     val categories = getCategoriesUseCase()
                     
                     val incomeTransactions = allTransactions.filter { transaction ->
-                        transaction.type == yandex.school.project.domain.entities.TransactionType.INCOME
+                        transaction.type == yandex.school.project.core.domain.entities.TransactionType.INCOME
                     }
                     
                     val transactionsWithCategory = incomeTransactions.mapNotNull { transaction ->
                         val category = categories.find { it.id == transaction.categoryId }
-                        category?.let { TransactionWithCategory(transaction, it) }
+                        category?.let {
+                            yandex.school.project.core.domain.entities.TransactionWithCategory(
+                                transaction,
+                                it
+                            )
+                        }
                     }.sortedByDescending {
                         it.date
                     }
@@ -55,14 +61,14 @@ class IncomesViewModel @Inject constructor(
                     val total = transactionsWithCategory.sumOf { it.amount }
                     IncomesState(
                         transactions = transactionsWithCategory,
-                        total = "${total.toInt()} $CURRENCY_RUB"
+                        total = "${total.toInt()} ${yandex.school.project.core.utils.CURRENCY_RUB}"
                     )
                 },
                 onSuccess = { incomesState ->
-                    _uiState.value = Result.Success(incomesState)
+                    _uiState.value = yandex.school.project.core.utils.Result.Success(incomesState)
                 },
                 onError = { errorMessage ->
-                    _uiState.value = Result.Error(errorMessage)
+                    _uiState.value = yandex.school.project.core.utils.Result.Error(errorMessage)
                 },
                 maxRetries = maxRetries,
                 delayMillis = delayMillis,

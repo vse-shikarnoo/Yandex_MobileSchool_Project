@@ -11,9 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -21,9 +19,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import yandex.school.project.R
-import yandex.school.project.domain.entities.Account
+import yandex.school.project.core.domain.entities.Account
 import androidx.compose.ui.text.input.TextFieldValue
-import yandex.school.project.presentation.components.TopBarState
+import yandex.school.project.core.ui.components.TopBarState
 import yandex.school.project.presentation.screens.account.AccountScreen
 import yandex.school.project.presentation.screens.category.CategoryScreen
 import yandex.school.project.presentation.screens.settings.SettingsScreen
@@ -33,7 +31,7 @@ import yandex.school.project.presentation.screens.expenses.history.ExpensesHisto
 import yandex.school.project.presentation.screens.income.create.IncomesCreateScreen
 import yandex.school.project.presentation.screens.income.history.IncomesHistoryScreen
 import yandex.school.project.presentation.screens.income.incomes.IncomesScreen
-import yandex.school.project.presentation.utils.CURRENCY_RUB
+import yandex.school.project.core.utils.CURRENCY_RUB
 
 /**
  * Основная навигация нижней панели приложения.
@@ -42,10 +40,10 @@ import yandex.school.project.presentation.utils.CURRENCY_RUB
 @Composable
 fun BottomNavigation(
     navController: NavHostController,
-    onTitleChange: (TopBarState) -> Unit,
-    account: Account?
+    onTitleChange: (yandex.school.project.core.ui.components.TopBarState) -> Unit,
+    account: yandex.school.project.core.domain.entities.Account?
 ) {
-    val (currency, setCurrency) = remember { mutableStateOf(account?.currency ?: CURRENCY_RUB) }
+    val (currency, setCurrency) = remember { mutableStateOf(account?.currency ?: yandex.school.project.core.utils.CURRENCY_RUB) }
     val (isEditingTitle, setIsEditingTitle) = remember { mutableStateOf(false) }
     val (titleInput, setTitleInput) = remember { mutableStateOf(TextFieldValue(account?.name ?: "Мой счет")) }
     val accountId = account?.id ?: 1
@@ -74,7 +72,7 @@ fun BottomNavigation(
 
             LaunchedEffect(titleInput, isEditingTitle) {
                 onTitleChange(
-                    TopBarState(
+                    yandex.school.project.core.ui.components.TopBarState(
                         title = titleInput.text,
                         actionIcon = editIcon,
                         actionIconAction = { setIsEditingTitle(true) },
@@ -95,7 +93,7 @@ fun BottomNavigation(
         }
         composable(BottomBarDestinations.Expenditure.route) {
             onTitleChange(
-                TopBarState(
+                yandex.school.project.core.ui.components.TopBarState(
                     title = "Мои статьи"
                 )
             )
@@ -103,7 +101,7 @@ fun BottomNavigation(
         }
         composable(BottomBarDestinations.Settings.route) {
             onTitleChange(
-                TopBarState(
+                yandex.school.project.core.ui.components.TopBarState(
                     title = "Настройки"
                 )
             )
@@ -120,8 +118,8 @@ fun BottomNavigation(
 @Composable
 fun ExpensesNavGraph(
     accountId: Int,
-    currency: String = CURRENCY_RUB,
-    onTitleChange: (TopBarState) -> Unit
+    currency: String = yandex.school.project.core.utils.CURRENCY_RUB,
+    onTitleChange: (yandex.school.project.core.ui.components.TopBarState) -> Unit
 ) {
     val expensesNavController = rememberNavController()
     val navBackStackEntry by expensesNavController.currentBackStackEntryAsState()
@@ -134,7 +132,7 @@ fun ExpensesNavGraph(
         when (currentRoute) {
             Destinations.ExpensesScreen.route -> {
                 onTitleChange(
-                    TopBarState(
+                    yandex.school.project.core.ui.components.TopBarState(
                         title = "Расходы сегодня",
                         actionIcon = historyIcon,
                         actionIconAction = {
@@ -146,13 +144,13 @@ fun ExpensesNavGraph(
             }
 
             Destinations.ExpensesCreateScreen.route -> onTitleChange(
-                TopBarState(
+                yandex.school.project.core.ui.components.TopBarState(
                     title = "Мои расходы",
                 )
             )
 
             Destinations.ExpensesHistoryScreen.route -> onTitleChange(
-                TopBarState(
+                yandex.school.project.core.ui.components.TopBarState(
                     title = "История расходов",
                     actionIcon = analyticIcon,
                     actionIconAction = {
@@ -191,8 +189,8 @@ fun ExpensesNavGraph(
 @Composable
 fun IncomesNavGraph(
     accountId: Int,
-    currency: String = CURRENCY_RUB,
-    onTitleChange: (TopBarState) -> Unit
+    currency: String = yandex.school.project.core.utils.CURRENCY_RUB,
+    onTitleChange: (yandex.school.project.core.ui.components.TopBarState) -> Unit
 ) {
     val incomesNavController = rememberNavController()
     val navBackStackEntry by incomesNavController.currentBackStackEntryAsState()
@@ -205,7 +203,7 @@ fun IncomesNavGraph(
         when (currentRoute) {
             Destinations.IncomesScreen.route -> {
                 onTitleChange(
-                    TopBarState(
+                    yandex.school.project.core.ui.components.TopBarState(
                         title = "Доходы сегодня",
                         actionIcon = historyIcon,
                         actionIconAction = {
@@ -217,13 +215,13 @@ fun IncomesNavGraph(
             }
 
             Destinations.IncomesCreateScreen.route -> onTitleChange(
-                TopBarState(
+                yandex.school.project.core.ui.components.TopBarState(
                     title = "Мои доходы"
                 )
             )
 
             Destinations.IncomesHistoryScreen.route -> onTitleChange(
-                TopBarState(
+                yandex.school.project.core.ui.components.TopBarState(
                     title = "История доходов",
                     actionIcon = analyticIcon,
                     actionIconAction = {

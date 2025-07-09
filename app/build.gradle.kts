@@ -5,17 +5,11 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "1.9.22"
-    kotlin("kapt")
+    alias(libs.plugins.ksp)
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
 }
 
-// Читаем токен из local.properties
-val apiToken: String by lazy {
-    val properties = Properties().apply {
-        rootProject.file("local.properties").inputStream().use { load(it) }
-    }
-    properties.getProperty("API_TOKEN", "")
-}
+
 
 android {
     namespace = "yandex.school.project"
@@ -30,8 +24,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
-        // Добавляем токен в BuildConfig
-        buildConfigField("String", "API_TOKEN", apiToken)
+
     }
 
     buildTypes {
@@ -60,6 +53,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
+    implementation(project(":feature:account"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -80,16 +75,10 @@ dependencies {
     implementation(libs.android.lottie.compose)
     implementation(libs.androidx.navigation.compose)
 
-    // Ktor
-    implementation("io.ktor:ktor-client-android:2.3.7")
-    implementation("io.ktor:ktor-client-core:2.3.7")
-    implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
-    implementation("io.ktor:ktor-client-logging:2.3.7")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-
     // Dagger 2
     implementation("com.google.dagger:dagger:2.50")
-    kapt("com.google.dagger:dagger-compiler:2.50")
+    ksp("com.google.dagger:dagger-compiler:2.50")
+
+
 }
 

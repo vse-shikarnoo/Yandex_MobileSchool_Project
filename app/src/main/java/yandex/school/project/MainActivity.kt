@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import yandex.school.project.presentation.navigation.AppNavigation
-import yandex.school.project.presentation.theme.ProjectTheme
+import yandex.school.project.core.theme.ProjectTheme
 import androidx.lifecycle.ViewModelProvider
 import yandex.school.project.di.ViewModelFactory
 import androidx.compose.runtime.CompositionLocalProvider
@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
         val viewModelFactory = app.appComponent.viewModelFactory()
         setContent {
             CompositionLocalProvider(LocalViewModelFactory provides viewModelFactory) {
-                ProjectTheme {
+                yandex.school.project.core.theme.ProjectTheme {
                     AppNavigation()
                 }
             }

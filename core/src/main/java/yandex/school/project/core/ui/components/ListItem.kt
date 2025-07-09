@@ -1,0 +1,168 @@
+package yandex.school.project.core.ui.components
+
+import android.annotation.SuppressLint
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import yandex.school.project.core.theme.ProjectTheme
+import yandex.school.project.core.utils.isEmoji
+
+@Composable
+fun ListItem(
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.height(70.dp),
+    leadingIcon: String? = null,
+    contentTitle: String,
+    comment: String? = null,
+    contentSecond: (@Composable () -> Unit)? = null,
+    trailing: (@Composable () -> Unit)? = null,
+    onClick: (() -> Unit)? = null,
+    backgroundColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.surface,
+    iconBackgroundColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.secondary
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
+            .background(backgroundColor)
+            .padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (leadingIcon != null) {
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .clip(CircleShape)
+                    .background(iconBackgroundColor),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = leadingIcon,
+                    fontSize = if (yandex.school.project.core.utils.isEmoji(leadingIcon)) 18.sp else 11.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+        }
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = contentTitle,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            if (comment != null) {
+                Text(
+                    text = comment,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
+            }
+        }
+        if (contentSecond != null){
+            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterEnd) {
+                contentSecond()
+            }
+        }
+        if (trailing != null) {
+            Spacer(modifier = Modifier.width(16.dp))
+            trailing()
+        }
+    }
+}
+
+
+//🏡👗🐶🍭🏋️💊
+@Preview
+@Composable
+fun ListItemIconPreview() {
+    yandex.school.project.core.theme.ProjectTheme {
+        Surface {
+            val leadingIcon = "\uD83D\uDC57"
+            ListItem(
+                leadingIcon = leadingIcon,
+                contentTitle = "Аренда квартиры",
+                comment = "Иван",
+                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                iconBackgroundColor = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+}
+
+
+@Preview
+@Composable
+fun ListItemStringPreview() {
+    yandex.school.project.core.theme.ProjectTheme {
+        Surface {
+            ListItem(
+                leadingIcon = "АК",
+                contentTitle = "Аренда квартиры",
+                comment = "Иван",
+                backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+                iconBackgroundColor = MaterialTheme.colorScheme.tertiary
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ListItemSwitchPreview() {
+    yandex.school.project.core.theme.ProjectTheme {
+        Surface {
+            ListItem(
+                contentTitle = "Светлая темная авто",
+                trailing = {
+                    Switch(
+                        checked = false,
+                        onCheckedChange = { }
+                    )
+                }
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ListItemPreview() {
+    yandex.school.project.core.theme.ProjectTheme {
+        Surface {
+            ListItem(
+                contentTitle = "О приложении",
+                comment = "Описание приложения",
+                contentSecond = {
+                    Text(
+                        text = "500 000",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                },
+                trailing = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = null
+                    )
+                },
+                onClick = { /* TODO: обработка нажатия */ }
+            )
+        }
+    }
+} 

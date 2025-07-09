@@ -5,8 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-import dagger.multibindings.ClassKey
-import dagger.multibindings.Multibinds
+import yandex.school.project.core.di.ViewModelKey
 import yandex.school.project.presentation.screens.account.AccountViewModel
 import yandex.school.project.presentation.screens.category.CategoryViewModel
 import yandex.school.project.presentation.screens.expenses.expenses.ExpensesViewModel

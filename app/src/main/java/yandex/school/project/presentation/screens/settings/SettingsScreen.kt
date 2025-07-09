@@ -18,8 +18,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import yandex.school.project.R
-import yandex.school.project.presentation.components.ListItem
-import yandex.school.project.presentation.theme.ProjectTheme
+import yandex.school.project.core.ui.components.ListItem
+import yandex.school.project.core.theme.ProjectTheme
 
 @Composable
 fun SettingsScreen() {
@@ -29,7 +29,7 @@ fun SettingsScreen() {
             .fillMaxSize()
     ) {
         // Переключатель темы
-        ListItem(
+        yandex.school.project.core.ui.components.ListItem(
             modifier = Modifier.height(56.dp),
             contentTitle = "Темная тема",
             trailing = {
@@ -51,7 +51,7 @@ fun SettingsScreen() {
             "О программе"
         )
         items.forEach { item ->
-            ListItem(
+            yandex.school.project.core.ui.components.ListItem(
                 modifier = Modifier.height(56.dp),
                 contentTitle = item,
                 trailing = {
@@ -70,7 +70,7 @@ fun SettingsScreen() {
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
 fun SettingsScreenPreview() {
-    ProjectTheme {
+    yandex.school.project.core.theme.ProjectTheme {
         Surface {
             SettingsScreen()
         }

@@ -12,14 +12,14 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import yandex.school.project.R
-import yandex.school.project.domain.entities.Account
+import yandex.school.project.core.domain.entities.Account
 import androidx.lifecycle.viewmodel.compose.viewModel
 import yandex.school.project.LocalViewModelFactory
 
 @Composable
 fun SplashScreen(
     goNextDestination: () -> Unit,
-    accountChange: (Account?) -> Unit
+    accountChange: (yandex.school.project.core.domain.entities.Account?) -> Unit
 ) {
     val factory = LocalViewModelFactory.current
     val viewModel: SplashViewModel = viewModel(factory = factory)

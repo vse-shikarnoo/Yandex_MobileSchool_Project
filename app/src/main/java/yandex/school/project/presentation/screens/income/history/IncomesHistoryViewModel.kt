@@ -8,25 +8,26 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import yandex.school.project.domain.entities.TransactionWithCategory
-import yandex.school.project.domain.usecases.category.GetCategoriesUseCase
-import yandex.school.project.domain.usecases.transaction.GetTransactionsByAccountUseCase
-import yandex.school.project.presentation.common.HistoryState
-import yandex.school.project.presentation.common.HistoryViewModel
-import yandex.school.project.presentation.common.NetworkOperationHelper
-import yandex.school.project.presentation.common.Result
+import yandex.school.project.core.domain.entities.TransactionWithCategory
+import yandex.school.project.core.domain.usecases.category.GetCategoriesUseCase
+import yandex.school.project.core.domain.usecases.transaction.GetTransactionsByAccountUseCase
+import yandex.school.project.core.ui.common.HistoryState
+import yandex.school.project.core.ui.common.HistoryViewModel
+import yandex.school.project.core.utils.NetworkOperationHelper
+import yandex.school.project.core.utils.Result
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class IncomesHistoryViewModel @Inject constructor(
-    private val getTransactionsByAccountUseCase: GetTransactionsByAccountUseCase,
-    private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val networkHelper: NetworkOperationHelper
-) : ViewModel(), HistoryViewModel {
+    private val getTransactionsByAccountUseCase: yandex.school.project.core.domain.usecases.transaction.GetTransactionsByAccountUseCase,
+    private val getCategoriesUseCase: yandex.school.project.core.domain.usecases.category.GetCategoriesUseCase,
+    private val networkHelper: yandex.school.project.core.utils.NetworkOperationHelper
+) : ViewModel(), yandex.school.project.core.ui.common.HistoryViewModel {
 
-    override var uiState: Result<HistoryState> by mutableStateOf(Result.Loading)
+    override var uiState: yandex.school.project.core.utils.Result<yandex.school.project.core.ui.common.HistoryState> by mutableStateOf(
+        yandex.school.project.core.utils.Result.Loading)
         private set
 
     private var currentStartDate: LocalDate? = null
@@ -45,7 +46,7 @@ class IncomesHistoryViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun loadTransactionsWithRetry(accountId: Int, maxRetries: Int, delayMillis: Long) {
-        uiState = Result.Loading
+        uiState = yandex.school.project.core.utils.Result.Loading
         val start = currentStartDate?.format(DateTimeFormatter.ISO_LOCAL_DATE)
         val end = currentEndDate?.format(DateTimeFormatter.ISO_LOCAL_DATE)
         networkHelper.executeWithRetry(
@@ -54,7 +55,7 @@ class IncomesHistoryViewModel @Inject constructor(
                 val allTransactions = getTransactionsByAccountUseCase(accountId)
                 val categories = getCategoriesUseCase()
                 val filteredTransactions = allTransactions.filter { transaction ->
-                    val isIncome = transaction.type == yandex.school.project.domain.entities.TransactionType.INCOME
+                    val isIncome = transaction.type == yandex.school.project.core.domain.entities.TransactionType.INCOME
                     val inDateRange = if (start != null && end != null) {
                         try {
                             val transactionDateTime = OffsetDateTime.parse(transaction.date)
@@ -72,10 +73,15 @@ class IncomesHistoryViewModel @Inject constructor(
                 }.sortedByDescending { it.date }
                 val transactionsWithCategory = filteredTransactions.mapNotNull { transaction ->
                     val category = categories.find { it.id == transaction.categoryId }
-                    category?.let { TransactionWithCategory(transaction, it) }
+                    category?.let {
+                        yandex.school.project.core.domain.entities.TransactionWithCategory(
+                            transaction,
+                            it
+                        )
+                    }
                 }
                 val total = transactionsWithCategory.sumOf { it.amount }
-                HistoryState(
+                yandex.school.project.core.ui.common.HistoryState(
                     transactions = transactionsWithCategory,
                     startDate = currentStartDate,
                     endDate = currentEndDate,
@@ -83,10 +89,10 @@ class IncomesHistoryViewModel @Inject constructor(
                 )
             },
             onSuccess = { data ->
-                uiState = Result.Success(data)
+                uiState = yandex.school.project.core.utils.Result.Success(data)
             },
             onError = { errorMessage ->
-                uiState = Result.Error(errorMessage)
+                uiState = yandex.school.project.core.utils.Result.Error(errorMessage)
             },
             maxRetries = maxRetries,
             delayMillis = delayMillis,
