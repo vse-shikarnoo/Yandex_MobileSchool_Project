@@ -14,8 +14,10 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import androidx.lifecycle.viewmodel.compose.viewModel
 import yandex.school.project.splash.di.LocalSplashViewModelFactory
 
+
+
 @Composable
-fun SplashScreen(
+fun _SplashScreen(
     goNextDestination: () -> Unit,
     accountChange: (yandex.school.project.core.domain.entities.Account?) -> Unit
 ) {

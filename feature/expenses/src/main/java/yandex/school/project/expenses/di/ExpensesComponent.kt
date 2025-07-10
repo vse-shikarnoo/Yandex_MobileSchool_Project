@@ -3,23 +3,22 @@ package yandex.school.project.expenses.di
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.ViewModelProvider
 import dagger.Component
+import dagger.Subcomponent
 import javax.inject.Singleton
 
 val LocalExpensesViewModelFactory = staticCompositionLocalOf<ViewModelProvider.Factory> {
     error("ExpensesViewModelFactory not provided")
 }
 
-//@Subcomponent(modules = [ExpensesViewModelModule::class])
-@Singleton
-@Component(
-    modules = [ExpensesViewModelModule::class,
-        yandex.school.project.core.di.NetworkModule::class,
-        yandex.school.project.core.di.RepositoryModule::class]
+@Subcomponent(
+//@Singleton
+//@Component(
+    modules = [ExpensesViewModelModule::class]
 )
 interface ExpensesComponent {
     fun viewModelFactory(): ViewModelProvider.Factory
 
-    @Component.Factory
+    @Subcomponent.Factory
     interface Factory {
         fun create(): ExpensesComponent
     }

@@ -8,11 +8,5 @@ import yandex.school.project.di.AppComponent
  * Единственная ответственность: настройка и запуск системы dependency injection.
  */
 class FinanceApplication : Application() {
-    lateinit var appComponent: AppComponent
-        private set
 
-    override fun onCreate() {
-        super.onCreate()
-        appComponent = AppComponent.create()
-    }
 } 

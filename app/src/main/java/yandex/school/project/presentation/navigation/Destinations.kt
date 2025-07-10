@@ -2,53 +2,10 @@ package yandex.school.project.presentation.navigation
 
 import yandex.school.project.R
 
-const val EXPENSES_ROUTE = "expenses"
-const val INCOMES_ROUTE = "incomes"
-
 sealed class Destinations(
     val route: String,
     val title: Int
 ) {
-    data object ExpensesScreen : Destinations(
-        EXPENSES_ROUTE + "_screen",
-        title = R.string.expenses_graph_title
-    )
-
-    data object ExpensesCreateScreen : Destinations(
-        EXPENSES_ROUTE + "_create_screen",
-        title = R.string.expenses_create_title
-    )
-
-    data object ExpensesHistoryScreen : Destinations(
-        EXPENSES_ROUTE + "_history_screen",
-        title = R.string.expenses_history_title
-    )
-
-    data object ExpensesAnalyticScreen : Destinations(
-        EXPENSES_ROUTE + "_analytic_screen",
-        title = R.string.expenses_analytic_title
-    )
-
-
-    data object IncomesScreen : Destinations(
-        INCOMES_ROUTE + "_screen",
-        title = R.string.income_screen_title
-    )
-
-    data object IncomesCreateScreen : Destinations(
-        INCOMES_ROUTE + "_create_screen",
-        title = R.string.income_screen_title
-    )
-
-    data object IncomesHistoryScreen : Destinations(
-        INCOMES_ROUTE + "_history_screen",
-        title = R.string.income_screen_title
-    )
-
-    data object IncomesAnalyticScreen : Destinations(
-        INCOMES_ROUTE + "_analytic_screen",
-        title = R.string.income_screen_title
-    )
 
     data object Account : Destinations(
         "account_screen",

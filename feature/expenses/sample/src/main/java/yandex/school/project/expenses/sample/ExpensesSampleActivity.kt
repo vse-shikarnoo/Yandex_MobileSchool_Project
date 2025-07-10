@@ -10,8 +10,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import yandex.school.project.core.ui.components.TopBar
 import yandex.school.project.core.ui.components.TopBarState
-import yandex.school.project.expenses.di.DaggerExpensesComponent
-import yandex.school.project.expenses.di.LocalExpensesViewModelFactory
 import yandex.school.project.expenses.navigation.ExpensesNavGraph
 
 class ExpensesSampleActivity : ComponentActivity() {
@@ -20,11 +18,11 @@ class ExpensesSampleActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
 
-        val expensesComponent = DaggerExpensesComponent.factory().create()
-        val viewModelFactory = expensesComponent.viewModelFactory()
+        //val expensesComponent = DaggerExpensesComponent.factory().create()
+        //val viewModelFactory = expensesComponent.viewModelFactory()
 
         setContent {
-            CompositionLocalProvider(LocalExpensesViewModelFactory provides viewModelFactory) {
+            //CompositionLocalProvider(LocalExpensesViewModelFactory provides viewModelFactory) {
                 Scaffold(
                     topBar = {
                         TopBar(
@@ -41,5 +39,5 @@ class ExpensesSampleActivity : ComponentActivity() {
                 }
             }
         }
-    }
+    //}
 }

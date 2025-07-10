@@ -5,8 +5,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "1.9.22"
-    alias(libs.plugins.ksp)
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
+
+    kotlin("kapt")
 }
 
 
@@ -55,6 +56,11 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":feature:account"))
+    implementation(project(":feature:category"))
+    implementation(project(":feature:expenses"))
+    implementation(project(":feature:income"))
+    implementation(project(":feature:settings"))
+    implementation(project(":feature:splash"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -77,7 +83,7 @@ dependencies {
 
     // Dagger 2
     implementation("com.google.dagger:dagger:2.50")
-    ksp("com.google.dagger:dagger-compiler:2.50")
+    kapt("com.google.dagger:dagger-compiler:2.50")
 
 
 }
