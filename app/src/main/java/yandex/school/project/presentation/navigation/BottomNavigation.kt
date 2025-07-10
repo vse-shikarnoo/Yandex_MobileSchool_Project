@@ -19,9 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import yandex.school.project.R
-import yandex.school.project.core.domain.entities.Account
 import androidx.compose.ui.text.input.TextFieldValue
-import yandex.school.project.core.ui.components.TopBarState
 import yandex.school.project.presentation.screens.account.AccountScreen
 import yandex.school.project.presentation.screens.category.CategoryScreen
 import yandex.school.project.presentation.screens.settings.SettingsScreen
@@ -31,7 +29,6 @@ import yandex.school.project.presentation.screens.expenses.history.ExpensesHisto
 import yandex.school.project.presentation.screens.income.create.IncomesCreateScreen
 import yandex.school.project.presentation.screens.income.history.IncomesHistoryScreen
 import yandex.school.project.presentation.screens.income.incomes.IncomesScreen
-import yandex.school.project.core.utils.CURRENCY_RUB
 
 /**
  * Основная навигация нижней панели приложения.
@@ -106,81 +103,6 @@ fun BottomNavigation(
                 )
             )
             SettingsScreen()
-        }
-    }
-}
-
-/**
- * Навигация для раздела расходов.
- * Единственная ответственность: управление навигацией между экранами расходов.
- */
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun ExpensesNavGraph(
-    accountId: Int,
-    currency: String = yandex.school.project.core.utils.CURRENCY_RUB,
-    onTitleChange: (yandex.school.project.core.ui.components.TopBarState) -> Unit
-) {
-    val expensesNavController = rememberNavController()
-    val navBackStackEntry by expensesNavController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-    val historyIcon = ImageVector.vectorResource(R.drawable.ic_history)
-    val analyticIcon = ImageVector.vectorResource(R.drawable.history_analytic)
-
-    // Меняем title в зависимости от текущего route
-    LaunchedEffect(currentRoute) {
-        when (currentRoute) {
-            Destinations.ExpensesScreen.route -> {
-                onTitleChange(
-                    yandex.school.project.core.ui.components.TopBarState(
-                        title = "Расходы сегодня",
-                        actionIcon = historyIcon,
-                        actionIconAction = {
-                            expensesNavController.navigate(Destinations.ExpensesHistoryScreen.route)
-                        },
-                        isFAB = true
-                    )
-                )
-            }
-
-            Destinations.ExpensesCreateScreen.route -> onTitleChange(
-                yandex.school.project.core.ui.components.TopBarState(
-                    title = "Мои расходы",
-                )
-            )
-
-            Destinations.ExpensesHistoryScreen.route -> onTitleChange(
-                yandex.school.project.core.ui.components.TopBarState(
-                    title = "История расходов",
-                    actionIcon = analyticIcon,
-                    actionIconAction = {
-
-                    },
-                    navigationIcon = Icons.Default.ArrowBack,
-                    navigationIconAction = {
-                        expensesNavController.popBackStack()
-                    }
-                )
-            )
-        }
-    }
-
-    BackHandler(enabled = expensesNavController.previousBackStackEntry != null) {
-        expensesNavController.popBackStack()
-    }
-
-    NavHost(
-        navController = expensesNavController,
-        startDestination = Destinations.ExpensesScreen.route
-    ) {
-        composable(Destinations.ExpensesScreen.route) {
-            ExpensesScreen(accountId = accountId, currency = currency)
-        }
-        composable(Destinations.ExpensesCreateScreen.route) {
-            ExpensesCreateScreen()
-        }
-        composable(Destinations.ExpensesHistoryScreen.route) {
-            ExpensesHistoryScreen(accountId = accountId, currency = currency)
         }
     }
 }

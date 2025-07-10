@@ -35,6 +35,7 @@ import yandex.school.project.core.utils.CURRENCY_RUB
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HistoryScreen(
+    modifier: Modifier = Modifier,
     viewModel: yandex.school.project.core.ui.common.HistoryViewModel,
     accountId: Int,
     currency: String,
@@ -48,6 +49,7 @@ fun HistoryScreen(
     }
 
     ResultScreen(
+        modifier = modifier,
         result = uiState,
         onRetry = { viewModel.loadTransactionsWithRetry(accountId) },
         coroutineManager = coroutineManager

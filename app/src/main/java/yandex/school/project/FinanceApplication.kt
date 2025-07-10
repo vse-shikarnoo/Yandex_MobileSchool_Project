@@ -2,7 +2,6 @@ package yandex.school.project
 
 import android.app.Application
 import yandex.school.project.di.AppComponent
-import yandex.school.project.di.DaggerAppComponent
 
 /**
  * Главный класс приложения, отвечающий за инициализацию Hilt для dependency injection.
@@ -14,6 +13,6 @@ class FinanceApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = DaggerAppComponent.create()
+        appComponent = AppComponent.create()
     }
 } 

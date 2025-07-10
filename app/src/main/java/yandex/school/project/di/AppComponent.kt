@@ -16,4 +16,5 @@ interface AppComponent {
     // Методы для внедрения зависимостей в Application, Activity, ViewModelFactory и т.д.
     fun viewModelFactory(): ViewModelProvider.Factory
     fun accountComponent(): yandex.school.project.account.di.AccountComponent.Factory
+    fun categoryComponent(): yandex.school.project.category.di.CategoryComponent.Factory
 } 

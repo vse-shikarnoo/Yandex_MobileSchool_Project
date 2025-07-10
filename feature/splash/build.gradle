@@ -1,0 +1,9 @@
+apply from: rootProject.file('feature-shared.gradle')
+
+android {
+    namespace 'yandex.school.project.splash'
+}
+
+dependencies {
+    implementation(libs.android.lottie.compose)
+}

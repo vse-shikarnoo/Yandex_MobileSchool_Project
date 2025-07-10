@@ -20,7 +20,7 @@ class ApiClient {
         private const val BASE_URL = "https://shmr-finance.ru"
 
         object BuildConfig{
-            val API_TOKEN = "kasljdklsadjlakjdklasjdkl"
+            val API_TOKEN = "2NrVL2sbxdmisqnLPGh7NUCe"
         }
     }
 

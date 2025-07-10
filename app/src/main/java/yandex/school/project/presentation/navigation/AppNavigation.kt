@@ -7,10 +7,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import yandex.school.project.core.domain.entities.Account
 import yandex.school.project.presentation.screens.MainScreen
 import yandex.school.project.presentation.screens.splash.SplashScreen
-import yandex.school.project.core.utils.CURRENCY_RUB
 
 /**
  * Константы для основных экранов приложения.

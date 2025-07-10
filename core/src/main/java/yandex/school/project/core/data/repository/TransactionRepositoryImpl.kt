@@ -1,5 +1,6 @@
 package yandex.school.project.core.data.repository
 
+import android.util.Log
 import yandex.school.project.core.data.network.ApiService
 import yandex.school.project.core.domain.entities.Transaction
 import yandex.school.project.core.domain.entities.TransactionType
@@ -65,7 +66,9 @@ class TransactionRepositoryImpl @Inject constructor(
         startDate: String?,
         endDate: String?
     ): List<Transaction> {
-        return apiService.getTransactionsByAccountPeriod(accountId, startDate, endDate)
+        val t = apiService.getTransactionsByAccountPeriod(accountId, startDate, endDate)
             .map { it.toDomain() }
+        Log.d("TransactionRepository", "getTransactionsByAccountPeriod: $t")
+        return t
     }
 } 

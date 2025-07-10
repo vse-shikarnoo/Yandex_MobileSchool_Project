@@ -45,6 +45,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import yandex.school.project.account.di.LocalAccountViewModelFactory
 
 @Composable
 fun AccountScreen(
@@ -53,7 +55,7 @@ fun AccountScreen(
     onCurrencyChanged: (String) -> Unit,
     onAccountNameEditDone: ((String) -> Unit)? = null
 ) {
-    val factory = LocalViewModelFactory.current
+    val factory = LocalAccountViewModelFactory.current
     val viewModel: AccountViewModel = viewModel(factory = factory)
     val uiState by viewModel.uiState.collectAsState()
     val coroutineManager = yandex.school.project.core.utils.rememberCoroutineManager(viewModel)
