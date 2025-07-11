@@ -13,9 +13,9 @@ sealed class ExpensesDestinations(
         title = R.string.expenses_graph_title
     )
 
-    data object ExpensesCreateScreen : ExpensesDestinations(
-        EXPENSES_ROUTE + "_create_screen",
-        title = R.string.expenses_create_title
+    data object ExpensesEditScreen : ExpensesDestinations(
+        EXPENSES_ROUTE + "_edit_screen",
+        title = R.string.expenses_edit_title
     )
 
     data object ExpensesHistoryScreen : ExpensesDestinations(

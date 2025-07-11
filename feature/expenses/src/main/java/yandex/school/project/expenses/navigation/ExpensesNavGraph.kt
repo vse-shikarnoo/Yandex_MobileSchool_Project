@@ -15,11 +15,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import yandex.school.project.core.ui.components.TopBarState
+import yandex.school.project.core.utils.CURRENCY_RUB
 import yandex.school.project.expenses.ExpensesScreen
 import yandex.school.project.expenses.R
-import yandex.school.project.expenses.create.ExpensesCreateScreen
 import yandex.school.project.expenses.di.ExpensesComponent
 import yandex.school.project.expenses.di.LocalExpensesViewModelFactory
+import yandex.school.project.expenses.edit.ExpensesEditScreen
 import yandex.school.project.expenses.history.ExpensesHistoryScreen
 
 /**
@@ -31,8 +33,8 @@ fun ExpensesNavGraph(
     expensesComponent: ExpensesComponent,
     modifier: Modifier = Modifier,
     accountId: Int,
-    currency: String = yandex.school.project.core.utils.CURRENCY_RUB,
-    onTitleChange: (yandex.school.project.core.ui.components.TopBarState) -> Unit
+    currency: String = CURRENCY_RUB,
+    onTitleChange: (TopBarState) -> Unit
 ) {
     val expensesNavController = rememberNavController()
     val navBackStackEntry by expensesNavController.currentBackStackEntryAsState()
@@ -45,25 +47,28 @@ fun ExpensesNavGraph(
         when (currentRoute) {
             ExpensesDestinations.ExpensesScreen.route -> {
                 onTitleChange(
-                    yandex.school.project.core.ui.components.TopBarState(
+                    TopBarState(
                         title = "Расходы сегодня",
                         actionIcon = historyIcon,
                         actionIconAction = {
                             expensesNavController.navigate(ExpensesDestinations.ExpensesHistoryScreen.route)
                         },
-                        isFAB = true
+                        isFAB = true,
+                        actionFAB = {
+                            expensesNavController.navigate(ExpensesDestinations.ExpensesEditScreen.route)
+                        }
                     )
                 )
             }
 
-            ExpensesDestinations.ExpensesCreateScreen.route -> onTitleChange(
-                yandex.school.project.core.ui.components.TopBarState(
+            ExpensesDestinations.ExpensesEditScreen.route -> onTitleChange(
+                TopBarState(
                     title = "Мои расходы",
                 )
             )
 
             ExpensesDestinations.ExpensesHistoryScreen.route -> onTitleChange(
-                yandex.school.project.core.ui.components.TopBarState(
+                TopBarState(
                     title = "История расходов",
                     actionIcon = analyticIcon,
                     actionIconAction = {
@@ -89,10 +94,18 @@ fun ExpensesNavGraph(
             startDestination = ExpensesDestinations.ExpensesScreen.route
         ) {
             composable(ExpensesDestinations.ExpensesScreen.route) {
-                ExpensesScreen(modifier = modifier, accountId = accountId, currency = currency)
+                ExpensesScreen(modifier = modifier, accountId = accountId, currency = currency){
+
+                }
             }
-            composable(ExpensesDestinations.ExpensesCreateScreen.route) {
-                ExpensesCreateScreen(modifier = modifier)
+            composable(ExpensesDestinations.ExpensesEditScreen.route) {
+                ExpensesEditScreen(
+                    modifier = modifier,
+                    accountId = accountId,
+                    isEditMode = false
+                ){
+                    expensesNavController.popBackStack()
+                }
             }
             composable(ExpensesDestinations.ExpensesHistoryScreen.route) {
                 ExpensesHistoryScreen(

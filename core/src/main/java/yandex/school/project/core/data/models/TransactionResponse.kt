@@ -1,6 +1,7 @@
 package yandex.school.project.core.data.models
 
 import kotlinx.serialization.Serializable
+import yandex.school.project.core.domain.entities.TransactionType
 
 @Serializable
 data class TransactionResponse(
@@ -12,4 +13,4 @@ data class TransactionResponse(
     val comment: String?,
     val createdAt: String,
     val updatedAt: String
-) 
+)

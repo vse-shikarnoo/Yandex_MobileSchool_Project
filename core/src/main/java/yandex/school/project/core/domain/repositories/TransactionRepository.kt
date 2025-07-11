@@ -11,7 +11,7 @@ interface TransactionRepository {
         description: String?,
         date: String,
         type: TransactionType
-    ): Transaction
+    )
     
     suspend fun getTransactionById(id: Int): Transaction
     suspend fun updateTransaction(

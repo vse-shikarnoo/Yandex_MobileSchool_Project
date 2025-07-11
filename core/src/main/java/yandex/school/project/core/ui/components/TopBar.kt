@@ -13,7 +13,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
@@ -32,6 +31,7 @@ data class TopBarState(
     val actionIcon: ImageVector? = null,
     val actionIconAction: () -> Unit = {},
     val isFAB: Boolean = false,
+    val actionFAB: () -> Unit = {},
     val isEditingTitle: Boolean = false,
     val titleInput: TextFieldValue = TextFieldValue(""),
     val onTitleInputChange: ((TextFieldValue) -> Unit)? = null,
@@ -73,7 +73,11 @@ fun TopBar(state: TopBarState) {
                             .padding(vertical = 4.dp),
                         trailingIcon = {
                             if (state.titleInput.text.isNotEmpty()) {
-                                IconButton(onClick = { state.onTitleInputChange.invoke(TextFieldValue("")) }) {
+                                IconButton(onClick = {
+                                    state.onTitleInputChange.invoke(
+                                        TextFieldValue("")
+                                    )
+                                }) {
                                     Icon(Icons.Default.Close, contentDescription = "Очистить")
                                 }
                             }

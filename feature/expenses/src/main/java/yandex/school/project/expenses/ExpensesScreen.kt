@@ -33,7 +33,8 @@ import yandex.school.project.expenses.di.LocalExpensesViewModelFactory
 fun ExpensesScreen(
     modifier: Modifier = Modifier,
     accountId: Int,
-    currency: String = CURRENCY_RUB
+    currency: String = CURRENCY_RUB,
+    onClickEdit: () -> Unit
 ) {
     val factory = LocalExpensesViewModelFactory.current
     val viewModel: ExpensesViewModel = viewModel(factory = factory)
@@ -105,7 +106,7 @@ fun ExpensesScreen(
                             tint = MaterialTheme.colorScheme.tertiary
                         )
                     },
-                    onClick = { /* TODO: переход к деталям */ }
+                    onClick = { onClickEdit() }
                 )
                 HorizontalDivider()
             }
@@ -118,7 +119,7 @@ fun ExpensesScreen(
 fun ExpensesScreenPreview() {
     ProjectTheme {
         Surface {
-            ExpensesScreen(accountId = 1)
+            ExpensesScreen(accountId = 1){}
         }
     }
 }

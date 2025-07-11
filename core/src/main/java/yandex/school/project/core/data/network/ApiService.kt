@@ -8,6 +8,7 @@ import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import yandex.school.project.core.data.models.*
+import yandex.school.project.core.domain.entities.Transaction
 import java.io.IOException
 
 /**
@@ -82,11 +83,15 @@ class ApiService(private val apiClient: ApiClient) {
     }
 
     // Transactions
-    suspend fun createTransaction(transactionData: yandex.school.project.core.data.models.TransactionRequest): TransactionResponse = withContext(Dispatchers.IO) {
+    suspend fun createTransaction(transactionData: yandex.school.project.core.data.models.TransactionRequest) = withContext(Dispatchers.IO) {
+
+        Log.d("ApiService", "createTransaction: Request: ${transactionData}")
         val response = apiClient.client.post(ApiEndpoints.TRANSACTIONS) {
             setBody(transactionData)
         }
-        response.body()
+
+        Log.d("ApiService", "Получен ответ с кодом: ${response.status}")
+        Log.d("ApiService", "createTransaction: Response:  ${response.body<String>()}")
     }
 
     suspend fun getTransactionById(id: Int): TransactionResponse = withContext(Dispatchers.IO) {

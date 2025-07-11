@@ -23,7 +23,7 @@ class TransactionRepositoryImpl @Inject constructor(
         description: String?,
         date: String,
         type: TransactionType
-    ): Transaction {
+    ) {
         val request = yandex.school.project.core.data.models.TransactionRequest(
             accountId = accountId,
             categoryId = categoryId,
@@ -31,7 +31,6 @@ class TransactionRepositoryImpl @Inject constructor(
             transactionDate = date,
             comment = description
         )
-        return apiService.createTransaction(request).toDomain()
     }
     
     override suspend fun getTransactionById(id: Int): Transaction {

@@ -44,7 +44,7 @@ fun MainScreen(account: Account?) {
             if (currentTopBarState.value.isFAB) {
                 FloatingActionButton(
                     modifier = Modifier.clip(CircleShape),
-                    onClick = {},
+                    onClick = currentTopBarState.value.actionFAB,
                     containerColor = MaterialTheme.colorScheme.primary
                 ) {
                     Icon(
