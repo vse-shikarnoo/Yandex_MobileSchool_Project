@@ -4,15 +4,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import dagger.hilt.android.AndroidEntryPoint
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.lifecycle.ViewModelProvider
+import yandex.school.project.core.theme.ProjectTheme
 import yandex.school.project.presentation.navigation.AppNavigation
-import yandex.school.project.presentation.theme.ProjectTheme
 
 /**
  * Главная активность приложения, отвечающая за запуск UI и навигации.
  * Единственная ответственность: инициализация и отображение основного интерфейса приложения.
  */
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +21,7 @@ class MainActivity : ComponentActivity() {
             ProjectTheme {
                 AppNavigation()
             }
+
         }
     }
 }

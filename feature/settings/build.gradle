@@ -1,0 +1,5 @@
+apply from: rootProject.file('feature-shared.gradle')
+
+android {
+    namespace 'yandex.school.project.settings'
+}

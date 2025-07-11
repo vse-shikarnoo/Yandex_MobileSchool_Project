@@ -21,4 +21,12 @@ dependencyResolutionManagement {
 
 rootProject.name = "Project"
 include(":app")
- 
+include(":feature:settings")
+include(":feature:main")
+include(":core")
+include(":feature:splash")
+include(":feature:category")
+include(":feature:income")
+include(":feature:expenses")
+include(":feature:account")
+include(":feature:expenses:sample")

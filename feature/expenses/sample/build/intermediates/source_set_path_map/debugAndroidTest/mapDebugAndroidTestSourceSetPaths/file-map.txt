@@ -1,0 +1,4 @@
+yandex.school.project.expenses.sample.test.sample-androidTest-0 F:\yandex\Yandex_MobileSchool_Project\feature\expenses\sample\build\generated\res\resValues\androidTest\debug
+yandex.school.project.expenses.sample.test.sample-mergeDebugAndroidTestResources-1 F:\yandex\Yandex_MobileSchool_Project\feature\expenses\sample\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+yandex.school.project.expenses.sample.test.sample-mergeDebugAndroidTestResources-2 F:\yandex\Yandex_MobileSchool_Project\feature\expenses\sample\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+yandex.school.project.expenses.sample.test.sample-debugAndroidTest-3 F:\yandex\Yandex_MobileSchool_Project\feature\expenses\sample\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources

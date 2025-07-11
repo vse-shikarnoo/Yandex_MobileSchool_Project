@@ -3,14 +3,14 @@ package yandex.school.project.presentation.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import yandex.school.project.domain.entities.Account
-import yandex.school.project.presentation.screens.MainScreen
-import yandex.school.project.presentation.screens.splash.SplashScreen
-import yandex.school.project.presentation.utils.CURRENCY_RUB
+import yandex.school.project.FinanceApplication
+import yandex.school.project.MainScreen
+import yandex.school.project.splash.ProvidedSplashScreen
 
 /**
  * Константы для основных экранов приложения.
@@ -27,13 +27,22 @@ object MainDestinations {
  */
 @Composable
 fun AppNavigation(navController: NavHostController = rememberNavController()) {
-    val (account, setAccount) = remember { mutableStateOf<Account?>(null) }
+    val (account, setAccount) = remember {
+        mutableStateOf<yandex.school.project.core.domain.entities.Account?>(
+            null
+        )
+    }
     NavHost(
         navController = navController,
         startDestination = MainDestinations.Splash
     ) {
         composable(MainDestinations.Splash) {
-            SplashScreen(
+            val context = LocalContext.current
+            val appComponent =
+                remember { (context.applicationContext as FinanceApplication).appComponent }
+            val splashComponent = remember { appComponent.splashComponent().create() }
+            ProvidedSplashScreen(
+                splashComponent = splashComponent,
                 goNextDestination = {
                     navController.navigate(MainDestinations.Main) {
                         popUpTo(MainDestinations.Splash) { inclusive = true }
