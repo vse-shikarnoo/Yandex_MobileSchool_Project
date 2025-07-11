@@ -8,7 +8,9 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import yandex.school.project.core.domain.entities.Category
 import yandex.school.project.core.domain.entities.Transaction
+import yandex.school.project.core.domain.usecases.category.GetCategoriesUseCase
 import yandex.school.project.core.domain.usecases.transaction.CreateTransactionUseCase
 import yandex.school.project.core.domain.usecases.transaction.DeleteTransactionUseCase
 import yandex.school.project.core.domain.usecases.transaction.GetTransactionByIdUseCase
@@ -23,6 +25,7 @@ data class EditExpenseState(
 )
 
 class ExpensesEditViewModel @Inject constructor(
+    private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getTransactionUseCase: GetTransactionByIdUseCase,
     private val createTransactionUseCase: CreateTransactionUseCase,
     private val updateTransactionUseCase: UpdateTransactionUseCase,
@@ -32,6 +35,26 @@ class ExpensesEditViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<Result<EditExpenseState>>(Result.Success(data = EditExpenseState()))
     val uiState: StateFlow<Result<EditExpenseState>> = _uiState
+
+    private val _categories = MutableStateFlow<List<Category>>(emptyList())
+    val categories: StateFlow<List<Category>> = _categories
+
+    fun loadCategories() {
+        networkHelper.executeWithRetry(
+            scope = viewModelScope,
+            operation = { getCategoriesUseCase() },
+            onSuccess = { categories ->
+                Log.d("CategoryViewModel", "Категории успешно загружены: ${categories.size} элементов")
+                _categories.value = categories.filter {
+                    !it.isIncome
+                }
+            },
+            onError = { errorMessage ->
+                _categories.value = emptyList()
+            },
+            operationName = "загрузка категорий"
+        )
+    }
 
     fun loadTransaction(transactionId: Int) {
 
@@ -51,7 +74,7 @@ class ExpensesEditViewModel @Inject constructor(
 
     fun saveTransaction(transaction: Transaction, isEdit: Boolean) {
         Log.d("ExpensesEditViewModel", "saveTransaction: $transaction $isEdit")
-        val work = viewModelScope.launch {
+        viewModelScope.launch {
             networkHelper.executeWithRetry(
                 scope = this,
                 operation = {

@@ -34,7 +34,6 @@ class ExpensesSampleActivity : ComponentActivity() {
                     bottomBar = {}
                 ) {
                     Box(modifier = Modifier.padding(it)) {
-                        ExpensesNavGraph(accountId = 1) { }
                     }
                 }
             }

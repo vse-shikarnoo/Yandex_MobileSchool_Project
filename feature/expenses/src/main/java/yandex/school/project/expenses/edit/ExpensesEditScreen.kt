@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,10 +28,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import yandex.school.project.core.domain.entities.Transaction
 import yandex.school.project.core.domain.entities.TransactionType
 import yandex.school.project.core.theme.ProjectTheme
+import yandex.school.project.core.ui.components.CategorySelectorListItem
+import yandex.school.project.core.ui.components.CommentTextListItem
+import yandex.school.project.core.ui.components.DateSelectorListItem
+import yandex.school.project.core.ui.components.EditArgsText
 import yandex.school.project.core.ui.components.ListItem
 import yandex.school.project.core.ui.components.ResultScreen
+import yandex.school.project.core.ui.components.TimeSelectorListItem
 import yandex.school.project.core.utils.rememberCoroutineManager
 import yandex.school.project.expenses.di.LocalExpensesViewModelFactory
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -43,6 +52,7 @@ fun ExpensesEditScreen(
 ) {
     val factory = LocalExpensesViewModelFactory.current
     val viewModel: ExpensesEditViewModel = viewModel(factory = factory)
+    val categories by viewModel.categories.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
     val coroutineManager = rememberCoroutineManager(viewModel)
 
@@ -52,6 +62,7 @@ fun ExpensesEditScreen(
                 viewModel.loadTransaction(transactionId)
             }
         }
+        viewModel.loadCategories()
     }
 
     ResultScreen(
@@ -61,44 +72,57 @@ fun ExpensesEditScreen(
         coroutineManager = coroutineManager
     ) { state ->
 
-        var account by remember { mutableIntStateOf(state.transaction?.accountId ?: accountId) }
-        var category by remember { mutableIntStateOf(state.transaction?.categoryId ?: 1) }
-        var amount by remember { mutableDoubleStateOf(state.transaction?.amount ?: 0.0) }
-        var date by remember { mutableStateOf(state.transaction?.date ?: "Test") }
-        var time by remember { mutableStateOf(state.transaction?.date ?: "Test") }
-        var comment by remember { mutableStateOf(state.transaction?.description ?: "Test") }
+        var account by remember { mutableIntStateOf(accountId) }
+        var category by remember { mutableIntStateOf(12) }
+        var amount by remember { mutableDoubleStateOf(0.0) }
+        var date by remember { mutableStateOf(OffsetDateTime.now(java.time.ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)) }
+        var time by remember { mutableStateOf(OffsetDateTime.now(java.time.ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)) }
+        var comment by remember { mutableStateOf("Test") }
 
+        LaunchedEffect(state.transaction) {
+            state.transaction?.let { transaction ->
+                account = transaction.accountId
+                category = transaction.categoryId
+                amount = transaction.amount
+                date = transaction.date
+                time = transaction.date
+                comment = transaction.description?:""
+            }
+        }
 
         Column {
             ListItem(
                 contentTitle = "Счёт",
-                comment = account.toString(),
+                contentSecond = {
+                    Text(account.toString())
+                },
                 onClick = { /* выбор счёта */ }
             )
-            ListItem(
-                contentTitle = "Статья",
-                comment = category.toString(),
-                onClick = { /* выбор категории */ }
+            HorizontalDivider()
+            CategorySelectorListItem(
+                categories = categories,
+                selectedCategoryId = category,
+                onCategorySelected = { category = it }
             )
-            ListItem(
-                contentTitle = "Сумма",
-                comment = amount.toString(),
-                onClick = { /* ввод суммы */ }
+            EditArgsText(
+                title = "Сумма",
+                value = amount.toString(),
+                onValueChange = {
+                    amount = it.toDouble()
+                }
             )
-            ListItem(
-                contentTitle = "Дата",
-                comment = date,
-                onClick = { /* выбор даты */ }
+            DateSelectorListItem(
+                date = date,
+                onDateChange = { date = it; time = it } // чтобы дата и время были синхронизированы
             )
-            ListItem(
-                contentTitle = "Время",
-                comment = time,
-                onClick = { /* выбор времени */ }
+            TimeSelectorListItem(
+                date = time,
+                onTimeChange = { time = it; date = it } // чтобы дата и время были синхронизированы
             )
-            ListItem(
-                contentTitle = "Комментарий",
+            CommentTextListItem(
                 comment = comment,
-                onClick = { /* ввод комментария */ }
+                onCommentChange = { comment = it },
+                maxLength = 40
             )
 
             Spacer(Modifier.height(16.dp))
@@ -126,10 +150,10 @@ fun ExpensesEditScreen(
                         categoryId = category,
                         amount = amount,
                         description = comment,
-                        date = "2025-07-11T13:41:19.672Z",
+                        date = date,
                         type = TransactionType.EXPENSE,
-                        createdAt = state.transaction?.createdAt ?: "2025-07-11T13:41:19.672Z",
-                        updatedAt = state.transaction?.updatedAt ?: "2025-07-11T13:41:19.672Z"
+                        createdAt = state.transaction?.createdAt ?: date,
+                        updatedAt = OffsetDateTime.now(java.time.ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
                     )
                     viewModel.saveTransaction(transaction, isEditMode)
                     onSuccess()
@@ -143,6 +167,9 @@ fun ExpensesEditScreen(
         }
     }
 }
+
+
+
 
 @Preview(widthDp = 360, heightDp = 640)
 @Composable

@@ -30,6 +30,7 @@ class ExpensesViewModel @Inject constructor(
     val uiState: StateFlow<Result<ExpensesState>> = _uiState
 
     fun loadTransactionsWithRetry(accountId: Int, maxRetries: Int = 3, delayMillis: Long = 2000) {
+        Log.d("ExpensesViewModel", "loadTransactionsWithRetry called, accountId = $accountId")
         viewModelScope.launch {
             networkHelper.executeWithRetry(
                 scope = this,

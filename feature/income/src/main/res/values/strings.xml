@@ -6,11 +6,15 @@
 
     <string name="expenses_graph_title">Expenses</string>
     <string name="expenses_screen_title">Expenses today</string>
-    <string name="expenses_create_title">My expenses</string>
+    <string name="expenses_edit_title">My expenses</string>
     <string name="expenses_history_title">My history</string>
     <string name="expenses_analytic_title">Analytic</string>
 
-    <string name="income_screen_title">Income</string>
+    <string name="incomes_graph_title">Incomes</string>
+    <string name="incomes_screen_title">Incomes today</string>
+    <string name="incomes_edit_title">My incomes</string>
+    <string name="incomes_history_title">My history</string>
+    <string name="incomes_analytic_title">Analytic</string>
 
     <string name="account_screen_title">Account</string>
 

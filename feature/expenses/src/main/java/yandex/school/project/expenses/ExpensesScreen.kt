@@ -27,6 +27,15 @@ import yandex.school.project.core.utils.CURRENCY_RUB
 import yandex.school.project.core.utils.convertAmount
 import yandex.school.project.core.utils.rememberCoroutineManager
 import yandex.school.project.expenses.di.LocalExpensesViewModelFactory
+import androidx.navigation.NavController
+import androidx.compose.runtime.DisposableEffect
+import androidx.navigation.NavDestination
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import yandex.school.project.expenses.navigation.ExpensesDestinations
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Observer
+import kotlinx.coroutines.awaitCancellation
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -34,13 +43,13 @@ fun ExpensesScreen(
     modifier: Modifier = Modifier,
     accountId: Int,
     currency: String = CURRENCY_RUB,
-    onClickEdit: () -> Unit
+    onClickEdit: (Int) -> Unit,
 ) {
+    Log.d("ExpensesScreen", "Composable recomposed, accountId = $accountId")
     val factory = LocalExpensesViewModelFactory.current
     val viewModel: ExpensesViewModel = viewModel(factory = factory)
     val uiState by viewModel.uiState.collectAsState()
     val coroutineManager = rememberCoroutineManager(viewModel)
-
 
     LaunchedEffect(accountId) {
         coroutineManager.launchWithCancelPrevious {
@@ -61,13 +70,14 @@ fun ExpensesScreen(
                     modifier = Modifier.height(56.dp),
                     contentTitle = "Всего",
                     contentSecond = {
-                        val total = convertAmount(
-                            state.total.toDoubleOrNull() ?: 0.0,
-                            CURRENCY_RUB,
-                            currency
-                        )
+                        val total = state.total
+//                        val total = convertAmount(
+//                            state.total.toDoubleOrNull() ?: 0.0,
+//                            CURRENCY_RUB,
+//                            currency
+//                        )
                         Text(
-                            "${total.toInt()} $currency",
+                            total,//"${total.toInt()} $currency",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -106,7 +116,7 @@ fun ExpensesScreen(
                             tint = MaterialTheme.colorScheme.tertiary
                         )
                     },
-                    onClick = { onClickEdit() }
+                    onClick = { onClickEdit(transactionWithCategory.transaction.id) }
                 )
                 HorizontalDivider()
             }

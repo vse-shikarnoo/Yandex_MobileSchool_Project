@@ -19,13 +19,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import yandex.school.project.core.utils.CURRENCY_RUB
 import yandex.school.project.income.di.LocalIncomesViewModelFactory
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IncomesScreen(
+    modifier: Modifier = Modifier,
     accountId: Int,
-    currency: String = yandex.school.project.core.utils.CURRENCY_RUB
+    currency: String = CURRENCY_RUB,
+    onClickEdit: (Int) -> Unit,
 ) {
     val factory = LocalIncomesViewModelFactory.current
     val viewModel: IncomesViewModel = viewModel(factory = factory)
@@ -76,13 +79,9 @@ fun IncomesScreen(
                         null
                     },
                     contentSecond = {
-                        val amount = yandex.school.project.core.utils.convertAmount(
-                            transactionWithCategory.amount,
-                            yandex.school.project.core.utils.CURRENCY_RUB,
-                            currency
-                        )
+                        val total = state.total
                         Text(
-                            "${amount.toInt()} $currency",
+                            total,//"${total.toInt()} $currency",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -94,7 +93,7 @@ fun IncomesScreen(
                             tint = MaterialTheme.colorScheme.tertiary
                         )
                     },
-                    onClick = { /* TODO: переход к деталям */ }
+                    onClick = { onClickEdit(transactionWithCategory.transaction.id) }
                 )
                 HorizontalDivider()
             }
@@ -107,7 +106,7 @@ fun IncomesScreen(
 fun IncomesScreenPreview() {
     yandex.school.project.core.theme.ProjectTheme {
         Surface {
-            IncomesScreen(accountId = 1)
+            IncomesScreen(accountId = 1){}
         }
     }
 }

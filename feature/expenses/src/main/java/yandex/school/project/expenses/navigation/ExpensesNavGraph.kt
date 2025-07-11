@@ -3,6 +3,7 @@ package yandex.school.project.expenses.navigation
 import androidx.activity.compose.BackHandler
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -41,6 +42,7 @@ fun ExpensesNavGraph(
     val currentRoute = navBackStackEntry?.destination?.route
     val historyIcon = ImageVector.vectorResource(R.drawable.ic_history)
     val analyticIcon = ImageVector.vectorResource(R.drawable.history_analytic)
+    val closeIcon = Icons.Default.Close
 
     // Меняем title в зависимости от текущего route
     LaunchedEffect(currentRoute) {
@@ -64,6 +66,20 @@ fun ExpensesNavGraph(
             ExpensesDestinations.ExpensesEditScreen.route -> onTitleChange(
                 TopBarState(
                     title = "Мои расходы",
+                    navigationIcon = closeIcon,
+                    navigationIconAction = {
+                        expensesNavController.popBackStack()
+                    }
+                )
+            )
+            // Для маршрута с id
+            ExpensesDestinations.ExpensesEditScreen.route + "/{transactionId}" -> onTitleChange(
+                TopBarState(
+                    title = "Мои расходы",
+                    navigationIcon = closeIcon,
+                    navigationIconAction = {
+                        expensesNavController.popBackStack()
+                    }
                 )
             )
 
@@ -94,17 +110,41 @@ fun ExpensesNavGraph(
             startDestination = ExpensesDestinations.ExpensesScreen.route
         ) {
             composable(ExpensesDestinations.ExpensesScreen.route) {
-                ExpensesScreen(modifier = modifier, accountId = accountId, currency = currency){
-
-                }
+                ExpensesScreen(
+                    modifier = modifier,
+                    accountId = accountId,
+                    currency = currency,
+                    onClickEdit = { transactionId ->
+                        expensesNavController.navigate(
+                            ExpensesDestinations.ExpensesEditScreen.route + "/$transactionId"
+                        )
+                    }
+                )
             }
             composable(ExpensesDestinations.ExpensesEditScreen.route) {
                 ExpensesEditScreen(
                     modifier = modifier,
                     accountId = accountId,
                     isEditMode = false
-                ){
-                    expensesNavController.popBackStack()
+                ) {
+                    expensesNavController.navigate(ExpensesDestinations.ExpensesScreen.route) {
+                        popUpTo(ExpensesDestinations.ExpensesScreen.route) { inclusive = true }
+                    }
+                }
+            }
+            composable(
+                ExpensesDestinations.ExpensesEditScreen.route + "/{transactionId}"
+            ) { backStackEntry ->
+                val transactionId = backStackEntry.arguments?.getString("transactionId")?.toIntOrNull()
+                ExpensesEditScreen(
+                    modifier = modifier,
+                    accountId = accountId,
+                    isEditMode = true,
+                    transactionId = transactionId
+                ) {
+                    expensesNavController.navigate(ExpensesDestinations.ExpensesScreen.route) {
+                        popUpTo(ExpensesDestinations.ExpensesScreen.route) { inclusive = true }
+                    }
                 }
             }
             composable(ExpensesDestinations.ExpensesHistoryScreen.route) {
