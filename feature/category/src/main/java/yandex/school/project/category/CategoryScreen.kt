@@ -16,6 +16,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,11 +29,22 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import yandex.school.project.category.di.CategoryComponent
 import yandex.school.project.category.di.LocalCategoryViewModelFactory
+
+@Composable
+fun ProvidedCategorytScreen(
+    categoryComponent: CategoryComponent
+) {
+    val viewModelFactory = remember { categoryComponent.viewModelFactory() }
+    CompositionLocalProvider(LocalCategoryViewModelFactory provides viewModelFactory) {
+        CategoryScreen()
+    }
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CategoryScreen() {
+internal fun CategoryScreen() {
     val factory = LocalCategoryViewModelFactory.current
     val viewModel: CategoryViewModel = viewModel(factory = factory)
     var search by remember { mutableStateOf("") }
@@ -40,7 +52,7 @@ fun CategoryScreen() {
 
     // Используем CoroutineManager для автоматического управления корутинами
     val coroutineManager = yandex.school.project.core.utils.rememberCoroutineManager(viewModel)
-    
+
     LaunchedEffect(Unit) {
         coroutineManager.launchWithCancelPrevious {
             viewModel.loadCategoriesWithRetry()
@@ -81,7 +93,7 @@ fun CategoryScreen() {
                 )
                 HorizontalDivider()
             }
-            items (filtered) { category ->
+            items(filtered) { category ->
                 yandex.school.project.core.ui.components.ListItem(
                     modifier = Modifier.height(70.dp),
                     leadingIcon = category.icon ?: "📁",

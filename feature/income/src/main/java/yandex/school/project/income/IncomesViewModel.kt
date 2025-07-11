@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import yandex.school.project.core.domain.entities.TransactionType
 import yandex.school.project.core.domain.entities.TransactionWithCategory
 import yandex.school.project.core.domain.usecases.category.GetCategoriesUseCase
 import yandex.school.project.core.domain.usecases.transaction.GetTransactionsByAccountUseCase
@@ -40,10 +41,13 @@ class IncomesViewModel @Inject constructor(
                 operation = {
                     val allTransactions = getTransactionsByAccountUseCase(accountId)
                     val categories = getCategoriesUseCase()
-                    
+
+                    Log.d("ExpensesViewModel", "allTransactions categories: $allTransactions $categories")
+
                     val incomeTransactions = allTransactions.filter { transaction ->
-                        transaction.type == yandex.school.project.core.domain.entities.TransactionType.INCOME
+                        transaction.type == TransactionType.INCOME
                     }
+                    Log.d("ExpensesViewModel", "expenseTransactions: $incomeTransactions")
                     
                     val transactionsWithCategory = incomeTransactions.mapNotNull { transaction ->
                         val category = categories.find { it.id == transaction.categoryId }

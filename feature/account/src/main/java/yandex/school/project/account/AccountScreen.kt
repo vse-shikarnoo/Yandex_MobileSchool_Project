@@ -26,6 +26,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -46,14 +47,31 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import yandex.school.project.account.di.AccountComponent
 import yandex.school.project.account.di.LocalAccountViewModelFactory
 
 @Composable
-fun AccountScreen(
+fun ProvidedAccountScreen(
+    accountComponent: AccountComponent,
     accountId: Int,
     currency: String,
-    onCurrencyChanged: (String) -> Unit,
-    onAccountNameEditDone: ((String) -> Unit)? = null
+    onCurrencyChanged: (String) -> Unit
+){
+    val viewModelFactory = remember { accountComponent.viewModelFactory() }
+    CompositionLocalProvider(LocalAccountViewModelFactory provides viewModelFactory) {
+        AccountScreen (
+            accountId,
+            currency,
+            onCurrencyChanged
+        )
+    }
+}
+
+@Composable
+internal fun AccountScreen(
+    accountId: Int,
+    currency: String,
+    onCurrencyChanged: (String) -> Unit
 ) {
     val factory = LocalAccountViewModelFactory.current
     val viewModel: AccountViewModel = viewModel(factory = factory)

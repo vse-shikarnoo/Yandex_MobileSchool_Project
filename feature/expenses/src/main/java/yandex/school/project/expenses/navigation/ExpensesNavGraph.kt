@@ -4,8 +4,10 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -16,6 +18,8 @@ import androidx.navigation.compose.rememberNavController
 import yandex.school.project.expenses.ExpensesScreen
 import yandex.school.project.expenses.R
 import yandex.school.project.expenses.create.ExpensesCreateScreen
+import yandex.school.project.expenses.di.ExpensesComponent
+import yandex.school.project.expenses.di.LocalExpensesViewModelFactory
 import yandex.school.project.expenses.history.ExpensesHistoryScreen
 
 /**
@@ -24,6 +28,7 @@ import yandex.school.project.expenses.history.ExpensesHistoryScreen
  */
 @Composable
 fun ExpensesNavGraph(
+    expensesComponent: ExpensesComponent,
     modifier: Modifier = Modifier,
     accountId: Int,
     currency: String = yandex.school.project.core.utils.CURRENCY_RUB,
@@ -77,18 +82,25 @@ fun ExpensesNavGraph(
         expensesNavController.popBackStack()
     }
 
-    NavHost(
-        navController = expensesNavController,
-        startDestination = ExpensesDestinations.ExpensesScreen.route
-    ) {
-        composable(ExpensesDestinations.ExpensesScreen.route) {
-            ExpensesScreen(modifier = modifier, accountId = accountId, currency = currency)
-        }
-        composable(ExpensesDestinations.ExpensesCreateScreen.route) {
-            ExpensesCreateScreen(modifier = modifier)
-        }
-        composable(ExpensesDestinations.ExpensesHistoryScreen.route) {
-            ExpensesHistoryScreen(modifier = modifier, accountId = accountId, currency = currency)
+    val viewModelFactory = remember { expensesComponent.viewModelFactory() }
+    CompositionLocalProvider(LocalExpensesViewModelFactory provides viewModelFactory) {
+        NavHost(
+            navController = expensesNavController,
+            startDestination = ExpensesDestinations.ExpensesScreen.route
+        ) {
+            composable(ExpensesDestinations.ExpensesScreen.route) {
+                ExpensesScreen(modifier = modifier, accountId = accountId, currency = currency)
+            }
+            composable(ExpensesDestinations.ExpensesCreateScreen.route) {
+                ExpensesCreateScreen(modifier = modifier)
+            }
+            composable(ExpensesDestinations.ExpensesHistoryScreen.route) {
+                ExpensesHistoryScreen(
+                    modifier = modifier,
+                    accountId = accountId,
+                    currency = currency
+                )
+            }
         }
     }
 }

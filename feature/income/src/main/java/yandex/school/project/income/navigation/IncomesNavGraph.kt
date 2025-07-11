@@ -4,9 +4,10 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import yandex.school.project.incomes.R
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.compose.NavHost
@@ -15,7 +16,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import yandex.school.project.income.IncomesScreen
 import yandex.school.project.income.create.IncomesCreateScreen
+import yandex.school.project.income.di.IncomesComponent
+import yandex.school.project.income.di.LocalIncomesViewModelFactory
 import yandex.school.project.income.history.IncomesHistoryScreen
+import yandex.school.project.incomes.R
 
 
 /**
@@ -24,6 +28,7 @@ import yandex.school.project.income.history.IncomesHistoryScreen
  */
 @Composable
 fun IncomesNavGraph(
+    incomesComponent: IncomesComponent,
     accountId: Int,
     currency: String = yandex.school.project.core.utils.CURRENCY_RUB,
     onTitleChange: (yandex.school.project.core.ui.components.TopBarState) -> Unit
@@ -76,18 +81,22 @@ fun IncomesNavGraph(
         incomesNavController.popBackStack()
     }
 
-    NavHost(
-        navController = incomesNavController,
-        startDestination = IncomesDestinations.IncomesScreen.route
-    ) {
-        composable(IncomesDestinations.IncomesScreen.route) {
-            IncomesScreen(accountId = accountId, currency = currency)
-        }
-        composable(IncomesDestinations.IncomesCreateScreen.route) {
-            IncomesCreateScreen()
-        }
-        composable(IncomesDestinations.IncomesHistoryScreen.route) {
-            IncomesHistoryScreen(accountId = accountId, currency = currency)
+    val viewModelFactory = remember { incomesComponent.viewModelFactory() }
+    CompositionLocalProvider(LocalIncomesViewModelFactory provides viewModelFactory) {
+
+        NavHost(
+            navController = incomesNavController,
+            startDestination = IncomesDestinations.IncomesScreen.route
+        ) {
+            composable(IncomesDestinations.IncomesScreen.route) {
+                IncomesScreen(accountId = accountId, currency = currency)
+            }
+            composable(IncomesDestinations.IncomesCreateScreen.route) {
+                IncomesCreateScreen()
+            }
+            composable(IncomesDestinations.IncomesHistoryScreen.route) {
+                IncomesHistoryScreen(accountId = accountId, currency = currency)
+            }
         }
     }
 }
