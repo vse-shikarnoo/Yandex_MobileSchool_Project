@@ -40,7 +40,7 @@ class ExpensesViewModel @Inject constructor(
                     Log.d("ExpensesViewModel", "allTransactions categories: $allTransactions $categories")
                     
                     val expenseTransactions = allTransactions.filter { transaction ->
-                        transaction.type == TransactionType.INCOME
+                        transaction.type == TransactionType.EXPENSE
                     }
                     Log.d("ExpensesViewModel", "expenseTransactions: $expenseTransactions")
 

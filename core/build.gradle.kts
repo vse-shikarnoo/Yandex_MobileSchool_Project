@@ -10,13 +10,13 @@ plugins {
 
 }
 
-// Читаем токен из local.properties
-val apiToken: String by lazy {
-    val properties = Properties().apply {
-        rootProject.file("local.properties").inputStream().use { load(it) }
-    }
-    properties.getProperty("API_TOKEN", "")
-}
+//// Читаем токен из local.properties
+//val apiToken: String by lazy {
+//    val properties = Properties().apply {
+//        rootProject.file("local.properties").inputStream().use { load(it) }
+//    }
+//    properties.getProperty("API_TOKEN", "")
+//}
 
 android {
     namespace = "yandex.school.project.core"
@@ -29,7 +29,7 @@ android {
         consumerProguardFiles("consumer-rules.pro")
 
         // Добавляем токен в BuildConfig
-        buildConfigField("String", "API_TOKEN", apiToken)
+        //buildConfigField("String", "API_TOKEN", apiToken)
     }
 
     buildTypes {

@@ -92,6 +92,7 @@ class ApiService(private val apiClient: ApiClient) {
 
         Log.d("ApiService", "Получен ответ с кодом: ${response.status}")
         Log.d("ApiService", "createTransaction: Response:  ${response.body<String>()}")
+        response.status.isSuccess()
     }
 
     suspend fun getTransactionById(id: Int): TransactionResponse = withContext(Dispatchers.IO) {

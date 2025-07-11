@@ -31,6 +31,7 @@ class TransactionRepositoryImpl @Inject constructor(
             transactionDate = date,
             comment = description
         )
+        apiService.createTransaction(request)
     }
     
     override suspend fun getTransactionById(id: Int): Transaction {
