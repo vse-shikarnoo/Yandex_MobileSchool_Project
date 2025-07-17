@@ -1,5 +1,6 @@
 package yandex.school.project.core.domain.usecases.account
 
+import kotlinx.coroutines.flow.first
 import yandex.school.project.core.domain.entities.Account
 import yandex.school.project.core.domain.repositories.AccountRepository
 import javax.inject.Inject
@@ -12,7 +13,7 @@ class GetFirstAccountUseCase @Inject constructor(
     private val accountRepository: AccountRepository
 ) {
     suspend operator fun invoke(): Account? {
-        val accounts = accountRepository.getAccounts()
+        val accounts = accountRepository.getAccounts().first()
         return accounts.firstOrNull()
     }
 } 

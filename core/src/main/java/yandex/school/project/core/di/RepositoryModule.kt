@@ -1,9 +1,9 @@
 package yandex.school.project.core.di
 
-import dagger.Binds
-import dagger.Module
 import yandex.school.project.core.data.repository.AccountRepositoryImpl
 import yandex.school.project.core.data.repository.CategoryRepositoryImpl
+import dagger.Binds
+import dagger.Module
 import yandex.school.project.core.data.repository.TransactionRepositoryImpl
 import yandex.school.project.core.domain.repositories.AccountRepository
 import yandex.school.project.core.domain.repositories.CategoryRepository

@@ -1,5 +1,7 @@
 package yandex.school.project.core.data.mappers
 
+import yandex.school.project.core.data.local.entities.AccountEntity
+import yandex.school.project.core.data.models.AccountCreateRequest
 import yandex.school.project.core.data.models.Account as DataAccount
 import yandex.school.project.core.data.models.AccountResponse as DataAccountResponse
 import yandex.school.project.core.domain.entities.Account as DomainAccount
@@ -40,4 +42,31 @@ fun DomainAccount.toData(): DataAccount = DataAccount(
     currency = currency,
     createdAt = createdAt,
     updatedAt = updatedAt
-) 
+)
+
+fun AccountEntity.toDomain(): DomainAccount = DomainAccount(
+    id = id,
+    userId = userId,
+    name = name,
+    balance = balance,
+    currency = currency,
+    createdAt = createdAt,
+    updatedAt = updatedAt
+)
+
+fun DomainAccount.toEntity(isSynced: Boolean = false): AccountEntity = AccountEntity(
+    id = id,
+    userId = userId,
+    name = name,
+    balance = balance,
+    currency = currency,
+    createdAt = createdAt,
+    updatedAt = updatedAt,
+    isSynced = isSynced
+)
+
+fun DataAccount.toCreateRequest(): AccountCreateRequest = AccountCreateRequest(
+    name = name,
+    balance = balance,
+    currency = currency
+)

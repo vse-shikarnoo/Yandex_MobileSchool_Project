@@ -27,15 +27,6 @@ import yandex.school.project.core.utils.CURRENCY_RUB
 import yandex.school.project.core.utils.convertAmount
 import yandex.school.project.core.utils.rememberCoroutineManager
 import yandex.school.project.expenses.di.LocalExpensesViewModelFactory
-import androidx.navigation.NavController
-import androidx.compose.runtime.DisposableEffect
-import androidx.navigation.NavDestination
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import yandex.school.project.expenses.navigation.ExpensesDestinations
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.lifecycle.Observer
-import kotlinx.coroutines.awaitCancellation
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -53,14 +44,14 @@ fun ExpensesScreen(
 
     LaunchedEffect(accountId) {
         coroutineManager.launchWithCancelPrevious {
-            viewModel.loadTransactionsWithRetry(accountId)
+            viewModel.observeExpenses(accountId)
         }
     }
 
     ResultScreen(
         modifier = modifier,
         result = uiState,
-        onRetry = { viewModel.loadTransactionsWithRetry(accountId) },
+        onRetry = { viewModel.observeExpenses(accountId) },
         coroutineManager = coroutineManager
     ) { state ->
         Log.d("ExpensesScreen", "ExpensesScreen: $state")

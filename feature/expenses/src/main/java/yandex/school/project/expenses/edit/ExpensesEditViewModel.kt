@@ -1,12 +1,11 @@
 package yandex.school.project.expenses.edit
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import yandex.school.project.core.domain.entities.Category
 import yandex.school.project.core.domain.entities.Transaction
@@ -15,7 +14,6 @@ import yandex.school.project.core.domain.usecases.transaction.CreateTransactionU
 import yandex.school.project.core.domain.usecases.transaction.DeleteTransactionUseCase
 import yandex.school.project.core.domain.usecases.transaction.GetTransactionByIdUseCase
 import yandex.school.project.core.domain.usecases.transaction.UpdateTransactionUseCase
-import yandex.school.project.core.utils.NetworkOperationHelper
 import yandex.school.project.core.utils.Result
 import javax.inject.Inject
 
@@ -29,8 +27,7 @@ class ExpensesEditViewModel @Inject constructor(
     private val getTransactionUseCase: GetTransactionByIdUseCase,
     private val createTransactionUseCase: CreateTransactionUseCase,
     private val updateTransactionUseCase: UpdateTransactionUseCase,
-    private val deleteTransactionUseCase: DeleteTransactionUseCase,
-    private val networkHelper: NetworkOperationHelper
+    private val deleteTransactionUseCase: DeleteTransactionUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<Result<EditExpenseState>>(Result.Success(data = EditExpenseState()))
@@ -40,70 +37,49 @@ class ExpensesEditViewModel @Inject constructor(
     val categories: StateFlow<List<Category>> = _categories
 
     fun loadCategories() {
-        networkHelper.executeWithRetry(
-            scope = viewModelScope,
-            operation = { getCategoriesUseCase() },
-            onSuccess = { categories ->
-                Log.d("CategoryViewModel", "Категории успешно загружены: ${categories.size} элементов")
-                _categories.value = categories.filter {
-                    !it.isIncome
+        viewModelScope.launch {
+            getCategoriesUseCase()
+                .catch { _categories.value = emptyList() }
+                .collectLatest { categories ->
+                    _categories.value = categories.filter { !it.isIncome }
                 }
-            },
-            onError = { errorMessage ->
-                _categories.value = emptyList()
-            },
-            operationName = "загрузка категорий"
-        )
+        }
     }
 
     fun loadTransaction(transactionId: Int) {
-
         viewModelScope.launch {
-            networkHelper.executeWithRetry(
-                scope = this,
-                operation = {
-                    val transaction = getTransactionUseCase(transactionId)
-                    EditExpenseState(transaction = transaction)
-                },
-                onSuccess = { state -> _uiState.value = Result.Success(state) },
-                onError = { error -> _uiState.value = Result.Error(error) },
-                operationName = "загрузка транзакции"
-            )
+            try {
+                val transaction = getTransactionUseCase(transactionId)
+                _uiState.value = Result.Success(EditExpenseState(transaction = transaction))
+            } catch (e: Exception) {
+                _uiState.value = Result.Error(e.message ?: "Ошибка загрузки транзакции")
+            }
         }
     }
 
     fun saveTransaction(transaction: Transaction, isEdit: Boolean) {
-        Log.d("ExpensesEditViewModel", "saveTransaction: $transaction $isEdit")
         viewModelScope.launch {
-            networkHelper.executeWithRetry(
-                scope = this,
-                operation = {
-                    if (isEdit) {
-                        updateTransactionUseCase(transaction)
-                    } else {
-                        createTransactionUseCase(transaction)
-                    }
-                    EditExpenseState(isSuccess = true)
-                },
-                onSuccess = { state -> _uiState.value = Result.Success(state) },
-                onError = { error -> _uiState.value = Result.Error(error) },
-                operationName = if (isEdit) "обновление транзакции" else "создание транзакции"
-            )
+            try {
+                if (isEdit) {
+                    updateTransactionUseCase(transaction)
+                } else {
+                    createTransactionUseCase(transaction)
+                }
+                _uiState.value = Result.Success(EditExpenseState(isSuccess = true))
+            } catch (e: Exception) {
+                _uiState.value = Result.Error(e.message ?: "Ошибка сохранения транзакции")
+            }
         }
     }
 
     fun deleteTransaction(transactionId: Int) {
         viewModelScope.launch {
-            networkHelper.executeWithRetry(
-                scope = this,
-                operation = {
-                    deleteTransactionUseCase(transactionId)
-                    EditExpenseState(isSuccess = true)
-                },
-                onSuccess = { state -> _uiState.value = Result.Success(state) },
-                onError = { error -> _uiState.value = Result.Error(error) },
-                operationName = "удаление транзакции"
-            )
+            try {
+                deleteTransactionUseCase(transactionId)
+                _uiState.value = Result.Success(EditExpenseState(isSuccess = true))
+            } catch (e: Exception) {
+                _uiState.value = Result.Error(e.message ?: "Ошибка удаления транзакции")
+            }
         }
     }
 }

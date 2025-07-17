@@ -4,6 +4,9 @@ import yandex.school.project.core.data.models.TransactionResponse as DataTransac
 import yandex.school.project.core.data.models.TransactionRequest as DataTransactionRequest
 import yandex.school.project.core.domain.entities.Transaction as DomainTransaction
 import yandex.school.project.core.domain.entities.TransactionType as DomainTransactionType
+import yandex.school.project.core.data.local.entities.TransactionEntity
+import yandex.school.project.core.domain.entities.Transaction
+import yandex.school.project.core.domain.entities.TransactionType
 
 /**
  * Функции для преобразования объектов Transaction между слоями данных и домена.
@@ -32,4 +35,29 @@ fun DomainTransaction.toRequest(): DataTransactionRequest = DataTransactionReque
 
 fun DataTransactionResponse.toData(): DataTransactionResponse {
     throw UnsupportedOperationException("Обратный маппинг Transaction не поддерживается")
-} 
+}
+
+fun TransactionEntity.toDomain(): Transaction = Transaction(
+    id = id,
+    accountId = accountId,
+    categoryId = categoryId,
+    amount = amount,
+    description = description,
+    date = date,
+    type = if (type == "INCOME") DomainTransactionType.INCOME else DomainTransactionType.EXPENSE,
+    createdAt = createdAt,
+    updatedAt = updatedAt
+)
+
+fun Transaction.toEntity(isSynced: Boolean = false): TransactionEntity = TransactionEntity(
+    id = id,
+    accountId = accountId,
+    categoryId = categoryId,
+    amount = amount,
+    description = description,
+    date = date,
+    type = type.name,
+    createdAt = createdAt,
+    updatedAt = updatedAt,
+    isSynced = isSynced
+) 
