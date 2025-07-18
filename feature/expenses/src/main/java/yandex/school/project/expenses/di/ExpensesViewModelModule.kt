@@ -9,6 +9,7 @@ import yandex.school.project.core.di.ViewModelKey
 import yandex.school.project.expenses.ExpensesViewModel
 import yandex.school.project.expenses.edit.ExpensesEditViewModel
 import yandex.school.project.expenses.history.ExpensesHistoryViewModel
+import yandex.school.project.expenses.analysis.ExpensesAnalysisViewModel
 
 @Module
 abstract class ExpensesViewModelModule {
@@ -27,6 +28,11 @@ abstract class ExpensesViewModelModule {
     @IntoMap
     @ViewModelKey(ExpensesEditViewModel::class)
     abstract fun bindExpensesEditViewModel(viewModel: ExpensesEditViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ExpensesAnalysisViewModel::class)
+    abstract fun bindExpensesAnalysisViewModel(viewModel: ExpensesAnalysisViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: yandex.school.project.core.di.ViewModelFactory): ViewModelProvider.Factory

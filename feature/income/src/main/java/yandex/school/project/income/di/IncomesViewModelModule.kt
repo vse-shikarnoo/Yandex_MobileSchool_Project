@@ -7,6 +7,7 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 import yandex.school.project.core.di.ViewModelKey
 import yandex.school.project.income.IncomesViewModel
+import yandex.school.project.income.analysis.IncomesAnalysisViewModel
 import yandex.school.project.income.edit.IncomesEditViewModel
 import yandex.school.project.income.history.IncomesHistoryViewModel
 
@@ -27,6 +28,11 @@ abstract class IncomesViewModelModule {
     @IntoMap
     @ViewModelKey(IncomesEditViewModel::class)
     abstract fun bindIncomesEditViewModel(viewModel: IncomesEditViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(IncomesAnalysisViewModel::class)
+    abstract fun bindExpensesAnalysisViewModel(viewModel: IncomesAnalysisViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: yandex.school.project.core.di.ViewModelFactory): ViewModelProvider.Factory

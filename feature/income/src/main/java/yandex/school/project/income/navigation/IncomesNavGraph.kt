@@ -14,8 +14,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import yandex.school.project.core.ui.components.TopBarState
 import yandex.school.project.expenses.edit.IncomesEditScreen
 import yandex.school.project.income.IncomesScreen
+import yandex.school.project.income.analysis.IncomesAnalysisScreen
 import yandex.school.project.income.di.IncomesComponent
 import yandex.school.project.income.di.LocalIncomesViewModelFactory
 import yandex.school.project.income.history.IncomesHistoryScreen
@@ -87,8 +89,19 @@ fun IncomesNavGraph(
                     }
                 )
             )
+            IncomesDestinations.IncomesAnalyticScreen.route -> onTitleChange(
+                TopBarState(
+                    title = "Анализ",
+                    navigationIcon = Icons.Default.ArrowBack,
+                    navigationIconAction = {
+                        incomesNavController.popBackStack()
+                    }
+                )
+            )
         }
     }
+
+
 
     BackHandler(enabled = incomesNavController.previousBackStackEntry != null) {
         incomesNavController.popBackStack()
@@ -133,6 +146,11 @@ fun IncomesNavGraph(
             }
             composable(IncomesDestinations.IncomesHistoryScreen.route) {
                 IncomesHistoryScreen(accountId = accountId, currency = currency)
+            }
+            composable(IncomesDestinations.IncomesAnalyticScreen.route) {
+                IncomesAnalysisScreen(
+                    accountId = accountId
+                )
             }
         }
     }
