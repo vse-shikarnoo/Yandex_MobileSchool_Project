@@ -55,13 +55,13 @@ internal fun CategoryScreen() {
 
     LaunchedEffect(Unit) {
         coroutineManager.launchWithCancelPrevious {
-            viewModel.loadCategoriesWithRetry()
+            viewModel.observeCategories()
         }
     }
 
     yandex.school.project.core.ui.components.ResultScreen(
         result = uiState,
-        onRetry = { viewModel.loadCategoriesWithRetry() },
+        onRetry = { viewModel.observeCategories() },
         coroutineManager = coroutineManager
     ) { categories ->
         val filtered = categories.filter { it.name.contains(search, ignoreCase = true) }

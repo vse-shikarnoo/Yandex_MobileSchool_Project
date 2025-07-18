@@ -2,8 +2,15 @@ package yandex.school.project.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import yandex.school.project.core.domain.entities.Account
 import yandex.school.project.core.domain.usecases.account.GetFirstAccountUseCase
+import yandex.school.project.core.utils.CURRENCY_RUB
+import yandex.school.project.core.utils.Result
 import javax.inject.Inject
 
 /**
@@ -14,19 +21,21 @@ class SplashViewModel @Inject constructor(
     private val getFirstAccountUseCase: GetFirstAccountUseCase
 ) : ViewModel() {
 
-    var account: yandex.school.project.core.domain.entities.Account? = null
-        private set
+    private val _uiState = MutableStateFlow<Result<Account?>>(Result.Loading)
+    val uiState: StateFlow<Result<Account?>> = _uiState
 
-    var currency: String = yandex.school.project.core.utils.CURRENCY_RUB
+    var currency: String = CURRENCY_RUB
         private set
 
     init {
         viewModelScope.launch {
-            account = try {
-                getFirstAccountUseCase()
+            try {
+                val account = getFirstAccountUseCase()
+                _uiState.value = Result.Success(account)
+                currency = account?.currency ?: CURRENCY_RUB
             } catch (e: Exception) {
-                null
+                _uiState.value = Result.Error(e.message ?: "Ошибка загрузки аккаунта")
             }
         }
     }
-} 
+}

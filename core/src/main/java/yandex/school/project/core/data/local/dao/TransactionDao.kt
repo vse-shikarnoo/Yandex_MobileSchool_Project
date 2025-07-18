@@ -10,7 +10,7 @@ interface TransactionDao {
     fun getAll(): Flow<List<TransactionEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(transaction: TransactionEntity)
+    suspend fun insert(transaction: TransactionEntity):Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(transactions: List<TransactionEntity>)

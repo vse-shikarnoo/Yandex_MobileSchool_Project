@@ -6,7 +6,6 @@ import yandex.school.project.core.domain.entities.Transaction as DomainTransacti
 import yandex.school.project.core.domain.entities.TransactionType as DomainTransactionType
 import yandex.school.project.core.data.local.entities.TransactionEntity
 import yandex.school.project.core.domain.entities.Transaction
-import yandex.school.project.core.domain.entities.TransactionType
 
 /**
  * Функции для преобразования объектов Transaction между слоями данных и домена.
@@ -49,7 +48,7 @@ fun TransactionEntity.toDomain(): Transaction = Transaction(
     updatedAt = updatedAt
 )
 
-fun Transaction.toEntity(isSynced: Boolean = false): TransactionEntity = TransactionEntity(
+fun Transaction.toEntity(isSynced: Boolean = false, syncAction: String?): TransactionEntity = TransactionEntity(
     id = id,
     accountId = accountId,
     categoryId = categoryId,
@@ -59,5 +58,6 @@ fun Transaction.toEntity(isSynced: Boolean = false): TransactionEntity = Transac
     type = type.name,
     createdAt = createdAt,
     updatedAt = updatedAt,
-    isSynced = isSynced
+    isSynced = isSynced,
+    syncAction = syncAction
 ) 

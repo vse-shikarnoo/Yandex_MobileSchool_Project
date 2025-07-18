@@ -14,5 +14,6 @@ data class TransactionEntity(
     val type: String,
     val createdAt: String,
     val updatedAt: String,
-    val isSynced: Boolean = false
+    val isSynced: Boolean = false,
+    val syncAction: String? = null
 ) 

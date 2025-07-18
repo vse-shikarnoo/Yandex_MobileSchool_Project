@@ -83,7 +83,7 @@ class ApiService(private val apiClient: ApiClient) {
     }
 
     // Transactions
-    suspend fun createTransaction(transactionData: yandex.school.project.core.data.models.TransactionRequest) = withContext(Dispatchers.IO) {
+    suspend fun createTransaction(transactionData: yandex.school.project.core.data.models.TransactionRequest):TransactionCreateResponse = withContext(Dispatchers.IO) {
 
         Log.d("ApiService", "createTransaction: Request: ${transactionData}")
         val response = apiClient.client.post(ApiEndpoints.TRANSACTIONS) {
@@ -92,7 +92,7 @@ class ApiService(private val apiClient: ApiClient) {
 
         Log.d("ApiService", "Получен ответ с кодом: ${response.status}")
         Log.d("ApiService", "createTransaction: Response:  ${response.body<String>()}")
-        response.status.isSuccess()
+        response.body()
     }
 
     suspend fun getTransactionById(id: Int): TransactionResponse = withContext(Dispatchers.IO) {

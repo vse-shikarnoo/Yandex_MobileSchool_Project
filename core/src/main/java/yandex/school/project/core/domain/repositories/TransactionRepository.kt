@@ -31,4 +31,6 @@ interface TransactionRepository {
         startDate: String? = null,
         endDate: String? = null
     ): Flow<List<Transaction>>
+
+    suspend fun syncTransactions()
 } 

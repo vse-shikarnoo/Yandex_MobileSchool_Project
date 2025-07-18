@@ -54,16 +54,18 @@ fun AccountEntity.toDomain(): DomainAccount = DomainAccount(
     updatedAt = updatedAt
 )
 
-fun DomainAccount.toEntity(isSynced: Boolean = false): AccountEntity = AccountEntity(
-    id = id,
-    userId = userId,
-    name = name,
-    balance = balance,
-    currency = currency,
-    createdAt = createdAt,
-    updatedAt = updatedAt,
-    isSynced = isSynced
-)
+fun DomainAccount.toEntity(isSynced: Boolean = false, syncAction: String?): AccountEntity =
+    AccountEntity(
+        id = id,
+        userId = userId,
+        name = name,
+        balance = balance,
+        currency = currency,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        isSynced = isSynced,
+        syncAction = syncAction
+    )
 
 fun DataAccount.toCreateRequest(): AccountCreateRequest = AccountCreateRequest(
     name = name,
