@@ -14,6 +14,7 @@ hilt = "2.50"
 lifecycleViewmodelCompose = "2.8.5"
 lottieComposeVersion = "6.3.0"
 navigationCompose = "2.7.6"
+securityCrypto = "1.1.0-beta01"
 storage = "1.4.2"
 appcompat = "1.7.1"
 material = "1.12.0"
@@ -24,6 +25,7 @@ android-lottie-compose = { module = "com.airbnb.android:lottie-compose", version
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
