@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import yandex.school.project.core.domain.entities.TransactionType
 import yandex.school.project.core.domain.entities.TransactionWithCategory
@@ -25,58 +27,29 @@ class IncomesViewModel @Inject constructor(
     private val networkHelper: yandex.school.project.core.utils.NetworkOperationHelper
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<yandex.school.project.core.utils.Result<IncomesState>>(
-        yandex.school.project.core.utils.Result.Loading)
-    val uiState: StateFlow<yandex.school.project.core.utils.Result<IncomesState>> = _uiState
+    private val _uiState = MutableStateFlow<Result<IncomesState>>(Result.Loading)
+    val uiState: StateFlow<Result<IncomesState>> = _uiState
 
-    override fun onCleared() {
-        super.onCleared()
-        Log.d("${this::class.java}", "onCleared: ")
-    }
-
-    fun loadTransactionsWithRetry(accountId: Int, maxRetries: Int = 3, delayMillis: Long = 2000) {
+    fun observeExpenses(accountId: Int) {
         viewModelScope.launch {
-            networkHelper.executeWithRetry(
-                scope = this,
-                operation = {
-                    val allTransactions = getTransactionsByAccountUseCase(accountId)
-                    val categories = getCategoriesUseCase()
-
-                    Log.d("ExpensesViewModel", "allTransactions categories: $allTransactions $categories")
-
-                    val incomeTransactions = allTransactions.filter { transaction ->
-                        transaction.type == TransactionType.INCOME
-                    }
-                    Log.d("ExpensesViewModel", "expenseTransactions: $incomeTransactions")
-                    
-                    val transactionsWithCategory = incomeTransactions.mapNotNull { transaction ->
+            // Подписываемся на оба Flow и комбинируем их
+            getTransactionsByAccountUseCase(accountId)
+                .combine(getCategoriesUseCase()) { transactions, categories ->
+                    val expenseTransactions = transactions.filter { it.type == TransactionType.INCOME }
+                    val transactionsWithCategory = expenseTransactions.mapNotNull { transaction ->
                         val category = categories.find { it.id == transaction.categoryId }
                         category?.let {
-                            yandex.school.project.core.domain.entities.TransactionWithCategory(
-                                transaction,
-                                it
-                            )
+                            TransactionWithCategory(transaction, it)
                         }
-                    }.sortedByDescending {
-                        it.date
-                    }
-                    
+                    }.sortedByDescending { it.date }
                     val total = transactionsWithCategory.sumOf { it.amount }
                     IncomesState(
                         transactions = transactionsWithCategory,
-                        total = "${total.toInt()} ${yandex.school.project.core.utils.CURRENCY_RUB}"
+                        total = "${total.toInt()} $CURRENCY_RUB"
                     )
-                },
-                onSuccess = { incomesState ->
-                    _uiState.value = yandex.school.project.core.utils.Result.Success(incomesState)
-                },
-                onError = { errorMessage ->
-                    _uiState.value = yandex.school.project.core.utils.Result.Error(errorMessage)
-                },
-                maxRetries = maxRetries,
-                delayMillis = delayMillis,
-                operationName = "загрузка доходов"
-            )
+                }
+                .catch { e -> _uiState.value = Result.Error(e.message ?: "Ошибка загрузки") }
+                .collect { state -> _uiState.value = Result.Success(state) }
         }
     }
 } 

@@ -18,12 +18,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import yandex.school.project.core.ui.components.TopBarState
 import yandex.school.project.core.utils.CURRENCY_RUB
-import yandex.school.project.expenses.ExpensesScreen
 import yandex.school.project.expenses.R
 import yandex.school.project.expenses.di.ExpensesComponent
 import yandex.school.project.expenses.di.LocalExpensesViewModelFactory
 import yandex.school.project.expenses.edit.ExpensesEditScreen
 import yandex.school.project.expenses.history.ExpensesHistoryScreen
+import yandex.school.project.expenses.analysis.ExpensesAnalysisScreen
+import yandex.school.project.income.ExpensesScreen
 
 /**
  * Навигация для раздела расходов.
@@ -88,8 +89,17 @@ fun ExpensesNavGraph(
                     title = "История расходов",
                     actionIcon = analyticIcon,
                     actionIconAction = {
-
+                        expensesNavController.navigate(ExpensesDestinations.ExpensesAnalyticScreen.route)
                     },
+                    navigationIcon = Icons.Default.ArrowBack,
+                    navigationIconAction = {
+                        expensesNavController.popBackStack()
+                    }
+                )
+            )
+            ExpensesDestinations.ExpensesAnalyticScreen.route -> onTitleChange(
+                TopBarState(
+                    title = "Анализ",
                     navigationIcon = Icons.Default.ArrowBack,
                     navigationIconAction = {
                         expensesNavController.popBackStack()
@@ -152,6 +162,12 @@ fun ExpensesNavGraph(
                     modifier = modifier,
                     accountId = accountId,
                     currency = currency
+                )
+            }
+            composable(ExpensesDestinations.ExpensesAnalyticScreen.route) {
+                ExpensesAnalysisScreen(
+                    modifier = modifier,
+                    accountId = accountId
                 )
             }
         }

@@ -1,5 +1,6 @@
 package yandex.school.project.core.domain.usecases.account
 
+import kotlinx.coroutines.flow.Flow
 import yandex.school.project.core.domain.entities.Account
 import yandex.school.project.core.domain.repositories.AccountRepository
 import javax.inject.Inject
@@ -11,7 +12,7 @@ import javax.inject.Inject
 class GetAccountsUseCase @Inject constructor(
     private val accountRepository: AccountRepository
 ) {
-    suspend operator fun invoke(): List<Account> {
+    suspend operator fun invoke(): Flow<List<Account>> {
         return accountRepository.getAccounts()
     }
 }

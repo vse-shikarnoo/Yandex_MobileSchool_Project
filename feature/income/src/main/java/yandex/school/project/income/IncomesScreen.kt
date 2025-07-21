@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import yandex.school.project.core.utils.CURRENCY_RUB
+import yandex.school.project.core.utils.convertAmount
 import yandex.school.project.income.di.LocalIncomesViewModelFactory
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -37,13 +38,13 @@ fun IncomesScreen(
 
     LaunchedEffect(accountId) {
         coroutineManager.launchWithCancelPrevious {
-            viewModel.loadTransactionsWithRetry(accountId)
+            viewModel.observeExpenses(accountId)
         }
     }
 
     yandex.school.project.core.ui.components.ResultScreen(
         result = uiState,
-        onRetry = { viewModel.loadTransactionsWithRetry(accountId) },
+        onRetry = { viewModel.observeExpenses(accountId) },
         coroutineManager = coroutineManager
     ) { state ->
         LazyColumn {
@@ -58,7 +59,7 @@ fun IncomesScreen(
                             currency
                         )
                         Text(
-                            "${total.toInt()} $currency",
+                            state.total,
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -79,9 +80,9 @@ fun IncomesScreen(
                         null
                     },
                     contentSecond = {
-                        val total = state.total
+                        val amount = convertAmount(transactionWithCategory.amount, CURRENCY_RUB, currency)
                         Text(
-                            total,//"${total.toInt()} $currency",
+                            "${amount.toInt()} $currency",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )

@@ -1,6 +1,9 @@
 package yandex.school.project
 
 import android.app.Application
+import androidx.work.Configuration
+import androidx.work.WorkManager
+import yandex.school.project.core.di.AppWorkerFactory
 import yandex.school.project.di.AppComponent
 import yandex.school.project.di.DaggerAppComponent
 
@@ -10,10 +13,15 @@ import yandex.school.project.di.DaggerAppComponent
  */
 class FinanceApplication : Application() {
     lateinit var appComponent: AppComponent
-        private set
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = DaggerAppComponent.create()
+        appComponent = DaggerAppComponent.factory().create(applicationContext)
+        val workerFactory = AppWorkerFactory(appComponent.syncTransactionsWorkerFactory())
+        WorkManager.initialize(
+            this,
+            Configuration.Builder().setWorkerFactory(workerFactory).build()
+        )
+        NetworkSyncHelper.registerNetworkCallback(this)
     }
-} 
+}

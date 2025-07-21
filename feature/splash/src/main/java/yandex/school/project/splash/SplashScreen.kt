@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import yandex.school.project.core.domain.entities.Account
 import yandex.school.project.splash.di.LocalSplashViewModelFactory
 import yandex.school.project.splash.di.SplashComponent
+import yandex.school.project.core.utils.Result
 
 @Composable
 fun ProvidedSplashScreen(
@@ -39,6 +41,7 @@ internal fun SplashScreen(
 ) {
     val factory = LocalSplashViewModelFactory.current
     val viewModel: SplashViewModel = viewModel(factory = factory)
+    val uiState by viewModel.uiState.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -52,7 +55,8 @@ internal fun SplashScreen(
             progress = { logoAnimationState.progress }
         )
         if (logoAnimationState.isAtEnd && logoAnimationState.isPlaying) {
-            accountChange(viewModel.account)
+            val account = (uiState as? Result.Success)?.data
+            accountChange(account)
             goNextDestination()
         }
     }

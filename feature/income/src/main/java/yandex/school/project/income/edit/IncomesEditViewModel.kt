@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import yandex.school.project.core.domain.entities.Category
 import yandex.school.project.core.domain.entities.Transaction
@@ -38,69 +40,49 @@ class IncomesEditViewModel @Inject constructor(
     val categories: StateFlow<List<Category>> = _categories
 
     fun loadCategories() {
-        networkHelper.executeWithRetry(
-            scope = viewModelScope,
-            operation = { getCategoriesUseCase() },
-            onSuccess = { categories ->
-                Log.d("CategoryViewModel", "Категории успешно загружены: ${categories.size} элементов")
-                _categories.value = categories.filter {
-                    it.isIncome
+        viewModelScope.launch {
+            getCategoriesUseCase()
+                .catch { _categories.value = emptyList() }
+                .collectLatest { categories ->
+                    _categories.value = categories.filter { !it.isIncome }
                 }
-            },
-            onError = { errorMessage ->
-                _categories.value = emptyList()
-            },
-            operationName = "загрузка категорий"
-        )
+        }
     }
 
     fun loadTransaction(transactionId: Int) {
-
         viewModelScope.launch {
-            networkHelper.executeWithRetry(
-                scope = this,
-                operation = {
-                    val transaction = getTransactionUseCase(transactionId)
-                    EditIncomeState(transaction = transaction)
-                },
-                onSuccess = { state -> _uiState.value = Result.Success(state) },
-                onError = { error -> _uiState.value = Result.Error(error) },
-                operationName = "загрузка транзакции"
-            )
+            try {
+                val transaction = getTransactionUseCase(transactionId)
+                _uiState.value = Result.Success(EditIncomeState(transaction = transaction))
+            } catch (e: Exception) {
+                _uiState.value = Result.Error(e.message ?: "Ошибка загрузки транзакции")
+            }
         }
     }
 
     fun saveTransaction(transaction: Transaction, isEdit: Boolean) {
         viewModelScope.launch {
-            networkHelper.executeWithRetry(
-                scope = this,
-                operation = {
-                    if (isEdit) {
-                        updateTransactionUseCase(transaction)
-                    } else {
-                        createTransactionUseCase(transaction)
-                    }
-                    EditIncomeState(isSuccess = true)
-                },
-                onSuccess = { state -> _uiState.value = Result.Success(state) },
-                onError = { error -> _uiState.value = Result.Error(error) },
-                operationName = if (isEdit) "обновление транзакции" else "создание транзакции"
-            )
+            try {
+                if (isEdit) {
+                    updateTransactionUseCase(transaction)
+                } else {
+                    createTransactionUseCase(transaction)
+                }
+                _uiState.value = Result.Success(EditIncomeState(isSuccess = true))
+            } catch (e: Exception) {
+                _uiState.value = Result.Error(e.message ?: "Ошибка сохранения транзакции")
+            }
         }
     }
 
     fun deleteTransaction(transactionId: Int) {
         viewModelScope.launch {
-            networkHelper.executeWithRetry(
-                scope = this,
-                operation = {
-                    deleteTransactionUseCase(transactionId)
-                    EditIncomeState(isSuccess = true)
-                },
-                onSuccess = { state -> _uiState.value = Result.Success(state) },
-                onError = { error -> _uiState.value = Result.Error(error) },
-                operationName = "удаление транзакции"
-            )
+            try {
+                deleteTransactionUseCase(transactionId)
+                _uiState.value = Result.Success(EditIncomeState(isSuccess = true))
+            } catch (e: Exception) {
+                _uiState.value = Result.Error(e.message ?: "Ошибка удаления транзакции")
+            }
         }
     }
 }

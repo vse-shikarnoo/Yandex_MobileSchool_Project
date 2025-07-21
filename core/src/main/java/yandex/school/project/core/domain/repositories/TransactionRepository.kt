@@ -1,5 +1,6 @@
 package yandex.school.project.core.domain.repositories
 
+import kotlinx.coroutines.flow.Flow
 import yandex.school.project.core.domain.entities.Transaction
 import yandex.school.project.core.domain.entities.TransactionType
 
@@ -29,5 +30,7 @@ interface TransactionRepository {
         accountId: Int,
         startDate: String? = null,
         endDate: String? = null
-    ): List<Transaction>
+    ): Flow<List<Transaction>>
+
+    suspend fun syncTransactions()
 } 
