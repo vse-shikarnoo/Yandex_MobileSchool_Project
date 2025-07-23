@@ -15,16 +15,27 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
+import yandex.school.project.core.domain.entities.Account
+import yandex.school.project.core.ui.common.ThemeColors
 import yandex.school.project.core.ui.components.TopBar
 import yandex.school.project.core.ui.components.TopBarState
 import yandex.school.project.presentation.navigation.BottomBar
 import yandex.school.project.presentation.navigation.BottomNavigation
-import yandex.school.project.core.domain.entities.Account
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(account: Account?) {
+fun MainScreen(
+    account: Account?,
+    onThemeChange: (Boolean) -> Unit = {},
+    onColorsChange: (ThemeColors) -> Unit = {},
+    darkTheme: Boolean = false,
+    primaryColor: Color = yandex.school.project.core.theme.GreenMain,
+    secondaryColor: Color = yandex.school.project.core.theme.GreenLight,
+    hapticsEnabled: Boolean = true,
+    onHapticsChange: (Boolean) -> Unit = {},
+) {
     val bottomNavController = rememberNavController()
     val currentTopBarState = remember {
         mutableStateOf(
@@ -60,6 +71,13 @@ fun MainScreen(account: Account?) {
                 navController = bottomNavController,
                 onTitleChange = { currentTopBarState.value = it },
                 account = account,
+                onThemeChange = onThemeChange,
+                onColorsChange = onColorsChange,
+                darkTheme = darkTheme,
+                primaryColor = primaryColor,
+                secondaryColor = secondaryColor,
+                hapticsEnabled = hapticsEnabled,
+                onHapticsChange = onHapticsChange
             )
         }
     }

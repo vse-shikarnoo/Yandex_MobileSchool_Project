@@ -90,4 +90,6 @@ dependencies {
 
     implementation(libs.androidx.security.crypto)
 
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
 }

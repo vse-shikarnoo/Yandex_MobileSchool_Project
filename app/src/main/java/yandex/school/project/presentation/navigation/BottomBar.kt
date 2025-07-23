@@ -9,6 +9,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -19,7 +21,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
  * Единственная ответственность: отображение и управление нижней панелью навигации между экранами.
  */
 @Composable
-fun BottomBar(navController: NavHostController) {
+fun BottomBar(navController: NavHostController, hapticsEnabled: Boolean = true) {
     val screens = listOf(
         BottomBarDestinations.Expenses,
         BottomBarDestinations.Incomes,
@@ -29,6 +31,7 @@ fun BottomBar(navController: NavHostController) {
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val haptic = LocalHapticFeedback.current
 
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surfaceContainer
@@ -55,6 +58,7 @@ fun BottomBar(navController: NavHostController) {
                     unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant
                 ),
                 onClick = {
+                    if (hapticsEnabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                         launchSingleTop = true

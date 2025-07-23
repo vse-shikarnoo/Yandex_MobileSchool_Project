@@ -2,11 +2,12 @@ package yandex.school.project.presentation.navigation
 
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.NavHostController
@@ -16,6 +17,7 @@ import yandex.school.project.FinanceApplication
 import yandex.school.project.R
 import yandex.school.project.account.ProvidedAccountScreen
 import yandex.school.project.category.ProvidedCategorytScreen
+import yandex.school.project.core.ui.common.ThemeColors
 import yandex.school.project.expenses.navigation.ExpensesNavGraph
 import yandex.school.project.feature.settings.SettingsScreen
 import yandex.school.project.income.navigation.IncomesNavGraph
@@ -28,9 +30,17 @@ import yandex.school.project.income.navigation.IncomesNavGraph
 fun BottomNavigation(
     navController: NavHostController,
     onTitleChange: (yandex.school.project.core.ui.components.TopBarState) -> Unit,
-    account: yandex.school.project.core.domain.entities.Account?
+    account: yandex.school.project.core.domain.entities.Account?,
+    onThemeChange: (Boolean) -> Unit = {},
+    onColorsChange: (ThemeColors) -> Unit = {},
+    darkTheme: Boolean = false,
+    primaryColor: Color = yandex.school.project.core.theme.GreenMain,
+    secondaryColor: Color = yandex.school.project.core.theme.GreenLight,
+    hapticsEnabled: Boolean = true,
+    onHapticsChange: (Boolean) -> Unit = {},
 ) {
     val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
     val appComponent =
         remember { (context.applicationContext as FinanceApplication).appComponent }
 
@@ -111,7 +121,15 @@ fun BottomNavigation(
                     title = "Настройки"
                 )
             )
-            SettingsScreen()
+            SettingsScreen(
+                onThemeChange = onThemeChange,
+                onColorsChange = onColorsChange,
+                darkTheme = darkTheme,
+                primaryColor = primaryColor,
+                secondaryColor = secondaryColor,
+                hapticsEnabled = hapticsEnabled,
+                onHapticsChange = onHapticsChange
+            )
         }
     }
 }

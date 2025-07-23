@@ -3,6 +3,7 @@ package yandex.school.project.presentation.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -10,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import yandex.school.project.FinanceApplication
 import yandex.school.project.MainScreen
+import yandex.school.project.core.ui.common.ThemeColors
 import yandex.school.project.splash.ProvidedSplashScreen
 
 /**
@@ -26,7 +28,16 @@ object MainDestinations {
  * Единственная ответственность: настройка и управление навигацией между экранами приложения.
  */
 @Composable
-fun AppNavigation(navController: NavHostController = rememberNavController()) {
+fun AppNavigation(
+    navController: NavHostController = rememberNavController(),
+    onThemeChange: (Boolean) -> Unit = {},
+    onColorsChange: (ThemeColors) -> Unit = {},
+    darkTheme: Boolean = false,
+    primaryColor: Color = yandex.school.project.core.theme.GreenMain,
+    secondaryColor: Color = yandex.school.project.core.theme.GreenLight,
+    hapticsEnabled: Boolean = true,
+    onHapticsChange: (Boolean) -> Unit = {},
+) {
     val (account, setAccount) = remember {
         mutableStateOf<yandex.school.project.core.domain.entities.Account?>(
             null
@@ -52,7 +63,16 @@ fun AppNavigation(navController: NavHostController = rememberNavController()) {
             )
         }
         composable(MainDestinations.Main) {
-            MainScreen(account = account)
+            MainScreen(
+                account = account,
+                onThemeChange = onThemeChange,
+                onColorsChange = onColorsChange,
+                darkTheme = darkTheme,
+                primaryColor = primaryColor,
+                secondaryColor = secondaryColor,
+                hapticsEnabled = hapticsEnabled,
+                onHapticsChange = onHapticsChange
+            )
         }
     }
 } 
