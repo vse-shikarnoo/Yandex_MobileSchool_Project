@@ -38,8 +38,8 @@ class MainActivity : ComponentActivity() {
             var themeColors by rememberSaveable(stateSaver = ThemeColorsSaver) {
                 mutableStateOf(
                     ThemeColors(
-                        if (themeSettings.primaryColor == 0L) GreenLight else Color(themeSettings.primaryColor),
-                        if (themeSettings.secondaryColor == 0L) GreenLight else Color(themeSettings.secondaryColor)
+                        if (themeSettings.primaryColor == 0L) GreenLight else Color(themeSettings.primaryColor.toULong()),
+                        if (themeSettings.secondaryColor == 0L) GreenLight else Color(themeSettings.secondaryColor.toULong())
                     )
                 )
             }
