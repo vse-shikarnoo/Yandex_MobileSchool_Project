@@ -8,17 +8,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import yandex.school.project.core.domain.entities.Account
+import yandex.school.project.core.ui.components.PinEnterScreen
+import yandex.school.project.core.utils.PinCodeStorage
+import yandex.school.project.core.utils.Result
 import yandex.school.project.splash.di.LocalSplashViewModelFactory
 import yandex.school.project.splash.di.SplashComponent
-import yandex.school.project.core.utils.Result
 
 @Composable
 fun ProvidedSplashScreen(
@@ -42,6 +47,9 @@ internal fun SplashScreen(
     val factory = LocalSplashViewModelFactory.current
     val viewModel: SplashViewModel = viewModel(factory = factory)
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+    var showPinEnter by remember { mutableStateOf(false) }
+    var pinError by remember { mutableStateOf<String?>(null) }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -54,10 +62,28 @@ internal fun SplashScreen(
             composition = composition,
             progress = { logoAnimationState.progress }
         )
-        if (logoAnimationState.isAtEnd && logoAnimationState.isPlaying) {
+        if (logoAnimationState.isAtEnd && logoAnimationState.isPlaying && !showPinEnter) {
             val account = (uiState as? Result.Success)?.data
             accountChange(account)
-            goNextDestination()
+            if (PinCodeStorage.hasPin(context)) {
+                showPinEnter = true
+            } else {
+                goNextDestination()
+            }
+        }
+        if (showPinEnter) {
+            PinEnterScreen(
+                onPinEntered = { pin ->
+                    if (PinCodeStorage.checkPin(context, pin)) {
+                        pinError = null
+                        showPinEnter = false
+                        goNextDestination()
+                    } else {
+                        pinError = "Неверный PIN-код"
+                    }
+                },
+                errorMessage = pinError
+            )
         }
     }
 }

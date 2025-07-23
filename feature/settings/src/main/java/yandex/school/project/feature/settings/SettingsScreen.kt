@@ -14,14 +14,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import yandex.school.project.core.R
+import yandex.school.project.core.utils.PinCodeStorage
 
 @Composable
 fun SettingsScreen() {
     var isAutoTheme by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    var hasPin by remember { mutableStateOf(PinCodeStorage.hasPin(context)) }
+    var showPinSetup by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -38,12 +43,33 @@ fun SettingsScreen() {
             }
         )
         HorizontalDivider()
+        // Переключатель пин-кода
+        yandex.school.project.core.ui.components.ListItem(
+            modifier = Modifier.height(56.dp),
+            contentTitle = "Код-пароль",
+            trailing = {
+                Switch(
+                    checked = hasPin,
+                    onCheckedChange = { checked ->
+                        if (checked) {
+                            showPinSetup = true
+                        } else {
+                            PinCodeStorage.clearPin(context)
+                            hasPin = false
+                        }
+                    }
+                )
+            },
+            onClick = {
+                if (!hasPin) showPinSetup = true
+            }
+        )
+        HorizontalDivider()
         // Список пунктов
         val items = listOf(
             "Основной цвет",
             "Звуки",
             "Хаптики",
-            "Код пароль",
             "Синхронизация",
             "Язык",
             "О программе"
@@ -58,10 +84,20 @@ fun SettingsScreen() {
                         contentDescription = null
                     )
                 },
-                onClick = { /* TODO: обработка нажатия */ }
+                onClick = { }
             )
             HorizontalDivider()
         }
+    }
+    if (showPinSetup) {
+        PinSetupScreen(
+            onPinSet = { pin ->
+                PinCodeStorage.savePin(context, pin)
+                hasPin = true
+                showPinSetup = false
+            },
+            onCancel = { showPinSetup = false }
+        )
     }
 }
 

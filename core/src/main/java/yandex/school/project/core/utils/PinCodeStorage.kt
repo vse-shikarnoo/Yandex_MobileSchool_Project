@@ -1,4 +1,4 @@
-package yandex.school.project.feature.settings
+package yandex.school.project.core.utils
 
 import android.content.Context
 import androidx.core.content.edit
