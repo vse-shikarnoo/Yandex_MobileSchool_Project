@@ -22,11 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 @Composable
 fun PinSetupScreen(
     onPinSet: (String) -> Unit,
-    onCancel: () -> Unit
+    onCancel: () -> Unit,
+    buttonShape: Shape = RoundedCornerShape(8.dp)
 ) {
     var pin1 by remember { mutableStateOf("") }
     var pin2 by remember { mutableStateOf("") }
@@ -35,8 +38,7 @@ fun PinSetupScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp),
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center
     ) {
         Text(
@@ -62,8 +64,11 @@ fun PinSetupScreen(
         }
         Spacer(modifier = Modifier.height(24.dp))
         Row {
-            Button(onClick = onCancel, modifier = Modifier.weight(1f)) {
-                Text("Отмена")
+            Button(
+                onClick = onCancel,
+                shape = buttonShape
+            ) {
+                Text("Отмена", maxLines = 1)
             }
             Spacer(modifier = Modifier.width(16.dp))
             Button(
@@ -88,9 +93,9 @@ fun PinSetupScreen(
                         }
                     }
                 },
-                modifier = Modifier.weight(1f)
+                shape = buttonShape
             ) {
-                Text(if (step == 1) "Далее" else "Сохранить")
+                Text(if (step == 1) "Далее" else "Сохранить", maxLines = 1)
             }
         }
     }

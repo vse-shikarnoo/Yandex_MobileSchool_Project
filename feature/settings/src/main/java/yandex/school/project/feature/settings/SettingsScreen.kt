@@ -42,6 +42,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.window.Dialog
 import yandex.school.project.core.theme.GreenLight
 import yandex.school.project.core.theme.GreenMain
 import yandex.school.project.core.theme.Grey
@@ -53,6 +55,8 @@ import yandex.school.project.core.theme.PurpleGrey40
 import yandex.school.project.core.theme.PurpleGrey80
 import yandex.school.project.core.theme.RedMain
 import yandex.school.project.core.theme.YellowMain
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.Arrangement
 
 @Composable
 fun SettingsScreen() {
@@ -79,6 +83,9 @@ fun SettingsScreen() {
     var showColorPicker by remember { mutableStateOf(false) }
 
     LaunchedEffect(userPrefs.darkTheme) { isAutoTheme = userPrefs.darkTheme }
+    LaunchedEffect(Unit) {
+        hasPin = PinCodeStorage.hasPin(context)
+    }
 
     Column(
         modifier = Modifier
@@ -178,14 +185,27 @@ fun SettingsScreen() {
         }
     }
     if (showPinSetup) {
-        PinSetupScreen(
-            onPinSet = { pin ->
-                yandex.school.project.core.utils.PinCodeStorage.savePin(context, pin)
-                hasPin = true
-                showPinSetup = false
-            },
-            onCancel = { showPinSetup = false }
-        )
+        Dialog(onDismissRequest = { showPinSetup = false }) {
+            androidx.compose.material3.Surface(
+                shape = RoundedCornerShape(28.dp),
+                tonalElevation = 8.dp,
+                color = androidx.compose.material3.MaterialTheme.colorScheme.background,
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .widthIn(min = 280.dp, max = 360.dp)
+            ) {
+                PinSetupScreen(
+                    onPinSet = { pin ->
+                        yandex.school.project.core.utils.PinCodeStorage.savePin(context, pin)
+                        hasPin = true
+                        showPinSetup = false
+                    },
+                    onCancel = { showPinSetup = false },
+                    buttonShape = RoundedCornerShape(50)
+                )
+
+            }
+        }
     }
 }
 

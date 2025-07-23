@@ -35,8 +35,7 @@ fun PinEnterScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp),
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center
     ) {
         Text(
