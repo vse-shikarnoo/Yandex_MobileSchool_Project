@@ -9,6 +9,9 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
+import yandex.school.project.core.data.local.UserPreferences
+import android.util.Log
 
 private val DarkColorScheme = darkColorScheme(
     primary = GreenMain,
@@ -36,23 +39,34 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun ProjectTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = false,
+    userPreferences: UserPreferences? = null,
+    darkTheme: Boolean = userPreferences?.darkTheme ?: isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = LightColorScheme
-        /*when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    val colorScheme = if (userPreferences != null) {
+        val primary = (userPreferences.primaryColor and 0xFFFFFFFFUL).toLong()
+        val secondary = (userPreferences.secondaryColor and 0xFFFFFFFFUL).toLong()
+        Log.d("ProjectTheme", "primaryColor ARGB: 0x${primary.toString(16)} secondaryColor ARGB: 0x${secondary.toString(16)}")
+        if (darkTheme) {
+            darkColorScheme(
+                primary = Color(primary),
+                secondary = Color(secondary),
+                tertiary = Grey,
+                error = RedMain
+            )
+        } else {
+            lightColorScheme(
+                primary = Color(primary),
+                secondary = Color(secondary),
+                tertiary = Grey,
+                error = RedMain
+            )
         }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    } else if (darkTheme) {
+        DarkColorScheme
+    } else {
+        LightColorScheme
     }
-
-         */
 
     MaterialTheme(
         colorScheme = colorScheme,

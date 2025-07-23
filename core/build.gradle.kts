@@ -89,5 +89,7 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
 
     implementation(libs.androidx.security.crypto)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.datastore.core)
 
 }

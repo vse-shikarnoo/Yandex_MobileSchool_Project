@@ -1,8 +1,11 @@
 package yandex.school.project.feature.settings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -13,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
@@ -20,13 +24,62 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import yandex.school.project.core.R
 import yandex.school.project.core.utils.PinCodeStorage
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.draw.clip
+import kotlinx.coroutines.launch
+import yandex.school.project.core.data.local.UserPreferencesDataStore
+import yandex.school.project.core.data.local.UserPreferences
+import yandex.school.project.core.ui.components.ColorPicker
+import yandex.school.project.core.theme.ThemeColors
+import android.util.Log
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.rememberScrollState
+import yandex.school.project.core.theme.GreenLight
+import yandex.school.project.core.theme.GreenMain
+import yandex.school.project.core.theme.Grey
+import yandex.school.project.core.theme.Pink40
+import yandex.school.project.core.theme.Pink80
+import yandex.school.project.core.theme.Purple40
+import yandex.school.project.core.theme.Purple80
+import yandex.school.project.core.theme.PurpleGrey40
+import yandex.school.project.core.theme.PurpleGrey80
+import yandex.school.project.core.theme.RedMain
+import yandex.school.project.core.theme.YellowMain
 
 @Composable
 fun SettingsScreen() {
-    var isAutoTheme by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    var hasPin by remember { mutableStateOf(PinCodeStorage.hasPin(context)) }
+    val dataStore = remember { UserPreferencesDataStore(context) }
+    val userPrefs by dataStore.preferencesFlow.collectAsState(
+        initial = UserPreferences(
+            0xFF2AE881UL,
+            0xFFD4FAE6UL,
+            false
+        )
+    )
+    // Логирование текущих настроек
+    Log.d(
+        "SettingsScreen",
+        "userPrefs: primaryColor=0x${userPrefs.primaryColor.toString(16)}, secondaryColor=0x${
+            userPrefs.secondaryColor.toString(16)
+        }, darkTheme=${userPrefs.darkTheme}"
+    )
+    val coroutineScope = rememberCoroutineScope()
+    var isAutoTheme by remember { mutableStateOf(userPrefs.darkTheme) }
+    var hasPin by remember { mutableStateOf(false) }
     var showPinSetup by remember { mutableStateOf(false) }
+    var showColorPicker by remember { mutableStateOf(false) }
+
+    LaunchedEffect(userPrefs.darkTheme) { isAutoTheme = userPrefs.darkTheme }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -38,10 +91,46 @@ fun SettingsScreen() {
             trailing = {
                 Switch(
                     checked = isAutoTheme,
-                    onCheckedChange = { isAutoTheme = it }
+                    onCheckedChange = {
+                        isAutoTheme = it
+                        coroutineScope.launch { dataStore.updateDarkTheme(it) }
+                    }
                 )
             }
         )
+        HorizontalDivider()
+        // Цвета
+        yandex.school.project.core.ui.components.ListItem(
+            modifier = Modifier.height(56.dp),
+            contentTitle = "Основной цвет",
+            trailing = {
+                Box(
+                    Modifier
+                        .size(24.dp)
+                        .clip(CircleShape)
+                        .background(Color((userPrefs.primaryColor and 0xFFFFFFFFUL).toLong()))
+                )
+            },
+            onClick = { showColorPicker = !showColorPicker }
+        )
+        if (showColorPicker) {
+            ColorPicker(
+                selectedColor = userPrefs.primaryColor,
+                onColorSelected = {
+                    Log.d(
+                        "ColorPicker",
+                        "Выбран цвет: primary=0x${it.primary.toString(16)}, secondary=0x${
+                            it.secondary.toString(16)
+                        }"
+                    )
+                    coroutineScope.launch {
+                        dataStore.updateColors(it.primary, it.secondary)
+                        showColorPicker = false
+                    }
+                },
+                darkTheme = userPrefs.darkTheme
+            )
+        }
         HorizontalDivider()
         // Переключатель пин-кода
         yandex.school.project.core.ui.components.ListItem(
@@ -54,7 +143,7 @@ fun SettingsScreen() {
                         if (checked) {
                             showPinSetup = true
                         } else {
-                            PinCodeStorage.clearPin(context)
+                            yandex.school.project.core.utils.PinCodeStorage.clearPin(context)
                             hasPin = false
                         }
                     }
@@ -67,7 +156,6 @@ fun SettingsScreen() {
         HorizontalDivider()
         // Список пунктов
         val items = listOf(
-            "Основной цвет",
             "Звуки",
             "Хаптики",
             "Синхронизация",
@@ -92,7 +180,7 @@ fun SettingsScreen() {
     if (showPinSetup) {
         PinSetupScreen(
             onPinSet = { pin ->
-                PinCodeStorage.savePin(context, pin)
+                yandex.school.project.core.utils.PinCodeStorage.savePin(context, pin)
                 hasPin = true
                 showPinSetup = false
             },
