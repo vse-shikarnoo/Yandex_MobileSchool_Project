@@ -111,6 +111,9 @@ fun SettingsScreen(
                     .horizontalScroll(rememberScrollState())
                     .padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
             ) {
+                val selectedBorderColor = if (darkTheme) Color.White else Color.Black
+                val unselectedBorderColor = if (darkTheme) Color.DarkGray else Color.LightGray
+
                 colorOptions.forEach { color ->
                     Box(
                         modifier = Modifier
@@ -127,7 +130,7 @@ fun SettingsScreen(
                             }
                             .border(
                                 width = if (color == primaryColor) 3.dp else 1.dp,
-                                color = if (color == primaryColor) Color.Black else Color.LightGray,
+                                color = if (color == primaryColor) selectedBorderColor else unselectedBorderColor,
                                 shape = CircleShape
                             )
                     )
