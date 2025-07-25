@@ -12,6 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalContext
+import yandex.school.project.core.data.local.LocalUserPreferences
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -31,6 +34,8 @@ fun BottomBar(navController: NavHostController) {
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val userPrefs = LocalUserPreferences.current
+    val haptic = LocalHapticFeedback.current
 
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surfaceContainer
@@ -58,6 +63,9 @@ fun BottomBar(navController: NavHostController) {
                     unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant
                 ),
                 onClick = {
+                    if (userPrefs.hapticsEnabled) {
+                        haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress)
+                    }
                     navController.navigate(screen.first.route) {
                         popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                         launchSingleTop = true

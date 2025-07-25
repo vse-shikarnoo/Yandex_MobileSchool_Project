@@ -12,6 +12,7 @@ object UserPreferencesKeys {
     val PRIMARY_COLOR = longPreferencesKey("primary_color")
     val SECONDARY_COLOR = longPreferencesKey("secondary_color")
     val DARK_THEME = booleanPreferencesKey("dark_theme")
+    val HAPTICS_ENABLED = booleanPreferencesKey("haptics_enabled")
 }
 
 val Context.userPreferencesDataStore by preferencesDataStore(name = "user_preferences")
@@ -21,7 +22,8 @@ class UserPreferencesDataStore(private val context: Context) {
         UserPreferences(
             primaryColor = (preferences[UserPreferencesKeys.PRIMARY_COLOR]?.toULong() ?: 0xFF2AE881UL) and 0xFFFFFFFFUL,
             secondaryColor = (preferences[UserPreferencesKeys.SECONDARY_COLOR]?.toULong() ?: 0xFFD4FAE6UL) and 0xFFFFFFFFUL,
-            darkTheme = preferences[UserPreferencesKeys.DARK_THEME] ?: false
+            darkTheme = preferences[UserPreferencesKeys.DARK_THEME] ?: false,
+            hapticsEnabled = preferences[UserPreferencesKeys.HAPTICS_ENABLED] ?: false
         )
     }
 
@@ -37,10 +39,17 @@ class UserPreferencesDataStore(private val context: Context) {
             preferences[UserPreferencesKeys.DARK_THEME] = enabled
         }
     }
+
+    suspend fun updateHapticsEnabled(enabled: Boolean) {
+        context.userPreferencesDataStore.edit { preferences ->
+            preferences[UserPreferencesKeys.HAPTICS_ENABLED] = enabled
+        }
+    }
 }
 
 data class UserPreferences(
     val primaryColor: ULong,
     val secondaryColor: ULong,
-    val darkTheme: Boolean
+    val darkTheme: Boolean,
+    val hapticsEnabled: Boolean
 ) 

@@ -50,6 +50,7 @@ fun SettingsScreen() {
         initial = UserPreferences(
             0xFF2AE881UL,
             0xFFD4FAE6UL,
+            false,
             false
         )
     )
@@ -146,10 +147,23 @@ fun SettingsScreen() {
             }
         )
         HorizontalDivider()
+        // Переключатель хаптиков
+        yandex.school.project.core.ui.components.ListItem(
+            modifier = Modifier.height(56.dp),
+            contentTitle = "Хаптики",
+            trailing = {
+                Switch(
+                    checked = userPrefs.hapticsEnabled,
+                    onCheckedChange = {
+                        coroutineScope.launch { dataStore.updateHapticsEnabled(it) }
+                    }
+                )
+            }
+        )
+        HorizontalDivider()
         // Список пунктов
         val items = listOf(
             "Звуки",
-            "Хаптики",
             "Синхронизация",
             "Язык",
             "О программе"

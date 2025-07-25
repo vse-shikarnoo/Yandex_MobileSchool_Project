@@ -13,6 +13,7 @@ import yandex.school.project.core.theme.ProjectTheme
 import yandex.school.project.presentation.navigation.AppNavigation
 import yandex.school.project.core.data.local.UserPreferencesDataStore
 import yandex.school.project.core.data.local.UserPreferences
+import yandex.school.project.core.data.local.LocalUserPreferences
 
 /**
  * Главная активность приложения, отвечающая за запуск UI и навигации.
@@ -24,9 +25,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val dataStore = remember { UserPreferencesDataStore(this) }
-            val userPrefs by dataStore.preferencesFlow.collectAsState(initial = UserPreferences(0xFF2AE881UL, 0xFFD4FAE6UL, false))
+            val userPrefs by dataStore.preferencesFlow.collectAsState(initial = UserPreferences(0xFF2AE881UL, 0xFFD4FAE6UL, false, false))
             ProjectTheme(userPreferences = userPrefs) {
-                AppNavigation()
+                androidx.compose.runtime.CompositionLocalProvider(LocalUserPreferences provides userPrefs) {
+                    AppNavigation()
+                }
             }
         }
     }
