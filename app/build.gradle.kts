@@ -56,6 +56,7 @@ dependencies {
     implementation(project(":feature:account"))
     implementation(project(":feature:category"))
     implementation(project(":feature:expenses"))
+    implementation(project(":feature:charts"))
     implementation(project(":feature:income"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:splash"))

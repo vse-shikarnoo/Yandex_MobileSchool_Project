@@ -17,20 +17,23 @@ data class BarChartData(val value: Float, val label: String)
 @Composable
 fun BarChart(
     data: List<BarChartData>,
-    colors: List<Color>,
     modifier: Modifier = Modifier
 ) {
-    val max = data.maxOfOrNull { it.value } ?: 1f
-    val colorScheme = MaterialTheme.colorScheme
     Canvas(modifier = modifier) {
-        val barWidth = size.width / (data.size * 2)
+        val max = data.maxOfOrNull { it.value } ?: 1f
+        val min = data.minOfOrNull { it.value } ?: 0f
+        val barWidth = size.width / (data.size * 1.5f)
+        val barSpace = barWidth / 2
+        val zeroY = size.height * (if (min < 0) max / (max - min) else 1f)
         data.forEachIndexed { i, item ->
-            val left = i * 2 * barWidth + barWidth / 2
-            val top = size.height - (item.value / max) * size.height
-            drawRect(
-                color = colors.getOrElse(i) { colorScheme.primary },
-                topLeft = Offset(left, top),
-                size = androidx.compose.ui.geometry.Size(barWidth, size.height - top)
+            val left = i * (barWidth + barSpace) + barSpace / 2
+            val valueY = size.height - ((item.value - min) / (max - min).coerceAtLeast(1f)) * size.height
+            val color = if (item.value >= 0) Color(0xFF00E676) else Color(0xFFFF6D00)
+            drawRoundRect(
+                color = color,
+                topLeft = Offset(left, valueY),
+                size = androidx.compose.ui.geometry.Size(barWidth, size.height - valueY),
+                cornerRadius = androidx.compose.ui.geometry.CornerRadius(barWidth / 2, barWidth / 2)
             )
         }
     }
@@ -40,20 +43,16 @@ fun BarChart(
 @Composable
 fun BarChartPreview() {
     val data = listOf(
-        BarChartData(40f, "A"),
-        BarChartData(30f, "B"),
-        BarChartData(20f, "C"),
-        BarChartData(10f, "D")
-    )
-    val colors = listOf(
-        MaterialTheme.colorScheme.primary,
-        MaterialTheme.colorScheme.secondary,
-        MaterialTheme.colorScheme.tertiary,
-        MaterialTheme.colorScheme.error
+        BarChartData(40f, ""),
+        BarChartData(30f, ""),
+        BarChartData(-10f, ""),
+        BarChartData(-20f, ""),
+        BarChartData(10f, ""),
+        BarChartData(5f, "")
     )
     Surface {
         Box(Modifier.fillMaxSize()) {
-            BarChart(data = data, colors = colors, modifier = Modifier.fillMaxSize())
+            BarChart(data = data, modifier = Modifier.fillMaxSize())
         }
     }
 } 

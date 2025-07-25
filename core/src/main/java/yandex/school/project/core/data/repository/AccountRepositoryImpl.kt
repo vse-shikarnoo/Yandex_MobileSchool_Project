@@ -97,7 +97,8 @@ class AccountRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getAccountHistory(id: Int): AccountHistory {
-        TODO("Not yet implemented")
+        val response = apiService.getAccountHistory(id)
+        return response.toDomain()
     }
 
     // Синхронизация с сервером (вызывать через WorkManager или вручную)
