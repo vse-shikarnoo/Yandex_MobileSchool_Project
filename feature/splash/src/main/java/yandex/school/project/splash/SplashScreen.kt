@@ -33,6 +33,7 @@ import yandex.school.project.core.utils.Result
 import yandex.school.project.splash.di.LocalSplashViewModelFactory
 import yandex.school.project.splash.di.SplashComponent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.platform.testTag
 
 @Composable
 fun ProvidedSplashScreen(
@@ -69,7 +70,8 @@ internal fun SplashScreen(
             animateLottieCompositionAsState(composition = composition)
         LottieAnimation(
             composition = composition,
-            progress = { logoAnimationState.progress }
+            progress = { logoAnimationState.progress },
+            modifier = Modifier.testTag("SplashLottie")
         )
         if (logoAnimationState.isAtEnd && logoAnimationState.isPlaying && !showPinEnter) {
             val account = (uiState as? Result.Success)?.data
