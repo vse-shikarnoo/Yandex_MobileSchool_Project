@@ -57,6 +57,7 @@ import yandex.school.project.core.theme.RedMain
 import yandex.school.project.core.theme.YellowMain
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.platform.testTag
 
 @Composable
 fun SettingsScreen() {
@@ -101,7 +102,8 @@ fun SettingsScreen() {
                     onCheckedChange = {
                         isAutoTheme = it
                         coroutineScope.launch { dataStore.updateDarkTheme(it) }
-                    }
+                    },
+                    modifier = Modifier.testTag("ThemeSwitch")
                 )
             }
         )
