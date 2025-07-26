@@ -1,29 +1,18 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    kotlin("plugin.serialization") version "1.9.22"
-    id("io.gitlab.arturbosch.detekt") version "1.23.8"
-
-    kotlin("kapt")
 }
 
-
-
 android {
-    namespace = "yandex.school.project"
+    namespace = "yandex.school.project.charts"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "yandex.school.project"
-        minSdk = 26
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = 24
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        
-
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -44,22 +33,10 @@ android {
     }
     buildFeatures {
         compose = true
-        buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
     }
 }
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":feature:account"))
-    implementation(project(":feature:category"))
-    implementation(project(":feature:expenses"))
-    implementation(project(":feature:charts"))
-    implementation(project(":feature:income"))
-    implementation(project(":feature:settings"))
-    implementation(project(":feature:splash"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -69,7 +46,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.work.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -77,17 +53,4 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    implementation(libs.android.lottie.compose)
-    implementation(libs.androidx.navigation.compose)
-
-    // Dagger 2
-    implementation("com.google.dagger:dagger:2.50")
-    kapt("com.google.dagger:dagger-compiler:2.50")
-
-
-    implementation(libs.androidx.work.runtime.ktx)
-
-
 }
-

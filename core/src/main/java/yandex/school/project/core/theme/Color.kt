@@ -19,4 +19,9 @@ val YellowMain = Color(0xFFFCE300)
 
 val Grey = Color(0xFFC4BFC7)
 
+data class ThemeColors(
+    val primary: ULong,
+    val secondary: ULong
+)
+
  

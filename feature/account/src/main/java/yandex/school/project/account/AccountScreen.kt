@@ -49,6 +49,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import yandex.school.project.account.di.AccountComponent
 import yandex.school.project.account.di.LocalAccountViewModelFactory
+import yandex.school.project.charts.BarChart
+import yandex.school.project.charts.BarChartData
+import androidx.compose.foundation.layout.Arrangement
 
 @Composable
 fun ProvidedAccountScreen(
@@ -76,17 +79,19 @@ internal fun AccountScreen(
     val factory = LocalAccountViewModelFactory.current
     val viewModel: AccountViewModel = viewModel(factory = factory)
     val uiState by viewModel.uiState.collectAsState()
+    val barChartData by viewModel.historyBarChart.collectAsState()
     val coroutineManager = yandex.school.project.core.utils.rememberCoroutineManager(viewModel)
     var showCurrencySheet by remember { mutableStateOf(false) }
 
     var isEditingBalance by remember { mutableStateOf(false) }
     var balanceInput by remember { mutableStateOf("") }
 
-    Log.d("AccountScreen", "RECOMPOSE: account.balance=${uiState.let { (it as? yandex.school.project.core.utils.Result.Success)?.data?.balance }}, isEditingBalance=$isEditingBalance, balanceInput=$balanceInput")
+    Log.d("AccountScreen", "RECOMPOSE: account.id = $accountId; account.balance=${uiState.let { (it as? yandex.school.project.core.utils.Result.Success)?.data?.balance }}, isEditingBalance=$isEditingBalance, balanceInput=$balanceInput")
 
     LaunchedEffect(accountId) {
         coroutineManager.launchWithCancelPrevious {
             viewModel.loadAccountWithRetry(accountId)
+            viewModel.loadAccountHistory(accountId)
         }
     }
 
@@ -191,6 +196,15 @@ internal fun AccountScreen(
                 CurrencyListItem(
                     currency = currency,
                     onClick = { showCurrencySheet = true }
+                )
+                // Добавляем BarChart
+                Spacer(modifier = Modifier.height(16.dp))
+                BarChart(
+                    data = barChartData,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
+                        .padding(horizontal = 8.dp)
                 )
             }
         }

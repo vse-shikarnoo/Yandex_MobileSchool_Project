@@ -26,6 +26,11 @@ import yandex.school.project.core.utils.rememberCoroutineManager
 import yandex.school.project.expenses.di.LocalExpensesViewModelFactory
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import yandex.school.project.charts.PieChart
+import yandex.school.project.charts.PieChartData
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Row
 
 @Composable
 fun ExpensesAnalysisScreen(
@@ -80,6 +85,29 @@ fun ExpensesAnalysisScreen(
                 modifier = Modifier.fillMaxWidth().height(56.dp)
             )
             HorizontalDivider()
+            Spacer(Modifier.height(16.dp))
+            // Добавляем PieChart
+            // Оставляю только вызов PieChart без Row и Column для легенды
+            PieChart(
+                data = state.categories.map { PieChartData(it.percent.toFloat(), it.category.name) },
+                colors = List(state.categories.size) { i ->
+                    val baseColors = listOf(
+                        Color(0xFF00E676), // зелёный
+                        Color(0xFFFFEB3B), // жёлтый
+                        Color(0xFFFF6D00), // оранжевый
+                        Color(0xFF2979FF), // синий
+                        Color(0xFFD500F9), // фиолетовый
+                        Color(0xFFFF1744), // красный
+                        Color(0xFF00B8D4), // бирюзовый
+                        Color(0xFF8D6E63)  // коричневый
+                    )
+                    baseColors[i % baseColors.size]
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .padding(horizontal = 32.dp)
+            )
             Spacer(Modifier.height(16.dp))
             HorizontalDivider()
             // Список категорий
